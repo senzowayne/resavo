@@ -1,0 +1,40 @@
+easy_admin:
+    entities:
+      Reservation:
+        class: App\Entity\Reservation
+        list:
+          collapse_actions: true
+          actions: ['show', 'edit', 'delete']
+          help: "Bonne journée, n'hesitez pas à me contacter en cas de probleme Contact.senzo@gmail.com"
+          fields:
+            - {property: 'nom', label: 'ID'}
+            - {property: 'createAt', label: 'Crée le', format: 'd/m/y h:m:s', permission: 'ROLE_MASTER'}
+            - {property: 'dateReservation', label: 'Date'}
+            - {property: 'user', label: 'Client'}
+            - salle
+            - {property: 'seance', label: 'Séance'}
+            - {property: 'nbPersonne', label: 'Nb'}
+            - {property: 'user.numero', type: 'tel', label: 'Contact'}
+            - {property: 'paiement', label: 'Acompte'}
+            #- {property: 'soirWeek', type: 'boolean', label: 'WeekEnd', permission: 'ROLE_MASTER'}
+            - {property: 'total', label: 'Total'}
+
+            - remarques
+        form:
+          help: "⚠ - - Lisez bien les indications pour choisir la séance demander. Si un client veut modifier ça séance, sélectionnez bien la séance qui appartient à la salle et vérifier que vous êtes bien dans les séances week-end ou semaine."
+          fields:
+            - { type: 'group', columns: 4, label: 'Basic information' }
+            - {label: 'Client' ,property: 'user', help: "Si le client a déjà un compte sur le site, sélectionnez-le, sinon choisissez O2GAM-SPA"}
+            #- {property: 'paiement'}
+            - {property: 'total', label: 'Total (€)', help: 'Indiquer le total de la réservation'}
+            - {property: 'nom', label: 'Nom de la reservation', help: 'Indiquer ici la provenance de la réservation (ex: GROUPON, TELEPHONE..)'}
+            - {property: 'remarques', help: 'Indiquer ici NOM, PRENOM, NUMERO DE TELEPHONE du client.'}
+            - { type: 'group', columns: 8, label: 'Information Reservation' }
+            - {label: 'Date de la réservation' ,property: 'dateReservation', type_options: { widget: 'single_text' }}
+            - {property: 'salle'}
+            - {property: "seance", help: "⚠ - Selectionner la bonne séance : pour un jour de semaine verifier bien d'etre sur une séance finissant par sm, si c'est pour une séance du vendredi au dimanche selectionnez bien une séance finnissant par wk"}
+            - {property: 'nbPersonne', label: 'Nombre de personne'}
+            #- { label: 'Week-End', property: 'soirWeek', help: 'Sélectionnez si la réservation est du vendredi au dimanche'}
+
+        search:
+          fields: ['user.nom', 'user.email', 'user.numero', 'dateReservation', 'nom', 'user']

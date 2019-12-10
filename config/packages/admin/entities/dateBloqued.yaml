@@ -1,0 +1,5 @@
+easy_admin:
+    entities:
+      DateBlocked:
+        class: App\Entity\DateBlocked
+        label: 'Bloquer une date'

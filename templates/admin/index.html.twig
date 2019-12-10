@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReservationAdminController!{% endblock %}
+{% block menu %}
+    {% include 'admin/menu.html.twig' %}
+{% endblock menu %}
+
+{% block body %}
+    <div class="container p-4 mt-4">
+        {% for reservation in resa %}
+            <div class="row border alert alert-primary">
+                <div class="col">
+                    Seance : {{ reservation.seance }} <br>
+                    Salle : <span class="badge badge-pill badge-warning">{{ reservation.salle.nom }}</span>
+                </div>
+                <div class="col">
+                    nom : {{ reservation.user.nom }} <br>
+                    prénom : {{ reservation.user.prenom }}
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

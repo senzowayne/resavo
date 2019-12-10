@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container p-4 mt-2">
+
+        <h1>RESUME :</h1>
+        <small>Voici les details de votre réservation :</small>
+        <hr>
+
+        {% set resa = app.session.get('resa') %}
+        {% set pay = resa.paiement %}
+
+
+        <strong>Nom:</strong> {{ resa.user.nom }} <br>
+        <strong>Prénom:</strong> {{ resa.user.prenom }} <br>
+        <strong>ID reservation:</strong> {{ resa.nom }} <br>
+        <strong>Date:</strong> {{ resa.dateReservation | localizeddate('full', 'none') }}<br>
+        <strong>Séance: {{ resa.seance.libelle }}<br></strong>
+        <strong>Salle: {{ resa.salle.nom }}<br></strong>
+        <strong>Nombre de personnes:</strong> {{ resa.nbPersonne }}<br>
+        <strong>{% if resa.remarques %}
+        Votre remarque: {{ resa.remarques }}<br>
+        {% else %}
+        Aucune remarque n'a été mentionnée.<br>
+            {% endif %}</strong>
+        <strong>Acompte: </strong>{{ pay.paymentAmount }}{{ pay.paymentCurrency }}<br>
+        <strong>total de la commande :</strong> {{ resa.total }}{{ pay.paymentCurrency }} <br>
+        <hr>
+        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - pay.paymentAmount }}{{ pay.paymentCurrency }}</span></strong> <br>
+        <br>
+    <div class="row">
+        <a href="{{ path('acceuil') }}"><button type="button" class="btn btn-primary">Retour sur le site</button></a>
+    </div>
+    </div>
+
+{% endblock %}
