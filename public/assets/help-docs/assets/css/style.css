@@ -1,0 +1,88 @@
+﻿/*=============================================================
+    Authour URL: www.designbootstrap.com
+    
+    http://www.designbootstrap.com/
+
+    License: MIT
+
+    http://opensource.org/licenses/MIT
+
+    100% Free To use For Personal And Commercial Use.
+
+    IN EXCHANGE JUST TELL PEOPLE ABOUT THIS WEBSITE
+   
+========================================================  */
+/* =============================================================
+   GENERAL STYLES FOR HELP DOCCUMENT 
+ ============================================================ */
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size:16px;
+   
+}
+.pad-top {
+    padding-top:50px;
+}
+.text-center {
+    text-align:center;
+}
+p {
+    padding:10px;
+    line-height:30px;
+}
+h3 {
+    text-align:center;
+    padding:40px 0px 40px 0px;
+}
+section {
+    padding-top:30px;
+    padding-bottom:30px;
+}
+.back-clr {
+    background-color:#e6e5e5;
+}
+
+/*TO MAKING NAV BAR LINKS WHITE COLORED */
+.navbar-inverse .navbar-nav > li > a {
+color: #FFF;
+}
+
+.navbar-inverse .navbar-brand {
+color: #FFF;
+}
+ul li {
+    line-height:30px;
+}
+/*=====================================
+  OHTER STYLES 
+    ===================================*/
+
+.help {
+    background-color:#ededed;
+    padding:30px;
+    text-align:center;
+    margin-bottom:50px;
+}
+    .help h2 {
+        font-weight:900;
+        line-height:70px;
+    }
+ /*=====================================
+  SCROLL UP STYLES 
+    ===================================*/
+
+a.scrollup {
+    background: #808080;
+height: 32px;
+width: 32px;
+color: #fff;
+font-size: 18px;
+line-height: 32px;
+text-align: center;
+text-decoration: none;
+position: fixed;
+bottom: 10px;
+right: 10px;
+z-index: 9999;
+opacity: 0.5;
+}
