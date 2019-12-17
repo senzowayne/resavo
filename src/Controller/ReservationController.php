@@ -57,13 +57,13 @@ class ReservationController extends AbstractController
 
         $repoDate = $this->manager->getRepository(DateBlocked::class);
         $blocked = $repoDate->myfindAll();
-        $paypalClient = "https://www.paypal.com/sdk/js?client-id=" . $this->getParameter('CLIENT_ID') . "&currency=EUR&debug=false&disable-card=amex&intent=authorize";
+        $paypalClient = "https://www.paypal.com/sdk/js?client-id=" . $this->getParameter('PAYPAL_CLIENT_ID') . "&currency=EUR&debug=false&disable-card=amex&intent=authorize";
 
         return $this->render('reservation/index.html.twig', [
             'form' => $form->createView(), 'salle' => $salle, 'blocked' => $blocked, 'client' => $paypalClient
         ]);
     }
-    
+
     /**
      * @Route("/before-reservation", name="before_reservation")
      */
