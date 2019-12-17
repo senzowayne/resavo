@@ -8,7 +8,6 @@ easy_admin:
           - { label: 'Réservation'}
           - { label: Nouvelle Réservation, entity: 'Reservation', icon: 'plus',params: {action: 'new'} }
           - { label: 'Réservation', entity: 'Reservation', icon: 'calendar', params: { sortField: 'dateReservation', sortDirection: 'DESC' } }
-          - { label: 'Réservation du jour', url: 'https://o2gam-spa.fr/resa', rel: 'resa-day', target: _blank }
           - { label: 'Autres'}
           - { label: 'Client', entity: 'User', icon: 'user',  params: { sortField: 'nom', sortDirection: 'ASC' }}
           - { label: 'Séance', entity: 'Seance', icon: 'clock', permission: 'ROLE_MASTER', params: { sortField: 'id', sortDirection: 'ASC' } }
