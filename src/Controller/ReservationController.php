@@ -91,7 +91,7 @@ class ReservationController extends AbstractController
         foreach ($resa as $cle => $valeur) {
                 array_push($datas, $valeur);
         }
-        return $this->render('site/resa-day.html.twig', [
+        return $this->render('reservation/resa-day.html.twig', [
             'resa' => $datas, 'seance1' => $seance1, 'seance2'=> $seance2, 'seance3' => $seance3
         ]);
     }
