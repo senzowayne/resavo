@@ -144,7 +144,7 @@ class ReservationController extends AbstractController
             $this->session->set('resa', $reservation);
 
             if ($this->capturePaiement($reservation, $paiement)) {
-                $this->notif->mailConfirmation();
+               // $this->notif->mailConfirmation();
                 $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
             }
 

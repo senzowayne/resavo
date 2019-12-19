@@ -277,7 +277,7 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   } else if ($("#reservation_seance option:selected").index() > 3 && valueweekEnd == 1) {
     prix += 30;
     $('#tarif').empty()
-    $('#tarif').append('<span class="badge badge-pill blue-gradient">Tarif Week End +30€</span>')
+    $('#tarif').append('<span class="badge badge-pill red accent-4">Tarif Week End +30€</span>')
     //  console.log('seance < 2 tarif weekEnd')
 
   } else if ($("#reservation_seance option:selected").index() < 3 && valueweekEnd == 0) {
@@ -286,7 +286,7 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   } else if (valueweekEnd == 1) {
     prix += 30;
     $('#tarif').empty()
-    $('#tarif').append('<span class="badge badge-pill badge-success blue-gradient">Tarif Week End +30€</span>')
+    $('#tarif').append('<span class="badge badge-pill badge-success red accent-4">Tarif Week End +30€</span>')
     //console.log('value week = 1')
   } else {
     $('#tarif').empty();
