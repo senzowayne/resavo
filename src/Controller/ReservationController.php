@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\GetOrder;
-use App\Entity\CaptureAuthorization;
+use App\Service\Paypal\GetOrder;
+use App\Service\Paypal\CaptureAuthorization;
 use App\Entity\Paypal;
 use App\Entity\Reservation;
 use App\Entity\Salle;
@@ -144,7 +144,7 @@ class ReservationController extends AbstractController
             $this->session->set('resa', $reservation);
 
             if ($this->capturePaiement($reservation, $paiement)) {
-               // $this->notif->mailConfirmation();
+                $this->notif->mailConfirmation();
                 $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
             }
 
@@ -197,7 +197,7 @@ class ReservationController extends AbstractController
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $captureId = $response->result->id;
             if ("COMPLETED" !== $response->result->status) {
-                $this->manager->remove($paiment);
+                $this->manager->remove($paiement);
                 $this->manager->remove($reservation);
                 $this->manager->flush();
                 $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
