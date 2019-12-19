@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Service\Paypal;
 
 //1. Import the PayPal SDK client that was created in `Set up the Server SDK`.
 use Sample\PayPalClient;

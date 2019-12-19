@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Service\Paypal;
 
 use Sample\PayPalClient;
 use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
