@@ -8,20 +8,16 @@ use App\Entity\Paypal;
 use App\Entity\Reservation;
 use App\Entity\Salle;
 use App\Entity\Seance;
-use App\Entity\User;
 use App\Entity\DateBlocked;
 use App\Form\ReservationType;
-use BraintreeHttp\Serializer\Json;
 use Exception;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Console\Exception\LogicException;
-use App\Controller\CheckReservationController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -48,6 +44,7 @@ class ReservationController extends AbstractController
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
      * @param Request $request
+     * @return Response
      */
     public function index(Request $request, $salle = null)
     {
@@ -161,6 +158,9 @@ class ReservationController extends AbstractController
     /**
      * Reponse de l'API paypal & entré en bdd des informations d'auritsation du paiment
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST", "GET"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
      */
     public function authorizePaiement(Request $request)
     {
