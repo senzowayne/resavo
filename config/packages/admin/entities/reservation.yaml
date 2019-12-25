@@ -24,7 +24,7 @@ easy_admin:
           help: "⚠ - - Lisez bien les indications pour choisir la séance demander. Si un client veut modifier ça séance, sélectionnez bien la séance qui appartient à la salle et vérifier que vous êtes bien dans les séances week-end ou semaine."
           fields:
             - { type: 'group', columns: 4, label: 'Basic information' }
-            - {label: 'Client' ,property: 'user', help: "Si le client a déjà un compte sur le site, sélectionnez-le, sinon choisissez O2GAM-SPA"}
+            - {label: 'Client' ,property: 'user', help: "Si le client a déjà un compte sur le site, sélectionnez-le"}
             #- {property: 'paiement'}
             - {property: 'total', label: 'Total (€)', help: 'Indiquer le total de la réservation'}
             - {property: 'nom', label: 'Nom de la reservation', help: 'Indiquer ici la provenance de la réservation (ex: GROUPON, TELEPHONE..)'}

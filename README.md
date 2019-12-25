@@ -1,4 +1,4 @@
-# O2GAM-SPA
+# RESAVO
 
 ## INSTALLATION
 
@@ -11,8 +11,8 @@ https://developer.paypal.com/docs/api/overview/#create-sandbox-accounts
 Crée ensuite un fichier .env.local avec comme variable d'environnement:
 
 ```
-CLIENT_ID=
-CLIENT_SECRET=
+PAYPAL_CLIENT_ID=
+PAYPAL_CLIENT_SECRET=
 ```
 
 Après avoir configuré le .env.local du projet :
