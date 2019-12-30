@@ -15,49 +15,36 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $salle = [];
-
-        for ($i = 0; $i < 3; $i++) {
-            $salle[$i] = new Salle();
-            $salle[$i]->setNom('Salle ' . $i);
-            $salle[$i]->setPrix(90);
-
-            $manager->persist($salle[$i]);
-        }
-
         $seanceLibelles = array(    '10h - 12h',
                                     '12h30 - 14h30',
                                     '15h - 17h',
                                     '17h30 - 19h30',
                                     '20h - 22h'
         );
+        $e = 0;
+        for ($i = 1; $i <= 3; $i++) {
+            $salle[$i] = new Salle();
+            $salle[$i]->setNom('Salle ' . $i);
+            $salle[$i]->setPrix(90);
+            $salle[$i]->setDescription('Salle ' . $i);
 
-        for ($i = 0; $i < 5; $i++) {
-            $seance[$i] = new Seance();
-            $seance[$i]->setLibelle($seanceLibelles[$i]);
+            for ($x = 0; $x <= 4; $x++) {
+                if ($e >= 5) {
+                    $e = 0;
+                }
+                $seance[$x] = new Seance();
+                $seance[$x]->setLibelle($seanceLibelles[$e]);
+                $salle[$i]->addSeance($seance[$x]);
+                $e++;
+                $manager->persist($seance[$x]);
+            }
 
-            $manager->persist($seance[$i]);
+            $manager->persist($salle[$i]);
         }
+
 
         $faker = Factory::create('fr-FR');
-        $nom = $faker->firstName;
-        $prenom = $faker->lastName;
-        $email = $faker->email;
-        $slug = $faker->slug;
         $hash = '$2y$13$Li.rLne01AHwc.ituzQ/jejHxxKO.BU4A9Fc9hmCc3.PprUhaJbRa'; // "password"
-        $avatar = $faker->imageUrl($width = 50, $height = 50);
-        $user = [];
-
-        for ($i = 0; $i < 20; $i++) {
-            $user[$i] = new User();
-            $user[$i]->setNom($nom)
-                     ->setPrenom($prenom)
-                     ->setEmail($email)
-                     ->setAvatar($avatar)
-                     ->setHash($hash)
-                     ->setSlug($slug);
-
-            $manager->persist($user[$i]);
-        }
 
         $admin = new User();
         $admin  ->setNom('resavo')
