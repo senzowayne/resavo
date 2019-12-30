@@ -19,15 +19,14 @@ class SeanceController extends AbstractController
      * Recuperer les seances d'une salle
      * @Route("/reservation/seance/horaire", methods={"POST"})
      */
-    public function seance(int $salle = 1, $weekEnd = false, EntityManagerInterface $manager): JsonResponse
+    public function seance(int $salle = 1, EntityManagerInterface $manager): JsonResponse
     {
         if (isset($_POST['salle'])) {
             $salle = htmlentities($_POST['salle']);
-            $weekEnd = $_POST['weekEnd'] ?? false;
         }
 
         $repo = $manager->getRepository(Seance::class);
-        $seance = $repo->findBy(['salle' => $salle, 'weekEnd' => $weekEnd]);
+        $seance = $repo->findBy(['salle' => $salle]);
 
         $datas = [];
         foreach ($seance as $data) {
