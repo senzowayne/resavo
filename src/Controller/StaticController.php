@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StaticController extends AbstractController
 {
     /**
-     * @Route("/reservation/", name="static")
+     * @Route("/", name="static")
      */
     public function index()
     {

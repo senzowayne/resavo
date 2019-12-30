@@ -3,23 +3,32 @@
 {% block title %}Hello StaticController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="container">
+        <h1 class="text-center">Présentation du projet:</h1>
+        <div class="row">
+            <div class="col text-center">
 
-    <h1 class="text-center">Bienvenue sur le systeme de réservation de O2GAM-SPA</h1>
-<div class="col text-center">
+                <p style="font-size: 18px">
+                    RESAVO est un projet open source, l'idée est de créer un système de réservation clef en main en y
+                    apportant des fonctionnalitées
+                    à la pointe de la technologie. Nous essayerons de répondre à un large eventaille de cas d'usage
+                    possible.
+                    Nous essayerons de creer un UI & UX avancée.
+                    J'ai pris le choix de créer les ISSUE en francais pour facilité aux developpeurs qui débutent à
+                    contribuer facilement.</p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-6 text-center"><a href="{{ path('app_login') }}">
+                    <button class="btn btn-large btn-primary" type="button">Se Connecter</button>
+                </a></div>
 
-    <p style="font-size: 18px"><strong>Pour continuez il vas falloir vous identifier ou vous inscrire,
-    pas d'inquiètude ca vous prendra moins de 2 minutes.</strong></p>
+            <div class="col-6 text-center"><a href="{{ path('user_new') }}">
+                    <button class="btn btn-large btn-success" type="button">S'inscrire</button>
+                </a></div>
 
-    <div class="row mt-5">
-        <div class="col-6 text-center"><a href="{{ path('app_login') }}"><button class="btn btn-large btn-primary" type="button">Se Connecter</button></a></div>
-
-        <div class="col-6 text-center"><a href="{{ path('user_new') }}"><button class="btn btn-large btn-success" type="button">S'inscrire</button></a></div>
+        </div>
 
     </div>
-
-</div>
+    </div>
 {% endblock %}
