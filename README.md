@@ -34,7 +34,10 @@ Vous devriez à present voir la page d'accueil du projet avec la possibilité de
 le chargement des fixtures nous aura crée quelques élèments pour commencer.
 
 Vous pouvez dès présent vous connecter avec un compte admin:
+
+
 Identifiant : admin@resavo.fr
+
 mdp: password
 
 ## Technologie
