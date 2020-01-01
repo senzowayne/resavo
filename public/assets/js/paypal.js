@@ -2,6 +2,7 @@ $('#payMe').hide();
 $('#resa1').hide();
 $('#buttonValide').prop('disabled', true);
 valueDate = null;
+acc = 45;
 jour = new Date().getDate();
 lmois = (new Date().getMonth() + 1);
 mois = '';
@@ -9,7 +10,7 @@ if (mois < 9) {
   mois = 0 + '' + lmois
 }
 annee = new Date().getFullYear();
-valueSalle = 1;
+valueSalle = 'Salle Bora-Bora';
 console.log('ready');
 
 /***************
@@ -18,23 +19,23 @@ console.log('ready');
  ****************/
 
 num = $('#number-salle');
-if (num.val() == 1 || num.val() == 'bora-bora') {
+if (num.text() === "Salle Bora-Bora") {
   $('#reservation_salle').prop('disabled', true);
-  $('#reservation_seance options[0]').prop('selected', true);
-  valueSalle = 1;
+  $('#reservation_seance option:eq(0)').prop('selected', true);
+  valueSalle = 'Salle Bora-Bora';
   acc = 38
 }
-if (num.val() == 2 || num.val() == 'miami') {
-  $('#reservation_salle option[value="2"]').prop('selected', true);
+if (num.text() === 'Salle Miami') {
+  $('#reservation_salle option:eq(1)').prop('selected', true);
   $('#reservation_salle').prop('disabled', true);
   $('#reservation_seance options[0]').prop('selected', true);
-  valueSalle = 2;
+  valueSalle = 'Salle Miami';
   acc = 45
 }
-if (num.val() == 3 || num.val() == 'phuket') {
-  $('#reservation_salle option[value="3"]').prop('selected', true);
+if (num.text() === 'Salle Phuket') {
+  $('#reservation_salle option:eq(2)').prop('selected', true);
   $('#reservation_salle').prop('disabled', true);
-  valueSalle = 3;
+  valueSalle = 'Salle Phuket';
   acc = 45
 }
 
@@ -87,8 +88,8 @@ $('#buttonValide').click(function() {
 });
 
 //Initialise le nombre de personnes et le prix selon la salle
-if (valueSalle == '1' || valueSalle == 'bora-bora') {
-  valueSalle = 1;
+if (valueSalle == "Salle Bora-Bora") {
+  valueSalle = "Salle Bora-Bora";
   prix = 75;
   $('#reservation_nbPersonne').empty();
   $('#messageSalle').empty();
@@ -102,8 +103,8 @@ if (valueSalle == '1' || valueSalle == 'bora-bora') {
 
   messageSalle = 'Cette salle ne peut comporter maximum <span class="text-danger">4</span> personnes';
 
-} else if (valueSalle == '2' || valueSalle == 'miami') {
-  valueSalle = 2;
+} else if (valueSalle == "Salle Miami") {
+  valueSalle = "Salle Miami";
   prix = 90;
   $('#messageSalle').empty();
   $('#reservation_nbPersonne').empty();
@@ -117,7 +118,7 @@ if (valueSalle == '1' || valueSalle == 'bora-bora') {
   messageSalle = 'Cette salle ne peut comporter maximum <span class="text-danger">8</span> personnes';
 
 } else {
-  valueSalle = 3;
+  valueSalle = "Salle Phuket";
   prix = 90;
   $('#messageSalle').empty();
   $('#reservation_nbPersonne').empty();
@@ -139,8 +140,8 @@ $('#messageSalle').append(messageSalle);
  NOMBRE DE PERSONNES EN FONCTION DE LA SALLE ****
  */
 salle = $('#reservation_salle').on('change', function() {
-  if (this.value == '1' || valueSalle == 'bora-bora') {
-    valueSalle = 1;
+  if (valueSalle == "Salle Bora-Bora") {
+    valueSalle = $('#reservation_salle').find(":selected").text()
     prix = 75;
     $('#reservation_nbPersonne').empty();
     $('#messageSalle').empty();
@@ -154,8 +155,8 @@ salle = $('#reservation_salle').on('change', function() {
 
     messageSalle = 'Cette salle ne peut comporter maximum <span class="text-danger">4</span> personnes';
 
-  } else if (this.value == '2' || valueSalle == 'miami') {
-    valueSalle = 2;
+  } else if (valueSalle === "Salle Miami") {
+    valueSalle = $('#reservation_salle').find(":selected").text()
     prix = 90;
     $('#messageSalle').empty();
     $('#reservation_nbPersonne').empty();
@@ -168,7 +169,7 @@ salle = $('#reservation_salle').on('change', function() {
 
     messageSalle = 'Cette salle ne peut comporter maximum <span class="text-danger">8</span> personnes';
   } else {
-    this.value = 3;
+    valueSalle = "Salle Phuket";
     prix = 90;
     $('#messageSalle').empty();
     $('#reservation_nbPersonne').empty();
@@ -207,19 +208,19 @@ $('#reservation_seance').on('change', function() {
 
 // Si quelconque changement sur tout les champs ré-iniatilise la variable avec la nouvelle valeur
 $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #reservation_seance').on('change', function() {
-  if (valueSalle === 1) {
+  if (valueSalle === 'Salle Bora-Bora') {
     nomSalle = 'Salle Bora-Bora';
-  } else if (valueSalle === 2) {
+  } else if (valueSalle === "Salle Miami") {
     nomSalle = 'Salle Miami';
   } else {
     nomSalle = 'Salle Phuket';
   }
   // SALLE 1 nbPersonne moins ou egal a 2
-  if (valueSalle === 1 && valuePersonnes <= 2) {
+  if (valueSalle === 'Salle Bora-Bora' && valuePersonnes <= 2) {
     prix = 75;
     acc = (76 / 2)
     //console.log('SALLE 1 MOINS DE 2 PERSONNE : prix : ' + prix)
-  } else if (valueSalle === 1 && valuePersonnes > 2) {
+  } else if (valueSalle === 'Salle Bora-Bora' && valuePersonnes > 2) {
     prix = 75;
     acc = (76 / 2);
     prix += ((valuePersonnes - 2) * 30);
@@ -227,17 +228,17 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   }
 
   // SALLE 2 & 3 nbPersonne moins ou egal a 2
-  if (valueSalle === 2 || valueSalle === 3 && valuePersonnes <= 2) {
+  if (valueSalle === "Salle Miami" || valueSalle === 'Salle Phuket' && valuePersonnes <= 2) {
     prix = 90;
     acc = (90 / 2);
   }
 
   //Si Salle egal 2 et personne superieur ou egale a 3 à 6 alors ajoute 35euros et de 7 & ajoute 20euro
-  if (valueSalle === 2 && valuePersonnes >= 3 && valuePersonnes <= 6) {
+  if (valueSalle === "Salle Miami" && valuePersonnes >= 3 && valuePersonnes <= 6) {
     prix = 90;
     prix += ((valuePersonnes - 2) * 35);
     acc = (90 / 2);
-  } else if (valueSalle === 2 && valuePersonnes >= 7 && valuePersonnes <= 8) {
+  } else if (valueSalle === "Salle Miami" && valuePersonnes >= 7 && valuePersonnes <= 8) {
     prix = 90;
     if (valuePersonnes == 7) {
       prix = (230 + 20);
@@ -249,11 +250,11 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   }
 
   //Si Salle egal 3 et personne superieur ou egale a 3 à 6 alors ajoute 35euros et de 7 & ajoute 20euro
-  if (valueSalle === 3 && valuePersonnes >= 3 && valuePersonnes <= 6) {
+  if (valueSalle === 'Salle Phuket' && valuePersonnes >= 3 && valuePersonnes <= 6) {
     prix = 90;
     prix += ((valuePersonnes - 2) * 35);
     acc = (90 / 2);
-  } else if (valueSalle === 3 && valuePersonnes >= 7 && valuePersonnes <= 8) {
+  } else if (valueSalle === 'Salle Phuket' && valuePersonnes >= 7 && valuePersonnes <= 8) {
     prix = 90;
     if (valuePersonnes == 7) {
       prix = (230 + 20);
@@ -263,7 +264,6 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
     }
     acc = (90 / 2);
   }
-  checkWeek()
   $('#tarif').empty();
 
   //Si Seance du soir selectionner un jour de semaine
@@ -315,20 +315,9 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   resume();
 });
 
-// verifie qu'on est bien en week-end
-function checkWeek() {
-  if (jourSelect != "Vendredi" && jourSelect != "Samedi" && jourSelect != "Dimanche") {
-    valueweekEnd = 0
-  } else if (jourSelect === "Vendredi" && ((valueSeance >= 6 && valueSeance <= 8) || (valueSeance >= 17 && valueSeance <= 19) || (valueSeance >= 28 && valueSeance <= 30))) {
-    valueweekEnd = 0
-  } else {
-    valueweekEnd = 1
-  }
-}
 
 // Au changement dans la date
 $('#reservation_date_reservation').on('change', function() {
-  checkWeek();
   valueSeance = "0";
   valueTextSeance = $('#reservation_seance').find(":selected").text()
 })

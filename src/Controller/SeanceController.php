@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Salle;
 use App\Entity\Seance;
 use App\Entity\DateBlocked;
 use App\Entity\Reservation;
@@ -60,9 +61,13 @@ class SeanceController extends AbstractController
         }
 
         try {
+            $valueSalle = $manager->getRepository(Salle::class)->findOneBy([
+                'nom' => $salle
+            ]);
+
             $valueSeance = $manager->getRepository(Seance::class)->findOneBy([
             'libelle' => $seance,
-            'salle' => $salle
+            'salle' => $valueSalle
             ]);
 
             if (null !== $valueSeance->getId()) {

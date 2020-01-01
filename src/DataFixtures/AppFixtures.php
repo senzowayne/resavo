@@ -22,9 +22,11 @@ class AppFixtures extends Fixture
                                     '20h - 22h'
         );
         $e = 0;
+        $nomSalle = ['Salle Bora-Bora', 'Salle Miami', 'Salle Phuket'];
+
         for ($i = 1; $i <= 3; $i++) {
             $salle[$i] = new Salle();
-            $salle[$i]->setNom('Salle ' . $i);
+            $salle[$i]->setNom($nomSalle[$i -1]);
             $salle[$i]->setPrix(90);
             $salle[$i]->setDescription('Salle ' . $i);
 
