@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\GetOrder;
-use App\Entity\CaptureAuthorization;
+use App\Service\Paypal\GetOrder;
+use App\Service\Paypal\CaptureAuthorization;
 use App\Entity\Paypal;
 use App\Entity\Reservation;
 use App\Entity\Salle;
@@ -101,10 +101,10 @@ class ReservationController extends AbstractController
             throw new \LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $salle = $this->check->checkSalleValue($_POST['salle']);
+        $salle = $_POST['salle'];
 
         $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($_POST['seance'])]);
-        $salle = $this->manager->getRepository(Salle::class)->find($salle);
+        $salle = $this->manager->getRepository(Salle::class)->findOneBy(['nom' => $salle]);
 
         $reservation = new Reservation();
         $reservation->setRemarques($_POST['remarques'])
@@ -112,7 +112,6 @@ class ReservationController extends AbstractController
                     ->setSalle($salle)
                     ->setSeance($seance)
                     ->setNbPersonne($_POST['nbPersonne'])
-                    ->setSoirWeek($_POST['weekEnd'])
                     ->setTotal($_POST['total']);
 
         return $reservation;
@@ -197,7 +196,7 @@ class ReservationController extends AbstractController
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $captureId = $response->result->id;
             if ("COMPLETED" !== $response->result->status) {
-                $this->manager->remove($paiment);
+                $this->manager->remove($paiement);
                 $this->manager->remove($reservation);
                 $this->manager->flush();
                 $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
