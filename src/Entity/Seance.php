@@ -33,11 +33,6 @@ class Seance
     private $salle;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":false})
-     */
-    private $weekEnd;
-
-    /**
      * @return mixed
      */
     public function getId()
@@ -66,19 +61,6 @@ class Seance
     public function setSalle(?Salle $salle): self
     {
         $this->salle = $salle;
-
-        return $this;
-    }
-
-
-    public function getWeekEnd(): ?bool
-    {
-        return $this->weekEnd;
-    }
-
-    public function setWeekEnd(?bool $weekEnd): self
-    {
-        $this->weekEnd = $weekEnd;
 
         return $this;
     }

@@ -78,11 +78,6 @@ class Reservation
 
 
     /**
-     * @ORM\Column(type="boolean", options={"default":false})
-     */
-    private $soirWeek;
-
-    /**
      * @ORM\Column(type="string")
      */
     private $total;
@@ -211,23 +206,6 @@ class Reservation
         return $this;
     }
 
-    public function getSoirWeek(): ?bool
-    {
-        return $this->soirWeek;
-    }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate()
-     * @return Reservation
-     */
-    public function setSoirWeek(): self
-    {
-        $week = substr($this->seance, -2);
-        $week === 'wk' ? $this->soirWeek = true : $this->soirWeek = false;
-
-        return $this;
-    }
 
     /**
      * @return mixed
