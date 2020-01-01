@@ -22,13 +22,15 @@ PAYPAL_CLIENT_SECRET=
 Après avoir configuré le .env.local du projet :
 
 ```
-$ git clone xxx
-$ cd xxx/
+$ git clone git@github.com:senzowayne/resavo.git
+$ cd resavo/
 $ composer install
 $ php bin/console doctrine:database:create
+$ php bin/console doctrine:schema:update -f
 $ php bin/console doctrine:fixtures:load
 $ php bin/console server:run
 ```
+Lien : http:127.0.0.1:8000/
 
 Vous devriez à present voir la page d'accueil du projet avec la possibilité de vous inscrire et de vous connecter
 le chargement des fixtures nous aura crée quelques élèments pour commencer.
