@@ -101,10 +101,10 @@ class ReservationController extends AbstractController
             throw new \LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $salle = $this->check->checkSalleValue($_POST['salle']);
+        $salle = $_POST['salle'];
 
         $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($_POST['seance'])]);
-        $salle = $this->manager->getRepository(Salle::class)->find($salle);
+        $salle = $this->manager->getRepository(Salle::class)->findOneBy(['nom' => $salle]);
 
         $reservation = new Reservation();
         $reservation->setRemarques($_POST['remarques'])
@@ -112,7 +112,6 @@ class ReservationController extends AbstractController
                     ->setSalle($salle)
                     ->setSeance($seance)
                     ->setNbPersonne($_POST['nbPersonne'])
-                    ->setSoirWeek($_POST['weekEnd'])
                     ->setTotal($_POST['total']);
 
         return $reservation;
@@ -144,7 +143,7 @@ class ReservationController extends AbstractController
             $this->session->set('resa', $reservation);
 
             if ($this->capturePaiement($reservation, $paiement)) {
-                $this->notif->mailConfirmation();
+               // $this->notif->mailConfirmation();
                 $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
             }
 

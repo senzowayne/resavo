@@ -218,11 +218,11 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   // SALLE 1 nbPersonne moins ou egal a 2
   if (valueSalle === 'Salle Bora-Bora' && valuePersonnes <= 2) {
     prix = 75;
-    acc = (76 / 2)
+    acc = (90 / 2)
     //console.log('SALLE 1 MOINS DE 2 PERSONNE : prix : ' + prix)
   } else if (valueSalle === 'Salle Bora-Bora' && valuePersonnes > 2) {
     prix = 75;
-    acc = (76 / 2);
+    acc = (90 / 2);
     prix += ((valuePersonnes - 2) * 30);
     //console.log('SALLE 1. PLUS DE 2 PERSONNE : prix : ' + prix)
   }
