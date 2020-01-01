@@ -1,12 +1,16 @@
 # RESAVO
 
+## PRÉSENTATION
+
+RESAVO est un projet open source, l'idée est de créer un système de réservation "clef en main" en y apportant des fonctionnalitées avec les dernières technologies. Nous essayerons de répondre à un large eventaille de cas d'usage possible. Nous essayerons de créer un UI & UX avancée. J'ai fais le choix de créer les ISSUE en francais pour faciliter aux developpeurs qui débutent de contribuer facilement. Nous essayerons de rendre ce projet le plus générique possible et personnalisable ( du choix de la couleur du thème, au choix entre Paypal ou Stripe... )
+
 ## INSTALLATION
 
 ### Paypal SANDBOX TEST
 
-Crée votre SANDBOX de test :
+Crée votre SANDBOX (celle-ci vous permettra d'effectuer des faux paiements et avoir le réel comportement de l'application) :
 
-https://developer.paypal.com/docs/api/overview/#create-sandbox-accounts
+Cf : https://developer.paypal.com/docs/api/overview/#create-sandbox-accounts
 
 Crée ensuite un fichier .env.local avec comme variable d'environnement:
 
@@ -22,7 +26,7 @@ $ git clone xxx
 $ cd xxx/
 $ composer install
 $ php bin/console doctrine:database:create
-$ php bin/console doctrine:migration:migrate
+$ php bin/console doctrine:fixtures:load
 $ php bin/console server:run
 ```
 
