@@ -3,17 +3,17 @@
 
 ## PRÉSENTATION
 
-RESAVO est un projet open source, l'idée est de créer un système de réservation "clef en main" en y apportant des fonctionnalitées avec les dernières technologies. Nous essayerons de répondre à un large eventaille de cas d'usage possible. Nous essayerons de créer un UI & UX avancée. J'ai fais le choix de créer les ISSUE en français pour faciliter aux developpeurs qui débutent de contribuer facilement. Nous essayerons de rendre ce projet le plus générique possible et personnalisable ( du choix de la couleur du thème, au choix entre Paypal ou Stripe... )
+RESAVO est un projet open source, l'idée est de créer un système de réservation "clef en main" en y apportant des fonctionnalitées avec les dernières technologies. Nous essayerons de répondre à un large eventaille de cas d'usage possible. Nous essayerons de créer un UI & UX avancée. J'ai fais le choix de créer les ISSUES en français pour faciliter la compréhension aux developpeurs débutants. Nous essayerons de rendre ce projet le plus générique possible et personnalisable ( du choix de la couleur du thème, au choix entre Paypal ou Stripe... )
 
 
 Le projet sous ça forme actuel avait été fait avec une personnalisation spécifique, vous trouverez surment du code à jeter/mofidier.
-le but étant de partir de cette base pour crée un projet générique et solide avec de bonnes pratiques.
+le but étant de partir de cette base pour créer un projet générique et solide avec de bonnes pratiques.
 
 ![Screenshot](screenshots/resa.png)
 
 ## COMMENT CONTRIBUER ?
 
-Rendez vous dans l'onglet "ISSUE" comme vous l'aurai compris c'est ici qu'on liste les taches à faire.
+Rendez vous dans l'onglet "ISSUE" comme vous l'aurez compris c'est ici qu'on liste les tâches à effectuer.
 Une fois que vous avez répéré une ISSUE, assignez vous l'ISSUE et vous commencerai par crée votre branch portant le nom de ISSUE
 
 Exemple : ``git checkout -b ISSUE-#22``
@@ -23,11 +23,11 @@ qui est d'ouvrir une Pull Request on imposera une convention en la nommant
 
 ```ISSUE-#22 : <la tache réaliser au sens large >```
 
-Concentrez vous vraiment sur la tache choisi ne mélangez pas une correction que vous auriez envie de faire dans une tache qui n'a rien n'a voir.
+Concentrez vous vraiment sur la tâche choisi ne mélangez pas une correction que vous auriez envie de faire dans une tâche qui n'a rien n'a voir.
 Il est souvent facile de s'éparpiller..
 Si vous estimez que vous avez fini votre travail vous pouvez le labelisser en "Pret pour relecture"
-un/des contributeurs pourrons relire et vous apporter des corrections/suggestions a apporter a votre travail.
-Une fois celui-ci valider par au moins 2 contributeurs votre travail sera en mesure d'etre merger dans le master.
+un/des contributeurs pourront relire et proposer des corrections/suggestions à apporter à votre travail.
+Une fois celui-ci validé par au moins 2 contributeurs votre travail sera en mesure d'être merger dans le master.
 Vous pourrais ensuite retourner sur votre master en local et effectuer un ```git pull```.
 
 Pensez à supprimer vos "branch" pour ne pas finir avec d'innombrable branch incompréhensible.
@@ -63,7 +63,7 @@ Lien : http:127.0.0.1:8000/
 Vous devriez à present voir la page d'accueil du projet avec la possibilité de vous inscrire et de vous connecter
 le chargement des fixtures nous aura crée quelques élèments pour commencer.
 
-Vous pouvez dès présent vous connecter avec un compte admin:
+Vous pouvez dès à présent vous connecter avec un compte admin:
 
 
 Identifiant : admin@resavo.fr
@@ -77,3 +77,6 @@ mdp: password
 * Javascript
 * Jquery
 * Bootstrap
+
+## CREDIT
+Merci à @marlene78 pour la typo :D & félicitation pour ça premiere contrib. 👏👏
