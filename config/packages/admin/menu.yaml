@@ -11,6 +11,6 @@ easy_admin:
           - { label: 'Réservation du jour', route: 'resa_day', rel: 'resa-day', target: _blank }
           - { label: 'Autres'}
           - { label: 'Client', entity: 'User', icon: 'user',  params: { sortField: 'nom', sortDirection: 'ASC' }}
-          - { label: 'Séance', entity: 'Seance', icon: 'clock', permission: 'ROLE_MASTER', params: { sortField: 'id', sortDirection: 'ASC' } }
+          - { label: 'Séance', entity: 'Seance', icon: 'clock', params: { sortField: 'id', sortDirection: 'ASC' } }
           - { label: 'Bloqué une date', entity: 'DateBlocked', icon: 'clock', params: { sortField: 'dateBlocked', sortDirection: 'DESC' }}
-          - { label: 'Paiement', entity: 'Paypal', permission: 'ROLE_MASTER'}
+          - { label: 'Paiement', entity: 'Paypal'}

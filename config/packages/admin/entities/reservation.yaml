@@ -7,7 +7,7 @@ easy_admin:
           actions: ['show', 'edit', 'delete']
           fields:
             - {property: 'nom', label: 'ID'}
-            - {property: 'createAt', label: 'Crée le', format: 'd/m/y h:m:s', permission: 'ROLE_MASTER'}
+            - {property: 'createAt', label: 'Crée le', format: 'd/m/y h:m:s'}
             - {property: 'dateReservation', label: 'Date'}
             - {property: 'user', label: 'Client'}
             - salle
