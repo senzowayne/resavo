@@ -1,4 +1,5 @@
 # RESAVO
+- Follow @ActuSenzo -- #CodeWithLove #Resavo 
 
 ## PRÉSENTATION
 
@@ -9,6 +10,27 @@ Le projet sous ça forme actuel avait été fait avec une personnalisation spéc
 le but étant de partir de cette base pour crée un projet générique et solide avec de bonnes pratiques.
 
 ![Screenshot](screenshots/resa.png)
+
+## COMMENT CONTRIBUER ?
+
+Rendez vous dans l'onglet "ISSUE" comme vous l'aurai compris c'est ici qu'on liste les taches à faire.
+Une fois que vous avez répéré une ISSUE, vous commencerai par crée votre branch portant le nom de ISSUE
+
+Exemple : ``git checkout -b ISSUE-#22``
+
+Vous effectuerai votre travail dessus après avoir commit (en suivant toujours la convention de nommage ```ISSUE-#22 : <la tache réaliser au sens précis>```) et push votre travail, vous pouvez passez a l'etape suivante
+qui est d'ouvrir une Pull Request on imposera une convention en la nommant 
+
+```ISSUE-#22 : <la tache réaliser au sens large >```
+
+Concentrez vous vraiment sur la tache choisi ne mélangez pas une correction que vous auriez envie de faire dans une tache qui n'a rien n'a voir.
+Il est souvent facile de s'éparpiller..
+Si vous estimez que vous avez fini votre travail vous pouvez le labelisser en "Pret pour relecture"
+un/des contributeurs pourrons relire et vous apporter des corrections/suggestions a apporter a votre travail.
+Une fois celui-ci valider par au moins 2 contributeurs votre travail sera en mesure d'etre merger dans le master.
+Vous pourrais ensuite retourner sur votre master en local et effectuer un ```git pull```.
+
+Pensez à supprimer vos "branch" pour ne pas finir avec d'innombrable branch incompréhensible.
 
 ## INSTALLATION
 
