@@ -14,7 +14,7 @@ le but étant de partir de cette base pour crée un projet générique et solide
 ## COMMENT CONTRIBUER ?
 
 Rendez vous dans l'onglet "ISSUE" comme vous l'aurai compris c'est ici qu'on liste les taches à faire.
-Une fois que vous avez répéré une ISSUE, vous commencerai par crée votre branch portant le nom de ISSUE
+Une fois que vous avez répéré une ISSUE, assignez vous l'ISSUE et vous commencerai par crée votre branch portant le nom de ISSUE
 
 Exemple : ``git checkout -b ISSUE-#22``
 
