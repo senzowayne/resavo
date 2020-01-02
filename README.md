@@ -2,7 +2,13 @@
 
 ## PRÉSENTATION
 
-RESAVO est un projet open source, l'idée est de créer un système de réservation "clef en main" en y apportant des fonctionnalitées avec les dernières technologies. Nous essayerons de répondre à un large eventaille de cas d'usage possible. Nous essayerons de créer un UI & UX avancée. J'ai fais le choix de créer les ISSUE en francais pour faciliter aux developpeurs qui débutent de contribuer facilement. Nous essayerons de rendre ce projet le plus générique possible et personnalisable ( du choix de la couleur du thème, au choix entre Paypal ou Stripe... )
+RESAVO est un projet open source, l'idée est de créer un système de réservation "clef en main" en y apportant des fonctionnalitées avec les dernières technologies. Nous essayerons de répondre à un large eventaille de cas d'usage possible. Nous essayerons de créer un UI & UX avancée. J'ai fais le choix de créer les ISSUE en français pour faciliter aux developpeurs qui débutent de contribuer facilement. Nous essayerons de rendre ce projet le plus générique possible et personnalisable ( du choix de la couleur du thème, au choix entre Paypal ou Stripe... )
+
+
+Le projet sous ça forme actuel avait été fait avec une personnalisation spécifique, vous trouverez surment du code à jeter/mofidier.
+le but étant de partir de cette base pour crée un projet générique et solide avec de bonnes pratiques.
+
+![Screenshot](screenshots/resa.png)
 
 ## INSTALLATION
 
