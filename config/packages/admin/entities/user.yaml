@@ -1,0 +1,31 @@
+easy_admin:
+  entities:
+    User:
+      class: App\Entity\User
+      label: 'Client'
+      list:
+        title: 'Client'
+        fields: ['nom', 'prenom', 'email', 'reservations', 'numero']
+      form:
+        fields:
+          - {property: 'nom'}
+          - {property: 'prenom', type_options: { required: false }}
+          - {property: 'email',  type: 'email'}
+          - {property: 'numero'}
+        form_options: { validation_groups: false }
+      new:
+        fields:
+            - {property: 'nom'}
+            - {property: 'prenom', type_options: { required: false }}
+            - {property: 'email',  type: 'email'}
+            - {property: 'numero'}
+            - {property: 'hash', label: 'mot de passe'}
+      edit:
+        fields:
+            - {property: 'nom'}
+            - {property: 'prenom', type_options: { required: false }}
+            - {property: 'email',  type: 'email'}
+            - {property: 'numero'}
+
+      search:
+        fields: ['nom', 'email', 'numero']

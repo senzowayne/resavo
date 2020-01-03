@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Hello ReservationController!{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 p-4">
+        <div class="jumbotron">
+            <h1 class="display-4">Inscription</h1>
+            <p class="lead">Bienvenue sur la page de reservation</p>
+            <hr>
+        </div>
+        <div class="row mt-5">
+            <!-- col gauche -->
+            <div class="col pl-4">
+
+                {{ form_start(form) }}
+                {{ form_row(form.nom) }}
+                {{ form_row(form.prenom) }}
+                {{ form_row(form.numero) }}
+
+            </div>
+            <!-- col droite -->
+            <div class="col pl-4">
+                {{ form_row(form.email) }}
+                {{ form_row(form.confirm_email) }}
+                {{ form_row(form.hash) }}
+                {{ form_row(form.confirm_hash) }}
+
+
+            </div>
+        </div>
+
+
+
+            <div class="col-1">
+                <input class="btn btn-primary" type="submit" value="valider">
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

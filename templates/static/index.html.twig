@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StaticController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Présentation du projet:</h1>
+        <div class="row">
+            <div class="col text-center">
+
+                <p style="font-size: 18px">Follow @Actusenzo</p>
+
+                connect with : admin@resavo.fr <br>
+                mdp: password
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-6 text-center"><a href="{{ path('app_login') }}">
+                    <button class="btn btn-large btn-primary" type="button">Se Connecter</button>
+                </a></div>
+
+            <div class="col-6 text-center"><a href="{{ path('user_new') }}">
+                    <button class="btn btn-large btn-success" type="button">S'inscrire</button>
+                </a></div>
+
+        </div>
+
+    </div>
+    </div>
+{% endblock %}

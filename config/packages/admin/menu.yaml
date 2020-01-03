@@ -1,0 +1,16 @@
+easy_admin:
+      formats:
+        date: 'd/m/Y'
+
+      design:
+        brand_color: red
+        menu:
+          - { label: 'Réservation'}
+          - { label: Nouvelle Réservation, entity: 'Reservation', icon: 'plus',params: {action: 'new'} }
+          - { label: 'Réservation', entity: 'Reservation', icon: 'calendar', params: { sortField: 'dateReservation', sortDirection: 'DESC' } }
+          - { label: 'Réservation du jour', route: 'resa_day', rel: 'resa-day', target: _blank }
+          - { label: 'Autres'}
+          - { label: 'Client', entity: 'User', icon: 'user',  params: { sortField: 'nom', sortDirection: 'ASC' }}
+          - { label: 'Séance', entity: 'Seance', icon: 'clock', params: { sortField: 'id', sortDirection: 'ASC' } }
+          - { label: 'Bloqué une date', entity: 'DateBlocked', icon: 'clock', params: { sortField: 'dateBlocked', sortDirection: 'DESC' }}
+          - { label: 'Paiement', entity: 'Paypal'}

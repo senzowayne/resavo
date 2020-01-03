@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-2 pl-3">
+        <h2>Mes Reservations</h2>
+{%if data == null %}
+Vous n'avez encore de reservation.
+{% endif%}
+        {% for resa in data %}
+
+            <div class="card mt-5">
+                <div class="card-header">
+                    Reservation du {{ resa.dateReservation | localizeddate('full', 'none') }}
+
+                   {% if  'now' | date('Y-m-d')  <= resa.dateReservation | date('Y-m-d') %}
+                        <span class="badge badge-success">En cour</span>
+                       {% else %}
+                           <span class="badge badge-dark">Terminé</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>Vous avez reservé la {{ resa.salle.nom }} pour {{ resa.nbPersonne }} personne{%  if resa.nbPersonne > 1 %}s{% endif %}
+                            <br>
+                        séance de {{ resa.seance.libelle }}</p>
+                        <footer class="blockquote-footer">Un montant de {{ resa.total }}{{ resa.paiement.paymentCurrency | default('€') }}
+                            <br>
+                            <small>ID de la reservation: #{{ resa.nom }}</small>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock body %}

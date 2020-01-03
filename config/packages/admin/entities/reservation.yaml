@@ -1,0 +1,36 @@
+easy_admin:
+    entities:
+      Reservation:
+        class: App\Entity\Reservation
+        list:
+          collapse_actions: true
+          actions: ['show', 'edit', 'delete']
+          fields:
+            - {property: 'nom', label: 'ID'}
+            - {property: 'createAt', label: 'Crée le', format: 'd/m/y h:m:s'}
+            - {property: 'dateReservation', label: 'Date'}
+            - {property: 'user', label: 'Client'}
+            - salle
+            - {property: 'seance', label: 'Séance'}
+            - {property: 'nbPersonne', label: 'Nb'}
+            - {property: 'user.numero', type: 'tel', label: 'Contact'}
+            - {property: 'paiement', label: 'Acompte'}
+            - {property: 'total', label: 'Total'}
+
+            - remarques
+        form:
+          fields:
+            - { type: 'group', columns: 4, label: 'Basic information' }
+            - {label: 'Client' ,property: 'user'}
+            #- {property: 'paiement'}
+            - {property: 'total', label: 'Total (€)'}
+            - {property: 'nom', label: 'Nom de la reservation'}
+            - {property: 'remarques'}
+            - { type: 'group', columns: 8, label: 'Information Reservation' }
+            - {label: 'Date de la réservation' ,property: 'dateReservation', type_options: { widget: 'single_text' }}
+            - {property: 'salle'}
+            - {property: "seance"}
+            - {property: 'nbPersonne', label: 'Nombre de personne'}
+
+        search:
+          fields: ['user.nom', 'user.email', 'user.numero', 'dateReservation', 'nom', 'user']
