@@ -70,7 +70,7 @@ class ReservationController extends AbstractController
             'controller_name' => 'Controller', 'reservation' => 'reservation'
         ]);
     }
-    
+
     /**
      * @Route("/resa", name="resa_day")
      */
@@ -86,7 +86,7 @@ class ReservationController extends AbstractController
         $seance3 = $repoSalle->findBy(['salle' => 3]);
         $datas = [];
         foreach ($resa as $cle => $valeur) {
-                array_push($datas, $valeur);
+            array_push($datas, $valeur);
         }
         return $this->render('reservation/resa-day.html.twig', [
             'resa' => $datas, 'seance1' => $seance1, 'seance2'=> $seance2, 'seance3' => $seance3
@@ -94,25 +94,25 @@ class ReservationController extends AbstractController
     }
 
 
-    public function createReservation()
+    public function createReservation(Request $request)
     {
-        $date = new \DateTime($_POST['date']);
+        $date = new \DateTime($request->get('date'));
         if (!$this->check->verifDate($date)) {
             throw new \LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $salle = $_POST['salle'];
+        $salle = $request->get('salle');
 
-        $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($_POST['seance'])]);
+        $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($request->get('seance'))]);
         $salle = $this->manager->getRepository(Salle::class)->findOneBy(['nom' => $salle]);
 
         $reservation = new Reservation();
-        $reservation->setRemarques($_POST['remarques'])
-                    ->setDateReservation($date)
-                    ->setSalle($salle)
-                    ->setSeance($seance)
-                    ->setNbPersonne($_POST['nbPersonne'])
-                    ->setTotal($_POST['total']);
+        $reservation->setRemarques($request->get('remarques'))
+            ->setDateReservation($date)
+            ->setSalle($salle)
+            ->setSeance($seance)
+            ->setNbPersonne($request->get('nbPersonne'))
+            ->setTotal($request->get('total'));
 
         return $reservation;
     }
@@ -143,7 +143,7 @@ class ReservationController extends AbstractController
             $this->session->set('resa', $reservation);
 
             if ($this->capturePaiement($reservation, $paiement)) {
-               // $this->notif->mailConfirmation();
+                // $this->notif->mailConfirmation();
                 $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
             }
 
@@ -164,12 +164,12 @@ class ReservationController extends AbstractController
     public function authorizePaiement(Request $request)
     {
         $this->session->remove('pay');
-        $data = $request->request->get('authorization');
-        $authID = $request->request->get('authorizationID');
+        $data = $request->get('authorization');
+        $authID = $request->get('authorizationID');
         $this->session->set('authorizationID', $authID);
 
         $data = GetOrder::getOrder($data['id']);
-       if ($data['status'] == 'COMPLETED') {
+        if ($data['status'] == 'COMPLETED') {
             $paiment = new Paypal();
             $paiment->setPaymentId($data['orderID']);
             $paiment->setPaymentCurrency($data['currency']);

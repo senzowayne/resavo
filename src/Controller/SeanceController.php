@@ -20,10 +20,11 @@ class SeanceController extends AbstractController
      * Recuperer les seances d'une salle
      * @Route("/reservation/seance/horaire", methods={"POST"})
      */
-    public function seance(int $salle = 1, EntityManagerInterface $manager): JsonResponse
+    public function seance(int $salle = 1, EntityManagerInterface $manager, Request $request): JsonResponse
     {
-        if (isset($_POST['salle'])) {
-            $salle = htmlentities($_POST['salle']);
+        $salle = $request->get('salle', null);
+        if ($salle === null) {
+            $salle = htmlentities($request->get('salle'));
         }
 
         $repo = $manager->getRepository(Seance::class);
@@ -46,14 +47,13 @@ class SeanceController extends AbstractController
      */
     public function verifDispo(Request $request, EntityManagerInterface $manager): JsonResponse
     {
-        $posts = $request->request;
-        $date = $posts->get('date');
-        $seance = $posts->get('seance');
-        $salle = $posts->get('salle');
+        $date = $request->get('date');
+        $seance = $request->get('seance');
+        $salle = $request->get('salle');
 
         $dateBloqued = $manager->getRepository(DateBlocked::class);
         $verifDate = $dateBloqued->findOneBy([
-          'dateBlocked' => new \DateTime($date)
+            'dateBlocked' => new \DateTime($date)
         ]);
 
         if ($verifDate) {
@@ -66,15 +66,15 @@ class SeanceController extends AbstractController
             ]);
 
             $valueSeance = $manager->getRepository(Seance::class)->findOneBy([
-            'libelle' => $seance,
-            'salle' => $valueSalle
+                'libelle' => $seance,
+                'salle' => $valueSalle
             ]);
 
             if (null !== $valueSeance->getId()) {
                 $resa = $manager->getRepository(Reservation::class)->findOneBy([
-                  'dateReservation' => new \DateTime($date),
-                  'seance' => $valueSeance->getId(),
-                  'salle' => $salle
+                    'dateReservation' => new \DateTime($date),
+                    'seance' => $valueSeance->getId(),
+                    'salle' => $salle
                 ]);
             }
         } catch (Exception $e) {
@@ -83,14 +83,14 @@ class SeanceController extends AbstractController
 
         if ($resa) {
             $reponse = new JsonResponse([
-              'message' => 'Cette réservation est deja prise'
+                'message' => 'Cette réservation est deja prise'
             ]);
 
             return $reponse;
         }
 
         $reponse = new JsonResponse([
-          'message' => 'Cette réservation est disponible'
+            'message' => 'Cette réservation est disponible'
         ]);
 
         return $reponse;
