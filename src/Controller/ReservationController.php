@@ -96,23 +96,23 @@ class ReservationController extends AbstractController
 
     public function createReservation(Request $request)
     {
-        $date = new \DateTime($request->get('date'));
+        $date = new \DateTime($request->request->get('date'));
         if (!$this->check->verifDate($date)) {
             throw new \LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $salle = $request->get('salle');
+        $salle = $request->request->get('salle');
 
-        $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($request->get('seance'))]);
+        $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($request->request->get('seance'))]);
         $salle = $this->manager->getRepository(Salle::class)->findOneBy(['nom' => $salle]);
 
         $reservation = new Reservation();
-        $reservation->setRemarques($request->get('remarques'))
+        $reservation->setRemarques($request->request->get('remarques'))
             ->setDateReservation($date)
             ->setSalle($salle)
             ->setSeance($seance)
-            ->setNbPersonne($request->get('nbPersonne'))
-            ->setTotal($request->get('total'));
+            ->setNbPersonne($request->request->get('nbPersonne'))
+            ->setTotal($request->request->get('total'));
 
         return $reservation;
     }
@@ -164,8 +164,8 @@ class ReservationController extends AbstractController
     public function authorizePaiement(Request $request)
     {
         $this->session->remove('pay');
-        $data = $request->get('authorization');
-        $authID = $request->get('authorizationID');
+        $data = $request->request->get('authorization');
+        $authID = $request->request->get('authorizationID');
         $this->session->set('authorizationID', $authID);
 
         $data = GetOrder::getOrder($data['id']);

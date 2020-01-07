@@ -22,9 +22,9 @@ class SeanceController extends AbstractController
      */
     public function seance(int $salle = 1, EntityManagerInterface $manager, Request $request): JsonResponse
     {
-        $salle = $request->get('salle', null);
+        $salle = $request->request->get('salle', null);
         if ($salle === null) {
-            $salle = htmlentities($request->get('salle'));
+            $salle = htmlentities($request->request->get('salle'));
         }
 
         $repo = $manager->getRepository(Seance::class);
@@ -47,9 +47,9 @@ class SeanceController extends AbstractController
      */
     public function verifDispo(Request $request, EntityManagerInterface $manager): JsonResponse
     {
-        $date = $request->get('date');
-        $seance = $request->get('seance');
-        $salle = $request->get('salle');
+        $date = $request->request->get('date');
+        $seance = $request->request->get('seance');
+        $salle = $request->request->get('salle');
 
         $dateBloqued = $manager->getRepository(DateBlocked::class);
         $verifDate = $dateBloqued->findOneBy([
