@@ -39,8 +39,9 @@ Vous effectuerez votre travail dessus. Après avoir commit
 
 `ISSUE-#22 : <la tâche réalisée au sens large>`
 
-Concentrez vous vraiment sur la tâche choisie. Ne mélangez pas une correction que vous auriez envie de faire dans une tâche qui n'a rien à voir.
-Il est souvent facile de s'éparpiller…
+> **Concentrez vous vraiment sur la tâche choisie. Ne mélangez pas une correction que vous auriez envie de faire dans une tâche qui n'a rien à voir.
+> Il est souvent facile de s'éparpiller…**
+
 Si vous estimez que vous avez fini votre travail vous pouvez le labelliser en "Prêt pour relecture".
 Les contributeurs pourront relire et proposer des corrections ou suggestions à apporter à votre travail.
 Une fois celui-ci validé par au moins 2 contributeurs votre travail sera en mesure d'être fusionné dans la branche "master".
