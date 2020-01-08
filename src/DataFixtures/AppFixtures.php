@@ -15,11 +15,12 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $salle = [];
-        $seanceLibelles = array(    '10h - 12h',
-                                    '12h30 - 14h30',
-                                    '15h - 17h',
-                                    '17h30 - 19h30',
-                                    '20h - 22h'
+        $seanceLibelles = array(
+            '10h - 12h',
+            '12h30 - 14h30',
+            '15h - 17h',
+            '17h30 - 19h30',
+            '20h - 22h'
         );
         $e = 0;
         $nomSalle = ['Salle Bora-Bora', 'Salle Miami', 'Salle Phuket'];

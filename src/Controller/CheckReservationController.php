@@ -15,7 +15,7 @@ class CheckReservationController
         $today = new \DateTime('now');
         $today->modify('+1 day');
 
-        return ($date < $today) ? false : true;
+        return $date >= $today;
     }
 
     /**

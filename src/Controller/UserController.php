@@ -48,7 +48,7 @@ class UserController extends AbstractController
             $user = $repo->findOneBy(['nom' => $user->getNom(), 'prenom' => $user->getPrenom(), 'email' => $user->getEmail()]);
 
 
-            $this->addFlash('success', 'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.');
+            $this->addFlash('success', 'Félicitations ' . $user->getNom() . ' votre compte à bien été créé, vous pouvez desormais reserver.');
 
             return $this->redirectToRoute('app_login');
         }
