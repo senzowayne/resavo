@@ -2,13 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
+ *     collectionOperations={
+ *         "get",
+ *         "post"
+ *     },
+ *     itemOperations={"get"}
+ * )
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"dateReservation", "seance", "salle"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
@@ -26,41 +33,47 @@ class Reservation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"resa:read"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Salle", inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"resa:read"})
      */
     private $salle;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"resa:read"})
      */
     private $createAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Seance")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"resa:read"})
      */
     private $seance;
 
     /**
      * @ORM\Column(type="date")
-     *
+     * @Groups({"resa:read"})
      */
     private $dateReservation;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"resa:read"})
      */
     private $nbPersonne;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"resa:read"})
      */
     private $nom;
 
@@ -73,12 +86,14 @@ class Reservation
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
+     * @Groups({"resa:read"})
      */
     private $Remarques;
 
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"resa:read"})
      */
     private $total;
 

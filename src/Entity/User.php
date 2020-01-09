@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Ausi\SlugGenerator\SlugGenerator;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,12 +31,14 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups({"resa:read"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups({"resa:read"})
      */
     private $prenom;
 
@@ -44,6 +47,7 @@ class User implements UserInterface
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      * @Assert\NotBlank
      * @Assert\Email()
+     * @Groups({"resa:read"})
      */
     private $email;
 
@@ -92,6 +96,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"resa:read"})
      */
     private $numero;
 
@@ -226,7 +231,6 @@ class User implements UserInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
      */
     public function getRoles()
     {

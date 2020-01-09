@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "api-platform/api-pack": "^1.2",
         "ausi/slug-generator": "^1.1",
         "deployer/deployer": "^6.4",
         "easycorp/easyadmin-bundle": "^2.1",

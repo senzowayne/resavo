@@ -2,9 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ *     collectionOperations={"get"},
+ *     itemOperations={"get"}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\SeanceRepository")
  */
 class Seance
@@ -23,6 +29,7 @@ class Seance
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"resa:read"})
      */
     private $libelle;
 
