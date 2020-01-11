@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+	<div class="container p-4">
+
+		<p class="col text-center black-text">
+		    <h1>Oups 404</h1>
+
+			<h2>Notre application a retourné une erreur 404 : page inexistante.</h2>
+
+			<br>
+			<ul class="nav justify-content-center">
+				<li class="nav-item">
+					<a class="nav-link btn btn-sm btn-warning" href="{{ path("static") }}">Retour à la page d'accueil</a>
+
+				</li>
+
+			</ul>
+
+
+		</p>
+	{% endblock %}
+
+{#
+To visualize the pages add to your .env.local file
+APP_ENV=prod
+APP_DEBUG=0
+
+don't forget to clear your cache
+if you're still enable to see it -->  check answer 1
+https://stackoverflow.com/questions/47801079/how-to-customize-error-pages-on-prod-environment-without-debug-on-symfony-4-0
+#}
