@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -19,8 +21,8 @@ class Paypal
     private $id;
 
     /**
-         * @ORM\Column(type="string", length=255)
-         */
+     * @ORM\Column(type="string", length=255)
+     */
     protected $payment_id;
 
     /**
@@ -49,15 +51,15 @@ class Paypal
     protected $payer_email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="paiements", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="paiements", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", mappedBy="paiement", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Booking", mappedBy="paiement", cascade={"persist", "remove"})
      */
-    private $reservation;
+    private $booking;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -93,9 +95,11 @@ class Paypal
     /**
      * @param mixed $payment_id
      */
-    public function setPaymentId($payment_id): void
+    public function setPaymentId($payment_id): self
     {
         $this->payment_id = $payment_id;
+
+        return $this;
     }
 
     /**
@@ -109,9 +113,11 @@ class Paypal
     /**
      * @param mixed $payment_status
      */
-    public function setPaymentStatus($payment_status): void
+    public function setPaymentStatus($payment_status): self
     {
         $this->payment_status = $payment_status;
+
+        return $this;
     }
 
     /**
@@ -125,9 +131,11 @@ class Paypal
     /**
      * @param mixed $payment_amount
      */
-    public function setPaymentAmount($payment_amount): void
+    public function setPaymentAmount($payment_amount): self
     {
         $this->payment_amount = $payment_amount;
+
+        return $this;
     }
 
     /**
@@ -141,9 +149,11 @@ class Paypal
     /**
      * @param mixed $payment_currency
      */
-    public function setPaymentCurrency($payment_currency): void
+    public function setPaymentCurrency($payment_currency): self
     {
         $this->payment_currency = $payment_currency;
+
+        return $this;
     }
 
     /**
@@ -156,13 +166,11 @@ class Paypal
 
     /**
      * @ORM\PrePersist
-     * @param \DateTimeInterface $createAt
-     * @return Reservation
-     * @throws \Exception
+     * @throws Exception
      */
     public function setPaymentDate(): void
     {
-        $this->payment_date = new \DateTime();
+        $this->payment_date = new DateTime();
     }
 
     /**
@@ -193,18 +201,18 @@ class Paypal
         return $this;
     }
 
-    public function getReservation(): ?Reservation
+    public function getBooking(): ?Booking
     {
-        return $this->reservation;
+        return $this->booking;
     }
 
-    public function setReservation(Reservation $reservation): self
+    public function setBooking(Booking $booking): self
     {
-        $this->reservation = $reservation;
+        $this->booking = $booking;
 
         // set the owning side of the relation if necessary
-        if ($this !== $reservation->getPaiement()) {
-            $reservation->setPaiement($this);
+        if ($this !== $booking->getPayment()) {
+            $booking->setPayment($this);
         }
 
         return $this;
