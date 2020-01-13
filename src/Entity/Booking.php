@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -86,12 +89,14 @@ class Booking
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
+     * @Groups({"resa:read"})
      */
     private $notices;
 
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"resa:read"})
      */
     private $total;
 
@@ -138,7 +143,6 @@ class Booking
     /**
      * @ORM\PrePersist
      *
-     * @return Booking
      * @throws Exception
      */
     public function setCreateAt(): self
@@ -220,10 +224,6 @@ class Booking
         return $this;
     }
 
-
-    /**
-     * @return mixed
-     */
     public function getTotal()
     {
         return $this->total;

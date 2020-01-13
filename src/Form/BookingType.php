@@ -21,7 +21,7 @@ class BookingType extends AbstractType
         $builder
             ->add('room', EntityType::class, [
                 'class' => Room::class,
-                'choice_label' => 'name',
+                'choice_label' => 'nom',
             ])
 
            /* ->add('bookingDate', DateType::class, ['attr' => ['placeholder' => 'Cliquez ici pour selectionner une date'], 'widget' => 'single_text', 'html5' => false, 'format' => 'dd-MM-yyyy', 'data' => new \DateTime()])*/

@@ -78,7 +78,7 @@ class User implements UserInterface
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="Booking", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user", cascade={"persist"})
      */
     private $bookings;
 
@@ -118,6 +118,7 @@ class User implements UserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+        $this->setSlug();
 
         return $this;
     }
@@ -177,9 +178,8 @@ class User implements UserInterface
 
     /**
      * @ORM\PrePersist
-     * @return void
      */
-    public function setSlug()
+    public function setSlug(): void
     {
         $generator = new SlugGenerator();
         $this->slug = $generator->generate($this->name);
@@ -299,11 +299,11 @@ class User implements UserInterface
         return $this->payments;
     }
 
-    public function addPaiement(Paypal $paiement): self
+    public function addPaiement(Paypal $payment): self
     {
-        if (!$this->payments->contains($paiement)) {
-            $this->payments[] = $paiement;
-            $paiement->setUser($this);
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setUser($this);
         }
 
         return $this;

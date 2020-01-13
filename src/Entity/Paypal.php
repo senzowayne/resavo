@@ -22,8 +22,8 @@ class Paypal
     private $id;
 
     /**
-         * @ORM\Column(type="string", length=255)
-         */
+     * @ORM\Column(type="string", length=255)
+     */
     protected $payment_id;
 
     /**
@@ -96,9 +96,11 @@ class Paypal
     /**
      * @param mixed $payment_id
      */
-    public function setPaymentId($payment_id): void
+    public function setPaymentId($payment_id): self
     {
         $this->payment_id = $payment_id;
+
+        return $this;
     }
 
     /**
@@ -112,9 +114,11 @@ class Paypal
     /**
      * @param mixed $payment_status
      */
-    public function setPaymentStatus($payment_status): void
+    public function setPaymentStatus($payment_status): self
     {
         $this->payment_status = $payment_status;
+
+        return $this;
     }
 
     /**
@@ -128,9 +132,11 @@ class Paypal
     /**
      * @param mixed $payment_amount
      */
-    public function setPaymentAmount($payment_amount): void
+    public function setPaymentAmount($payment_amount): self
     {
         $this->payment_amount = $payment_amount;
+
+        return $this;
     }
 
     /**
@@ -144,9 +150,11 @@ class Paypal
     /**
      * @param mixed $payment_currency
      */
-    public function setPaymentCurrency($payment_currency): void
+    public function setPaymentCurrency($payment_currency): self
     {
         $this->payment_currency = $payment_currency;
+
+        return $this;
     }
 
     /**
@@ -159,7 +167,6 @@ class Paypal
 
     /**
      * @ORM\PrePersist
-     * @return void
      * @throws Exception
      */
     public function setPaymentDate(): void

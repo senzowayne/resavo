@@ -63,7 +63,7 @@ class BookingController extends AbstractController
         $paypalClient = "https://www.paypal.com/sdk/js?client-id=" . $this->getParameter('CLIENT_ID') . "&currency=EUR&debug=false&disable-card=amex&intent=authorize";
 
         return $this->render('reservation/index.html.twig', [
-            'form' => $form->createView(), 'room' => $room, 'blocked' => $blocked, 'client' => $paypalClient
+            'form' => $form->createView(), 'salle' => $room, 'blocked' => $blocked, 'client' => $paypalClient
         ]);
     }
 
@@ -183,7 +183,7 @@ class BookingController extends AbstractController
             $payment->setPaymentId($data['orderID']);
             $payment->setPaymentCurrency($data['currency']);
             $payment->setPaymentAmount($data['value']);
-            $payment->setPaymentDate(new DateTime());
+            $payment->setPaymentDate();
             $payment->setPaymentStatus($data['status']);
             $payment->setPayerEmail($data['mail']);
             $payment->setUser($this->getUser());
