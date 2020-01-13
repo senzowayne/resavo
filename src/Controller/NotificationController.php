@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
-use Swift_Mailer;
-use Swift_Message;
-use Swift_SmtpTransport;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class NotificationController extends AbstractController
 {
-    public function mailConfirmation()
+    final public function mailConfirmation(MailerInterface $mailer): void
     {
         $session = new Session();
         $resa = $session->get('resa');
@@ -19,27 +18,26 @@ class NotificationController extends AbstractController
         $date = $resa->getDateReservation();
         //setup transport mail
 
-        $message = (new Swift_Message('Votre reservation'))
-        //->setFrom(['xxx' => 'Reservation'])
-          ->setTo([$user->getEmail() => $user->getNom() . ' ' . $user->getPrenom()])
-          ->setBody('
-      Nous vous confirmons la reservation de votre séance :
+        $email = (new Email())
+            ->from('resa@resavo.fr')
+            ->to(new Address($user->getEmail(), $user->getNom().' '.$user->getPrenom()))
+            ->subject('Votre réservation')
+            ->html('<p>Nous vous confirmons la reservation de votre séance :</p>
+<p>Nom:' . $user->getNom() . '</p>
+<p>Prénom:' . $user->getPrenom() . '</p>
+<p>ID reservation:' . $resa->getNom() . ' </p>
+<p>Date: ' . $date->format('d-m-y') . '</p>
+<p>Séance: ' . $resa->getSeance() . '</p>
+<p>Salle: ' . $resa->getSalle() . '</p>
+<p>Nombre de personnes: ' . $resa->getNbPersonne() . '</p>
+<p>Votre remarque : ' . $resa->getRemarques() .' </p>
+<p>Acompte : ' . $resa->getPaiement()->getPaymentAmount() . $resa->getPaiement()->getPaymentCurrency() .'</p>
+<p>Reste à payer (sur place) : '.($resa->getTotal() - $resa->getPaiement()->getPaymentAmount()).
+                   $resa->getPaiement()->getPaymentCurrency() . '</p>')
+        ;
 
-      <br>
-      Nom:' . $user->getNom() . '<br>
-      Prénom:' . $user->getPrenom() . '<br>
-      ID reservation:' . $resa->getNom() . ' <br>
-      Date: ' . $date->format('d-m-y') . '<br>
-      Séance: ' . $resa->getSeance() . '<br>
-      Salle: ' . $resa->getSalle() . '<br>
-      Nombre de personnes: ' . $resa->getNbPersonne() . '<br>
-      Votre remarque : ' . $resa->getRemarques() .' <br>
-      Acompte: ' . $resa->getPaiement()->getPaymentAmount() . $resa->getPaiement()->getPaymentCurrency() . '<br>
-      Reste à payer (sur place): ' . ($resa->getTotal() - $resa->getPaiement()->getPaymentAmount()) . $resa->getPaiement()->getPaymentCurrency() . '<br>
-
-
-          ', 'text/html');
-
-        $mailer->send($message);
+//        /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
+//        $sentEmail = $mailer->send($email);
+        $mailer->send($email);
     }
 }
