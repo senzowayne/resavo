@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Service\Paypal\GetOrder;
 use App\Service\Paypal\CaptureAuthorization;
 use App\Entity\Paypal;
-use App\Entity\Reservation;
-use App\Entity\Salle;
-use App\Entity\Seance;
+use App\Entity\Booking;
+use App\Entity\Room;
+use App\Entity\Meeting;
 use App\Entity\DateBlocked;
-use App\Form\ReservationType;
+use App\Form\BookingType;
+use DateTime;
 use Exception;
+use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,16 +26,20 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * @Route("/reservation")
  */
-class ReservationController extends AbstractController
+class BookingController extends AbstractController
 {
-    private $notif;
+    private $notification;
     private $check;
     private $manager;
     private $session;
 
-    public function __construct(EntityManagerInterface $manager, NotificationController $notif, CheckReservationController $check, SessionInterface $session)
+    public function __construct(
+        EntityManagerInterface $manager,
+        NotificationController $notification,
+        CheckBookingController $check,
+        SessionInterface $session)
     {
-        $this->notif = $notif;
+        $this->notification = $notification;
         $this->check = $check;
         $this->manager = $manager;
         $this->session = $session;
@@ -46,10 +52,10 @@ class ReservationController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request, $salle = null)
+    public function index(Request $request, $room = null)
     {
-        $reservation = new Reservation();
-        $form = $this->createForm(ReservationType::class, $reservation);
+        $booking = new Booking();
+        $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
 
         $repoDate = $this->manager->getRepository(DateBlocked::class);
@@ -57,7 +63,7 @@ class ReservationController extends AbstractController
         $paypalClient = "https://www.paypal.com/sdk/js?client-id=" . $this->getParameter('CLIENT_ID') . "&currency=EUR&debug=false&disable-card=amex&intent=authorize";
 
         return $this->render('reservation/index.html.twig', [
-            'form' => $form->createView(), 'salle' => $salle, 'blocked' => $blocked, 'client' => $paypalClient
+            'form' => $form->createView(), 'salle' => $room, 'blocked' => $blocked, 'client' => $paypalClient
         ]);
     }
 
@@ -66,55 +72,55 @@ class ReservationController extends AbstractController
      */
     public function reservationPage() {
 
-        return $this->render('reservation/reservation.html.twig', [
+        return $this->render('reservation/booking.html.twig', [
             'controller_name' => 'Controller', 'reservation' => 'reservation'
         ]);
     }
-    
+
     /**
      * @Route("/resa", name="resa_day")
      */
-    public function resaDay()
+    public function bookingDay()
     {
-        $date = new \DateTime();
+        $date = new DateTime();
         $manager = $this->getDoctrine()->getManager();
-        $repo = $manager->getRepository(Reservation::class);
-        $repoSalle = $manager->getRepository(Seance::class);
-        $resa = $repo->findBy(['dateReservation' => $date], ['salle' => 'ASC']);
-        $seance1 = $repoSalle->findBy(['salle' => 1]);
-        $seance2 = $repoSalle->findBy(['salle' => 2]);
-        $seance3 = $repoSalle->findBy(['salle' => 3]);
+        $repo = $manager->getRepository(Booking::class);
+        $roomRepository = $manager->getRepository(Meeting::class);
+        $booking = $repo->findBy(['bookingDate' => $date], ['room' => 'ASC']);
+        $meeting1 = $roomRepository->findBy(['room' => 1]);
+        $meeting2 = $roomRepository->findBy(['room' => 2]);
+        $meeting3 = $roomRepository->findBy(['room' => 3]);
         $datas = [];
-        foreach ($resa as $cle => $valeur) {
-                array_push($datas, $valeur);
+        foreach ($booking as $key => $value) {
+                array_push($datas, $value);
         }
-        return $this->render('reservation/resa-day.html.twig', [
-            'resa' => $datas, 'seance1' => $seance1, 'seance2'=> $seance2, 'seance3' => $seance3
+        return $this->render('reservation/booking-day.html.twig', [
+            'booking' => $datas, 'meeting1' => $meeting1, 'meeting2'=> $meeting2, 'meeting3' => $meeting3
         ]);
     }
 
 
-    public function createReservation()
+    public function createBooking()
     {
-        $date = new \DateTime($_POST['date']);
-        if (!$this->check->verifDate($date)) {
-            throw new \LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
+        $date = new DateTime($_POST['date']);
+        if (!$this->check->verifyDate($date)) {
+            throw new LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $salle = $_POST['salle'];
+        $room = $_POST['room'];
 
-        $seance = $this->manager->getRepository(Seance::class)->findOneBy(['libelle' => htmlspecialchars($_POST['seance'])]);
-        $salle = $this->manager->getRepository(Salle::class)->findOneBy(['nom' => $salle]);
+        $meeting = $this->manager->getRepository(Meeting::class)->findOneBy(['label' => htmlspecialchars($_POST['meeting'])]);
+        $room = $this->manager->getRepository(Room::class)->findOneBy(['name' => $room]);
 
-        $reservation = new Reservation();
-        $reservation->setRemarques($_POST['remarques'])
-                    ->setDateReservation($date)
-                    ->setSalle($salle)
-                    ->setSeance($seance)
-                    ->setNbPersonne($_POST['nbPersonne'])
+        $booking = new Booking();
+        $booking->setNotices($_POST['notices'])
+                    ->setBookingDate($date)
+                    ->setRoom($room)
+                    ->setMeeting($meeting)
+                    ->setNbPerson($_POST['nbPerson'])
                     ->setTotal($_POST['total']);
 
-        return $reservation;
+        return $booking;
     }
 
     /**
@@ -125,25 +131,28 @@ class ReservationController extends AbstractController
      */
     public function reserve(Request $request)
     {
-        $reservation = $this->createReservation();
+        $booking = $this->createBooking();
         $user = $this->getUser();
         $pay = $this->session->get('pay');
 
-        if ($this->check->verifPaiment($pay, $reservation)) {
-            $paiement = $this->manager->getRepository(Paypal::class)->find($pay);
+        if ($this->check->verifyPayment($pay, $booking)) {
+            $payment = $this->manager->getRepository(Paypal::class)->find($pay);
 
-            $reservation->setPaiement($paiement);
-            $reservation->setUser($user);
-            $this->manager->persist($reservation);
+            $booking->setPayment($payment);
+            $booking->setUser($user);
+            $this->manager->persist($booking);
             $this->manager->flush();
-            $reservation->setNom('resa_' . substr($this->getUser()->getNom(), 0, 3) . '&' . $reservation->getId() . '&' . $this->getUser()->getId());
-            $this->manager->persist($reservation);
+            $booking->setName(
+                'booking_' . substr($this->getUser()->getName(), 0, 3) .
+                '&' . $booking->getId() . '&' . $this->getUser()->getId()
+            );
+            $this->manager->persist($booking);
             $this->manager->flush();
             $this->session->remove('pay');
-            $this->session->set('resa', $reservation);
+            $this->session->set('booking', $booking);
 
-            if ($this->capturePaiement($reservation, $paiement)) {
-                $this->notif->mailConfirmation($reservation);
+            if ($this->capturePayment($booking, $payment)) {
+                $this->notification->mailConfirmation($booking);
                 $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
             }
 
@@ -161,7 +170,7 @@ class ReservationController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function authorizePaiement(Request $request)
+    public function authorizePayment(Request $request)
     {
         $this->session->remove('pay');
         $data = $request->request->get('authorization');
@@ -170,50 +179,50 @@ class ReservationController extends AbstractController
 
         $data = GetOrder::getOrder($data['id']);
        if ($data['status'] == 'COMPLETED') {
-            $paiment = new Paypal();
-            $paiment->setPaymentId($data['orderID']);
-            $paiment->setPaymentCurrency($data['currency']);
-            $paiment->setPaymentAmount($data['value']);
-            $paiment->setPaymentDate(new \DateTime());
-            $paiment->setPaymentStatus($data['status']);
-            $paiment->setPayerEmail($data['mail']);
-            $paiment->setUser($this->getUser());
-            $paiment->setCapture(0);
-            $this->manager->persist($paiment);
+            $payment = new Paypal();
+            $payment->setPaymentId($data['orderID']);
+            $payment->setPaymentCurrency($data['currency']);
+            $payment->setPaymentAmount($data['value']);
+            $payment->setPaymentDate(new DateTime());
+            $payment->setPaymentStatus($data['status']);
+            $payment->setPayerEmail($data['mail']);
+            $payment->setUser($this->getUser());
+            $payment->setCapture(0);
+            $this->manager->persist($payment);
             $this->manager->flush();
 
-            $this->session->set('pay', $paiment);
+            $this->session->set('pay', $payment);
 
-            return $this->json(['success' => 'ok', 'resa' => true]);
+            return $this->json(['success' => 'ok', 'booking' => true]);
         }
 
-        return $this->json(['error' => 'problème de paiment', 'resa' => false,]);
+        return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-    public function capturePaiement(Reservation $reservation, $paiement)
+    public function capturePayment(Booking $booking, $payment)
     {
         try {
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $captureId = $response->result->id;
             if ("COMPLETED" !== $response->result->status) {
-                $this->manager->remove($paiement);
-                $this->manager->remove($reservation);
+                $this->manager->remove($payment);
+                $this->manager->remove($booking);
                 $this->manager->flush();
                 $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
 
                 return $this->redirectToRoute('before_reservation');
             }
-            $paiement->setCapture(1);
-            $paiement->setCaptureId($captureId);
+            $payment->setCapture(1);
+            $payment->setCaptureId($captureId);
 
-            $this->manager->persist($paiement);
+            $this->manager->persist($payment);
             $this->manager->flush();
 
             return true;
         } catch (Exception $e) {
             $e->getMessage();
-            $this->manager->remove($paiment);
-            $this->manager->remove($reservation);
+            $this->manager->remove($payment);
+            $this->manager->remove($booking);
             $this->manager->flush();
             $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
 

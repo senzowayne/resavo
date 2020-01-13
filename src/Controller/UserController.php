@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Reservation;
+use App\Entity\Booking;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -45,7 +45,7 @@ class UserController extends AbstractController
             $em->flush();
 
             $repo = $em->getRepository(User::class);
-            $user = $repo->findOneBy(['nom' => $user->getNom(), 'prenom' => $user->getPrenom(), 'email' => $user->getEmail()]);
+            $user = $repo->findOneBy(['nom' => $user->getName(), 'prenom' => $user->getFirstName(), 'email' => $user->getEmail()]);
 
 
             $this->addFlash('success', 'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.');
@@ -106,7 +106,7 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
 
-        $repo = $manager->getRepository(Reservation::class);
+        $repo = $manager->getRepository(Booking::class);
         $data = $repo->findBy(['user' => $user], ['dateReservation' => 'DESC'], 10);
 
         return $this->render('user/historique.html.twig', ['data' => $data ]);
