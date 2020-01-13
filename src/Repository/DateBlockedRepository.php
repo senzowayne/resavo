@@ -22,7 +22,6 @@ class DateBlockedRepository extends ServiceEntityRepository
      /**
       * @return DateBlocked[] Returns an array of DateBlocked objects
       */
-
     public function myfindAll()
     {
         return $this->createQueryBuilder('d')

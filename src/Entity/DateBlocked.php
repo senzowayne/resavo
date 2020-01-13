@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,38 +20,38 @@ class DateBlocked
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $raison;
+    private $cause;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $dateBlocked;
+    private $blockedDate;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRaison(): ?string
+    public function getCause(): ?string
     {
-        return $this->raison;
+        return $this->cause;
     }
 
-    public function setRaison(string $raison): self
+    public function setCause(string $cause): self
     {
-        $this->raison = $raison;
+        $this->cause = $cause;
 
         return $this;
     }
 
-    public function getDateBlocked(): ?\DateTimeInterface
+    public function getBlockedDate(): ?DateTimeInterface
     {
-        return $this->dateBlocked;
+        return $this->blockedDate;
     }
 
-    public function setDateBlocked(\DateTimeInterface $dateBlocked): self
+    public function setBlockedDate(DateTimeInterface $blockedDate): self
     {
-        $this->dateBlocked = $dateBlocked;
+        $this->blockedDate = $blockedDate;
 
         return $this;
     }

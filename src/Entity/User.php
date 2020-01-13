@@ -25,19 +25,17 @@ class User implements UserInterface
      */
     private $id;
 
-
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     */
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
-    private $nom;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     */
-    private $prenom;
+    private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255, unique = true)
@@ -76,14 +74,14 @@ class User implements UserInterface
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Reservation", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Booking", mappedBy="user", cascade={"persist"})
      */
-    private $reservations;
+    private $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
-    private $paiements;
+    private $payments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
@@ -93,12 +91,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $numero;
+    private $number;
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
-        $this->paiements = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->payments = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
     }
 
@@ -107,26 +105,26 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->prenom;
+        return $this->firstName;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setFirstName(string $firstName): self
     {
-        $this->prenom = $prenom;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -174,37 +172,36 @@ class User implements UserInterface
 
     /**
      * @ORM\PrePersist
-     * @param string $slug
-     * @return User
+     * @return void
      */
     public function setSlug()
     {
         $generator = new SlugGenerator();
-        $this->slug = $generator->generate($this->nom);
+        $this->slug = $generator->generate($this->name);
     }
 
     /**
-     * @return Collection|Reservation[]
+     * @return Collection|Booking[]
      */
-    public function getReservations(): Collection
+    public function getBookings(): Collection
     {
-        return $this->reservations;
+        return $this->bookings;
     }
 
-    public function addReservation(Reservation $reservation): self
+    public function addReservation(Booking $reservation): self
     {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations[] = $reservation;
+        if (!$this->bookings->contains($reservation)) {
+            $this->bookings[] = $reservation;
             $reservation->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeReservation(Reservation $reservation): self
+    public function removeReservation(Booking $reservation): self
     {
-        if ($this->reservations->contains($reservation)) {
-            $this->reservations->removeElement($reservation);
+        if ($this->bookings->contains($reservation)) {
+            $this->bookings->removeElement($reservation);
             // set the owning side to null (unless already changed)
             if ($reservation->getUser() === $this) {
                 $reservation->setUser(null);
@@ -266,7 +263,7 @@ class User implements UserInterface
 
     public function __toString()
     {
-        return $this->getPrenom();
+        return $this->getFirstName();
     }
 
     /**
@@ -293,28 +290,28 @@ class User implements UserInterface
     /**
      * @return Collection|Paypal[]
      */
-    public function getPaiements(): Collection
+    public function getPayments(): Collection
     {
-        return $this->paiements;
+        return $this->payments;
     }
 
     public function addPaiement(Paypal $paiement): self
     {
-        if (!$this->paiements->contains($paiement)) {
-            $this->paiements[] = $paiement;
+        if (!$this->payments->contains($paiement)) {
+            $this->payments[] = $paiement;
             $paiement->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePaiement(Paypal $paiement): self
+    public function removePaiement(Paypal $payment): self
     {
-        if ($this->paiements->contains($paiement)) {
-            $this->paiements->removeElement($paiement);
+        if ($this->payments->contains($payment)) {
+            $this->payments->removeElement($payment);
             // set the owning side to null (unless already changed)
-            if ($paiement->getUser() === $this) {
-                $paiement->setUser(null);
+            if ($payment->getUser() === $this) {
+                $payment->setUser(null);
             }
         }
 
@@ -349,14 +346,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getNumero(): ?string
+    public function getNumber(): ?string
     {
-        return $this->numero;
+        return $this->number;
     }
 
-    public function setNumero(string $numero): self
+    public function setNumber(string $number): self
     {
-        $this->numero = $numero;
+        $this->number = $number;
 
         return $this;
     }

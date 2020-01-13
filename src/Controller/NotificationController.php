@@ -14,28 +14,28 @@ class NotificationController extends AbstractController
     public function mailConfirmation()
     {
         $session = new Session();
-        $resa = $session->get('resa');
-        $user = $resa->getUser();
-        $date = $resa->getDateReservation();
+        $booking = $session->get('booking');
+        $user = $booking->getUser();
+        $date = $booking->getBookingDate();
         //setup transport mail
 
         $message = (new Swift_Message('Votre reservation'))
-        //->setFrom(['xxx' => 'Reservation'])
-          ->setTo([$user->getEmail() => $user->getNom() . ' ' . $user->getPrenom()])
+        //->setFrom(['xxx' => 'Booking'])
+          ->setTo([$user->getEmail() => $user->getName() . ' ' . $user->getFirstName()])
           ->setBody('
       Nous vous confirmons la reservation de votre séance :
 
       <br>
-      Nom:' . $user->getNom() . '<br>
-      Prénom:' . $user->getPrenom() . '<br>
-      ID reservation:' . $resa->getNom() . ' <br>
+      Nom:' . $user->getName() . '<br>
+      Prénom:' . $user->getFirstName() . '<br>
+      ID reservation:' . $booking->getName() . ' <br>
       Date: ' . $date->format('d-m-y') . '<br>
-      Séance: ' . $resa->getSeance() . '<br>
-      Salle: ' . $resa->getSalle() . '<br>
-      Nombre de personnes: ' . $resa->getNbPersonne() . '<br>
-      Votre remarque : ' . $resa->getRemarques() .' <br>
-      Acompte: ' . $resa->getPaiement()->getPaymentAmount() . $resa->getPaiement()->getPaymentCurrency() . '<br>
-      Reste à payer (sur place): ' . ($resa->getTotal() - $resa->getPaiement()->getPaymentAmount()) . $resa->getPaiement()->getPaymentCurrency() . '<br>
+      Séance: ' . $booking->getMeeting() . '<br>
+      Room: ' . $booking->getRoom() . '<br>
+      Nombre de personnes: ' . $booking->getNbPerson() . '<br>
+      Votre remarque : ' . $booking->getNotices() .' <br>
+      Acompte: ' . $booking->getPayement()->getPaymentAmount() . $booking->getPayement()->getPaymentCurrency() . '<br>
+      Reste à payer (sur place): ' . ($booking->getTotal() - $booking->getPayement()->getPaymentAmount()) . $booking->getPayement()->getPaymentCurrency() . '<br>
 
 
           ', 'text/html');

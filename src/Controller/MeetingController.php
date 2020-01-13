@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Salle;
-use App\Entity\Seance;
+use App\Entity\Room;
+use App\Entity\Meeting;
 use App\Entity\DateBlocked;
-use App\Entity\Reservation;
-use App\Repository\SeanceRepository;
+use App\Entity\Booking;
+use App\Repository\MeetingRepository;
 use BraintreeHttp\Serializer\Json;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class SeanceController extends AbstractController
+class MeetingController extends AbstractController
 {
     /**
      * Recuperer les seances d'une salle
@@ -26,7 +26,7 @@ class SeanceController extends AbstractController
             $salle = htmlentities($_POST['salle']);
         }
 
-        $repo = $manager->getRepository(Seance::class);
+        $repo = $manager->getRepository(Meeting::class);
         $seance = $repo->findBy(['salle' => $salle]);
 
         $datas = [];
@@ -61,17 +61,17 @@ class SeanceController extends AbstractController
         }
 
         try {
-            $valueSalle = $manager->getRepository(Salle::class)->findOneBy([
+            $valueSalle = $manager->getRepository(Room::class)->findOneBy([
                 'nom' => $salle
             ]);
 
-            $valueSeance = $manager->getRepository(Seance::class)->findOneBy([
+            $valueSeance = $manager->getRepository(Meeting::class)->findOneBy([
             'libelle' => $seance,
             'salle' => $valueSalle
             ]);
 
             if (null !== $valueSeance->getId()) {
-                $resa = $manager->getRepository(Reservation::class)->findOneBy([
+                $resa = $manager->getRepository(Booking::class)->findOneBy([
                   'dateReservation' => new \DateTime($date),
                   'seance' => $valueSeance->getId(),
                   'salle' => $salle

@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ausi/slug-generator": "^1.1",
         "deployer/deployer": "^6.4",
         "easycorp/easyadmin-bundle": "^2.1",
         "paypal/paypal-checkout-sdk": "1.0.0",
@@ -28,11 +29,11 @@
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
         "symfony/validator": "4.4.*",
+        "symfony/var-dumper": "4.4.*",
         "symfony/web-link": "4.4.*",
         "symfony/web-server-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "twig/extensions": "^1.5",
-        "symfony/var-dumper": "4.4.*"
+        "twig/extensions": "^1.5"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
