@@ -1,6 +1,6 @@
 easy_admin:
     entities:
-      Reservation:
+      Booking:
         class: App\Entity\Booking
         list:
           collapse_actions: true

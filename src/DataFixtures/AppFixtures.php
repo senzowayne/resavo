@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
                                     '20h - 22h'
         );
         $e = 0;
-        $roomName = ['Room Bora-Bora', 'Room Miami', 'Room Phuket'];
+        $roomName = ['Salle Bora-Bora', 'Salle Miami', 'Salle Phuket'];
 
         for ($i = 1; $i <= 3; $i++) {
             $room[$i] = new Room();

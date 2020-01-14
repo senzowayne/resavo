@@ -52,13 +52,13 @@ class Paypal
     protected $payer_email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="paiements", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Booking", mappedBy="paiement", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Booking", mappedBy="payment", cascade={"persist", "remove"})
      */
     private $booking;
 

@@ -20,18 +20,18 @@ class MeetingController extends AbstractController
      * Recuperer les seances d'une salle
      * @Route("/reservation/seance/horaire", methods={"POST"})
      */
-    public function seance(int $salle = 1, EntityManagerInterface $manager): JsonResponse
+    public function seance(EntityManagerInterface $manager, int $room = 1): JsonResponse
     {
-        if (isset($_POST['salle'])) {
-            $salle = htmlentities($_POST['salle']);
+        if (isset($_POST['room'])) {
+            $room = htmlentities($_POST['room']);
         }
 
         $repo = $manager->getRepository(Meeting::class);
-        $seance = $repo->findBy(['salle' => $salle]);
+        $seance = $repo->findBy(['room' => $room]);
 
         $datas = [];
         foreach ($seance as $data) {
-            $datas[$data->getId()] = $data->getLibelle();
+            $datas[$data->getId()] = $data->getLabel();
         }
 
         return $this->json($datas);
@@ -39,10 +39,12 @@ class MeetingController extends AbstractController
 
     /**
      * @Route("/reservation/verif/dispo", name="dispo", methods={"POST"})
-     * @param Request $request
+     * @param Request                $request
      * @param EntityManagerInterface $manager
+     *
      * @return JsonResponse
      * @throws Exception
+     * @throws \Exception
      */
     public function verifDispo(Request $request, EntityManagerInterface $manager): JsonResponse
     {
@@ -51,9 +53,9 @@ class MeetingController extends AbstractController
         $seance = $posts->get('seance');
         $salle = $posts->get('salle');
 
-        $dateBloqued = $manager->getRepository(DateBlocked::class);
-        $verifDate = $dateBloqued->findOneBy([
-          'dateBlocked' => new \DateTime($date)
+        $blockedDate = $manager->getRepository(DateBlocked::class);
+        $verifDate = $blockedDate->findOneBy([
+          'blockedDate' => new \DateTime($date)
         ]);
 
         if ($verifDate) {
@@ -62,19 +64,19 @@ class MeetingController extends AbstractController
 
         try {
             $valueSalle = $manager->getRepository(Room::class)->findOneBy([
-                'nom' => $salle
+                'name' => $salle
             ]);
 
             $valueSeance = $manager->getRepository(Meeting::class)->findOneBy([
-            'libelle' => $seance,
-            'salle' => $valueSalle
+            'label' => $seance,
+            'room' => $valueSalle
             ]);
 
             if (null !== $valueSeance->getId()) {
                 $resa = $manager->getRepository(Booking::class)->findOneBy([
-                  'dateReservation' => new \DateTime($date),
-                  'seance' => $valueSeance->getId(),
-                  'salle' => $salle
+                  'bookingDate' => new \DateTime($date),
+                  'meeting' => $valueSeance->getId(),
+                  'room' => $salle
                 ]);
             }
         } catch (Exception $e) {

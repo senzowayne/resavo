@@ -1,5 +1,5 @@
 easy_admin:
       entities:
-        Seance:
-          class: App\Entity\Seance
+        Meeting:
+          class: App\Entity\Meeting
           label: 'Horaires'
