@@ -24,9 +24,9 @@
             </div>
             <div class="card-body ">
               <a
-                href="/admin/?entity=Reservation&action=show&menuIndex=2&submenuIndex=-1&sortField=dateReservation&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DReservation%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DdateReservation%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Voir</a>
+                href="/admin/?entity=Booking&action=show&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Voir</a>
               <a
-                href="/admin/?entity=Reservation&action=edit&menuIndex=2&submenuIndex=-1&sortField=dateReservation&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DReservation%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DdateReservation%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Éditer</a>
+                href="/admin/?entity=Booking&action=edit&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Éditer</a>
               <h5 class="card-title">{{ data.salle.nom | default('Non renseigné')  }}<br>
                 {{ data.nbPersonne }}
                 Personne{% if data.nbPersonne > 1 %}s{% endif %}

@@ -31,14 +31,14 @@ class Booking
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reservations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="reservations")
+     * @ORM\ManyToOne(targetEntity="Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
@@ -78,7 +78,7 @@ class Booking
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="reservation", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $payment;

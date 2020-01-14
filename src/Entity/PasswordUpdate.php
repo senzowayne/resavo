@@ -4,9 +4,6 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\PasswordUpdateRepository")
- */
 class PasswordUpdate
 {
     private $oldPassword;

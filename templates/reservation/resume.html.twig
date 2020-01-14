@@ -7,26 +7,26 @@
         <small>Voici les details de votre réservation :</small>
         <hr>
 
-        {% set resa = app.session.get('resa') %}
-        {% set pay = resa.paiement %}
+        {% set booking = app.session.get('booking') %}
+        {% set pay = booking.payment %}
 
 
-        <strong>Nom:</strong> {{ resa.user.nom }} <br>
-        <strong>Prénom:</strong> {{ resa.user.prenom }} <br>
-        <strong>ID reservation:</strong> {{ resa.nom }} <br>
-        <strong>Date:</strong> {{ resa.dateReservation | localizeddate('full', 'none') }}<br>
-        <strong>Séance: {{ resa.seance.libelle }}<br></strong>
-        <strong>Salle: {{ resa.salle.nom }}<br></strong>
-        <strong>Nombre de personnes:</strong> {{ resa.nbPersonne }}<br>
-        <strong>{% if resa.remarques %}
-        Votre remarque: {{ resa.remarques }}<br>
+        <strong>Nom:</strong> {{ booking.user.name }} <br>
+        <strong>Prénom:</strong> {{ booking.user.firstname }} <br>
+        <strong>ID reservation:</strong> {{ booking.name }} <br>
+        <strong>Date:</strong> {{ booking.bookingDate | localizeddate('full', 'none') }}<br>
+        <strong>Séance: {{ booking.meeting.label }}<br></strong>
+        <strong>Salle: {{ booking.room.name }}<br></strong>
+        <strong>Nombre de personnes:</strong> {{ booking.nbPerson }}<br>
+        <strong>{% if booking.notices %}
+        Votre remarque: {{ booking.notices }}<br>
         {% else %}
         Aucune remarque n'a été mentionnée.<br>
             {% endif %}</strong>
         <strong>Acompte: </strong>{{ pay.paymentAmount }}{{ pay.paymentCurrency }}<br>
-        <strong>total de la commande :</strong> {{ resa.total }}{{ pay.paymentCurrency }} <br>
+        <strong>total de la commande :</strong> {{ booking.total }}{{ pay.paymentCurrency }} <br>
         <hr>
-        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - pay.paymentAmount }}{{ pay.paymentCurrency }}</span></strong> <br>
+        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ booking.total - pay.paymentAmount }}{{ pay.paymentCurrency }}</span></strong> <br>
         <br>
     <div class="row">
        {# <a href="{{ path('acceuil') }}"><button type="button" class="btn btn-primary">Retour sur le site</button></a> #}

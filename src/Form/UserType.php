@@ -14,13 +14,13 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom' ,null,['attr' => ['placeholder' => 'Entrez votre nom']])
-            ->add('prenom' ,null,['attr' => ['placeholder' => 'Entrez votre prénom']])
+            ->add('name' ,null,['attr' => ['placeholder' => 'Entrez votre nom']])
+            ->add('firstName' ,null,['attr' => ['placeholder' => 'Entrez votre prénom']])
             ->add('email',null,['attr' => ['placeholder' => 'Ex: Dupont@gmail.com']])
             ->add('confirm_email', null, ['attr' => ['placeholder' => 'Retapez votre e-mail'], 'label' => 'Confirmer votre e-mail'])
             ->add('hash', PasswordType::class, ['attr' => ['placeholder' => 'Entrez votre mot de passe'], 'label' => 'Mot de passe'])
             ->add('confirm_hash', PasswordType::class, ['attr' => ['placeholder' => 'Confirmez votre mot de passe'],'label' => 'Confirmer votre mot de passe'])
-            ->add('numero', null, ['attr' => ['placeholder' => 'ex: 0652....'],'label' => 'Numero de téléphone'])
+            ->add('number', null, ['attr' => ['placeholder' => 'ex: 0652....'],'label' => 'Numero de téléphone'])
 
         ;
     }

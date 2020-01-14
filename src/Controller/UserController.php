@@ -45,7 +45,7 @@ class UserController extends AbstractController
             $em->flush();
 
             $repo = $em->getRepository(User::class);
-            $user = $repo->findOneBy(['nom' => $user->getName(), 'prenom' => $user->getFirstName(), 'email' => $user->getEmail()]);
+            $user = $repo->findOneBy(['name' => $user->getName(), 'firstName' => $user->getFirstName(), 'email' => $user->getEmail()]);
 
 
             $this->addFlash('success', 'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.');
@@ -107,7 +107,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         $repo = $manager->getRepository(Booking::class);
-        $data = $repo->findBy(['user' => $user], ['dateReservation' => 'DESC'], 10);
+        $data = $repo->findBy(['user' => $user], ['dateBooking' => 'DESC'], 10);
 
         return $this->render('user/historique.html.twig', ['data' => $data ]);
     }

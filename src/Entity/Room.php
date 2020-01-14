@@ -34,12 +34,12 @@ class Room
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity="Booking", mappedBy="salle")
+     * @ORM\OneToMany(targetEntity="Booking", mappedBy="room")
      */
     private $bookings;
 
     /**
-     * @ORM\OneToMany(targetEntity="Meeting", mappedBy="salle")
+     * @ORM\OneToMany(targetEntity="Meeting", mappedBy="room")
      */
     private $meetings;
 
