@@ -10,9 +10,9 @@ Vous n'avez encore de reservation.
 
             <div class="card mt-5">
                 <div class="card-header">
-                    Reservation du {{ resa.dateReservation | localizeddate('full', 'none') }}
+                    Reservation du {{ resa.bookingDate | localizeddate('full', 'none') }}
 
-                   {% if  'now' | date('Y-m-d')  <= resa.dateReservation | date('Y-m-d') %}
+                   {% if  'now' | date('Y-m-d')  <= resa.bookingDate | date('Y-m-d') %}
                         <span class="badge badge-success">En cour</span>
                        {% else %}
                            <span class="badge badge-dark">Terminé</span>
@@ -20,12 +20,12 @@ Vous n'avez encore de reservation.
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
-                        <p>Vous avez reservé la {{ resa.salle.nom }} pour {{ resa.nbPersonne }} personne{%  if resa.nbPersonne > 1 %}s{% endif %}
+                        <p>Vous avez reservé la {{ resa.room.name }} pour {{ resa.nbPerson }} personne{%  if resa.nbPerson > 1 %}s{% endif %}
                             <br>
-                        séance de {{ resa.seance.libelle }}</p>
-                        <footer class="blockquote-footer">Un montant de {{ resa.total }}{{ resa.paiement.paymentCurrency | default('€') }}
+                        séance de {{ resa.meeting.label }}</p>
+                        <footer class="blockquote-footer">Un montant de {{ resa.total }}{{ resa.payment.paymentCurrency | default('€') }}
                             <br>
-                            <small>ID de la reservation: #{{ resa.nom }}</small>
+                            <small>ID de la reservation: #{{ resa.name }}</small>
                         </footer>
                     </blockquote>
                 </div>

@@ -13,9 +13,9 @@
 {% endblock %}
 {% block body %}
     <div class="container">
-        <input id="dateBlocked" type="hidden" data-blocked="{% for date in blocked %}{{ date.dateBlocked | date('d-m-Y') }}{% if not loop.last %},{% endif %}{% endfor %}">
+        <input id="dateBlocked" type="hidden" data-blocked="{% for date in blocked %}{{ date.blockedDate | date('d-m-Y') }}{% if not loop.last %},{% endif %}{% endfor %}">
         <h1 class="col text-center">Réservation</h1>
-        <p class="col text-center black-text">Bienvenue {{ app.user.prenom | default('') }} sur le systeme de reservation</p>
+        <p class="col text-center black-text">Bienvenue {{ app.user.firstName | default('') }} sur le systeme de reservation</p>
         <ul class="nav justify-content-center">
             <li class="nav-item">
                 <a class="nav-link btn btn-sm btn-warning" href="{{ path("historique") }}">Mes Réservations</a>
@@ -59,31 +59,31 @@
             <!-- col droite -->
             <div class="col">
                 <div class="col mt-3 pl-2 col-lg-offset-2 ">
-                    <input type="hidden" value="{{ salle }}" id="number-salle">
+                    <input type="hidden" value="{{ room }}" id="number-salle">
                     {{ form_errors(form) }}
-                    <span class="pb-2"><strong>Vous avez selectionner la salle : <span class="purple-text"> {{ salle }}</span></strong></span>
-                    {{ form_widget(form.salle) }}
+                    <span class="pb-2"><strong>Vous avez selectionner la salle : <span class="purple-text"> {{ room }}</span></strong></span>
+                    {{ form_widget(form.room) }}
 
                 </div>
 
                 <div class="col mt-3 pl-2">
                     <h2>Nombre de personne</h2>
                     <small id="messageSalle"></small>
-                    <select id="reservation_nbPersonne" name="reservation[nbPersonne]"
+                    <select id="reservation_nbPersonne" name="reservation[nbPerson]"
                             required="required" class="form-control">
                     </select>
                 </div>
 
                 <div class="col mt-3 pl-2">
                     <h2 class="pb-2">Selectionner une séance</h2>
-                    <select id="reservation_seance" name="reservation[seance]" class="form-control"></select>
+                    <select id="reservation_seance" name="reservation[meeting]" class="form-control"></select>
                 </div>
                 <div class="col-10 offset-1 mt-3" id="dispo"></div>
                 <div class="row pl mt-2">
                     <hr>
                     <div id="resa1" class="col  pl-4">
                         <h2>Remarques</h2>
-                        {{ form_widget(form.remarques) }}
+                        {{ form_widget(form.notices) }}
                     </div>
                 </div>
                 <div class="col pt-0">
