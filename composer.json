@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ausi/slug-generator": "^1.1",
         "deployer/deployer": "^6.4",
         "easycorp/easyadmin-bundle": "^2.1",
         "paypal/paypal-checkout-sdk": "1.0.0",
@@ -36,6 +37,8 @@
         "twig/extensions": "^1.5"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "fzaninotto/faker": "^1.9",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
