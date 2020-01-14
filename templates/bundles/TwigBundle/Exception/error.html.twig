@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 	{# All other HTML erros - including 500 #}
-
 	<div class="container p-4">
-
 		<p class="col text-center black-text">
 			<h1>Oups!
 			</h1>
@@ -13,7 +11,6 @@
 				{{ status_code | default('') }}
 				:
 				{{ status_text | default('')}}.</h2>
-
 			<div>
 				N'hésitez pas à contacter le webmaster du site pour la corriger.
 			</div>
@@ -21,11 +18,7 @@
 			<ul class="nav justify-content-center">
 				<li class="nav-item">
 					<a class="nav-link btn btn-sm btn-warning" href="{{ path("static") }}">Retour à la page d'accueil</a>
-
 				</li>
-
 			</ul>
-
 		</p>
-
-	{% endblock %}
+{% endblock %}
