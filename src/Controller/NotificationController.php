@@ -10,7 +10,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class NotificationController extends AbstractController
 {
-    final public function mailConfirmation(MailerInterface $mailer): void
+    /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
+    final public function mailConfirmation(): void
     {
         $session = new Session();
         $resa = $session->get('resa');
@@ -38,6 +48,6 @@ class NotificationController extends AbstractController
 
 //        /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
 //        $sentEmail = $mailer->send($email);
-        $mailer->send($email);
+//        $this->mailer->send($email);
     }
 }
