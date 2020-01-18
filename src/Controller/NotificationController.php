@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class NotificationController extends AbstractController
 {
@@ -20,34 +21,23 @@ class NotificationController extends AbstractController
         $this->mailer = $mailer;
     }
 
-    final public function mailConfirmation(): void
+    final public function mailConfirmation(Reservation $booking): TemplatedEmail
     {
-        $session = new Session();
-        $resa = $session->get('resa');
-        $user = $resa->getUser();
-        $date = $resa->getDateReservation();
+        $user = $booking->getUser();
         //setup transport mail
 
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from('resa@resavo.fr')
             ->to(new Address($user->getEmail(), $user->getNom().' '.$user->getPrenom()))
             ->subject('Votre réservation')
-            ->html('<p>Nous vous confirmons la reservation de votre séance :</p>
-<p>Nom:' . $user->getNom() . '</p>
-<p>Prénom:' . $user->getPrenom() . '</p>
-<p>ID reservation:' . $resa->getNom() . ' </p>
-<p>Date: ' . $date->format('d-m-y') . '</p>
-<p>Séance: ' . $resa->getSeance() . '</p>
-<p>Salle: ' . $resa->getSalle() . '</p>
-<p>Nombre de personnes: ' . $resa->getNbPersonne() . '</p>
-<p>Votre remarque : ' . $resa->getRemarques() .' </p>
-<p>Acompte : ' . $resa->getPaiement()->getPaymentAmount() . $resa->getPaiement()->getPaymentCurrency() .'</p>
-<p>Reste à payer (sur place) : '.($resa->getTotal() - $resa->getPaiement()->getPaymentAmount()).
-                   $resa->getPaiement()->getPaymentCurrency() . '</p>')
+            ->htmlTemplate('reservation/_confirmNotification.html.twig')
+            ->context(['resa' => $booking])
         ;
 
 //        /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
 //        $sentEmail = $mailer->send($email);
-//        $this->mailer->send($email);
+        $this->mailer->send($email);
+
+        return $email;
     }
 }
