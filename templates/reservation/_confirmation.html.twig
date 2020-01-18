@@ -1,0 +1,24 @@
+
+    <div class="container p-4 mt-2">
+
+        <h1>Bonjour {{ resa.user.nom }} {{ resa.user.prenom }}</h1>
+        <small>Voici les details de votre réservation :</small>
+        <hr>
+
+        <strong>Nom:</strong> {{ resa.user.nom }} <br>
+        <strong>Prénom:</strong> {{ resa.user.prenom }} <br>
+        <strong>ID reservation:</strong> {{ resa.nom }} <br>
+        <strong>Date:</strong> {{ resa.dateReservation | localizeddate('full', 'none') }}<br>
+        <strong>Séance: {{ resa.seance.libelle }}<br></strong>
+        <strong>Salle: {{ resa.salle.nom }}<br></strong>
+        <strong>Nombre de personnes:</strong> {{ resa.nbPersonne }}<br>
+        <strong>{% if resa.remarques %}
+                Votre remarque: {{ resa.remarques }}<br>
+            {% else %}
+                Aucune remarque n'a été mentionnée.<br>
+            {% endif %}</strong>
+        <strong>Acompte: </strong>{{ resa.paiement.paymentAmount }}{{ resa.paiement.paymentCurrency }}<br>
+        <strong>total de la commande :</strong> {{ resa.total }}{{ resa.paiement.paymentCurrency }} <br>
+        <hr>
+        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - resa.paiement.paymentAmount }}{{ resa.paiement.paymentCurrency }}</span></strong>
+    </div>

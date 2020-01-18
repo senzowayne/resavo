@@ -2,44 +2,38 @@
 
 namespace App\Controller;
 
-use Swift_Mailer;
-use Swift_Message;
-use Swift_SmtpTransport;
+use App\Entity\Reservation;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 class NotificationController extends AbstractController
 {
-    public function mailConfirmation()
+    /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
     {
-        $session = new Session();
-        $resa = $session->get('resa');
-        $user = $resa->getUser();
-        $date = $resa->getDateReservation();
-        //setup transport mail
+        $this->mailer = $mailer;
+    }
 
-        $message = (new Swift_Message('Votre reservation'))
-        //->setFrom(['xxx' => 'Reservation'])
-          ->setTo([$user->getEmail() => $user->getNom() . ' ' . $user->getPrenom()])
-          ->setBody('
-      Nous vous confirmons la reservation de votre séance :
+    final public function mailConfirmation(Reservation $booking): TemplatedEmail
+    {
+        $user = $booking->getUser();
 
-      <br>
-      Nom:' . $user->getNom() . '<br>
-      Prénom:' . $user->getPrenom() . '<br>
-      ID reservation:' . $resa->getNom() . ' <br>
-      Date: ' . $date->format('d-m-y') . '<br>
-      Séance: ' . $resa->getSeance() . '<br>
-      Salle: ' . $resa->getSalle() . '<br>
-      Nombre de personnes: ' . $resa->getNbPersonne() . '<br>
-      Votre remarque : ' . $resa->getRemarques() .' <br>
-      Acompte: ' . $resa->getPaiement()->getPaymentAmount() . $resa->getPaiement()->getPaymentCurrency() . '<br>
-      Reste à payer (sur place): ' . ($resa->getTotal() - $resa->getPaiement()->getPaymentAmount()) . $resa->getPaiement()->getPaymentCurrency() . '<br>
+        $email = (new TemplatedEmail())
+            ->from('resa@resavo.fr')
+            ->to(new Address($user->getEmail(), $user->getNom().' '.$user->getPrenom()))
+            ->subject('Votre réservation')
+            ->htmlTemplate('reservation/_confirmation.html.twig')
+            ->context(['resa' => $booking])
+        ;
 
+        $this->mailer->send($email);
 
-          ', 'text/html');
-
-        $mailer->send($message);
+        return $email;
     }
 }
