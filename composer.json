@@ -34,13 +34,16 @@
         "symfony/web-link": "4.4.*",
         "symfony/web-server-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "twig/extensions": "^1.5"
+        "twig/cssinliner-extra": "^3.0",
+        "twig/extensions": "^1.5",
+        "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.9",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^5.0",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*"
     },
