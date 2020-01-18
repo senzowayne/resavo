@@ -30,7 +30,7 @@ class NotificationController extends AbstractController
             ->from('resa@resavo.fr')
             ->to(new Address($user->getEmail(), $user->getNom().' '.$user->getPrenom()))
             ->subject('Votre réservation')
-            ->htmlTemplate('reservation/_confirmNotification.html.twig')
+            ->htmlTemplate('reservation/_confirmation.html.twig')
             ->context(['resa' => $booking])
         ;
 

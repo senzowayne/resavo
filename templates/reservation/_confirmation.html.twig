@@ -1,9 +1,3 @@
-{% apply inline_css(
-    source('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'),
-    source('https://use.fontawesome.com/releases/v5.7.0/css/all.css'),
-    source('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css'),
-    source('https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.5/css/mdb.min.css')
-) %}
 
     <div class="container p-4 mt-2">
 
@@ -23,10 +17,8 @@
             {% else %}
                 Aucune remarque n'a été mentionnée.<br>
             {% endif %}</strong>
-        <strong>Acompte: </strong>{{ pay.paymentAmount }}{{ pay.paymentCurrency }}<br>
-        <strong>total de la commande :</strong> {{ resa.total }}{{ pay.paymentCurrency }} <br>
+        <strong>Acompte: </strong>{{ resa.paiement.paymentAmount }}{{ resa.paiement.paymentCurrency }}<br>
+        <strong>total de la commande :</strong> {{ resa.total }}{{ resa.paiement.paymentCurrency }} <br>
         <hr>
-        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - pay.paymentAmount }}{{ pay.paymentCurrency }}</span></strong> <br>
+        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - resa.paiement.paymentAmount }}{{ resa.paiement.paymentCurrency }}</span></strong>
     </div>
-
-{% endapply %}
