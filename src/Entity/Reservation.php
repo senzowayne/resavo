@@ -139,8 +139,6 @@ class Reservation
 
     /**
      * @ORM\PrePersist
-     * @param \DateTimeInterface $createAt
-     * @return Reservation
      */
     public function setCreateAt(): self
     {
@@ -220,19 +218,12 @@ class Reservation
 
         return $this;
     }
-
-
-    /**
-     * @return mixed
-     */
+    
     public function getTotal()
     {
         return $this->total;
     }
 
-    /**
-     * @param mixed $total
-     */
     public function setTotal($total): void
     {
         $this->total = $total;
