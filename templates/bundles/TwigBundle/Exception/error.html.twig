@@ -9,16 +9,15 @@
 				{{ app.user.prenom | default('') }}
 				notre systeme de reservation a retourné une erreur
 				{{ status_code | default('') }}
-				:
 				{{ status_text | default('')}}.</h2>
 			<div>
 				N'hésitez pas à contacter le webmaster du site pour la corriger.
 			</div>
 			<br>
-			<ul class="nav justify-content-center">
-				<li class="nav-item">
-					<a class="nav-link btn btn-sm btn-warning" href="{{ path("static") }}">Retour à la page d'accueil</a>
-				</li>
-			</ul>
+			<div>
+				<button>
+					<a class="nav-link btn btn-outline-danger" href="{{ path("static") }}">Retour à la page d'accueil</a>
+				</button>
+			</div>
 		</p>
-{% endblock %}
+	{% endblock %}

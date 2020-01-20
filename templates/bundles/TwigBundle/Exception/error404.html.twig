@@ -2,13 +2,13 @@
 {% block body %}
 	<div class="container p-4">
 		<p class="col text-center black-text">
-		    <h1>Oups 404</h1>
+			<h1>Oups 404</h1>
 			<h2>Notre application a retourné une erreur 404 : page inexistante.</h2>
 			<br>
-			<ul class="nav justify-content-center">
-				<li class="nav-item">
-					<a class="nav-link btn btn-sm btn-warning" href="{{ path("static") }}">Retour à la page d'accueil</a>
-				</li>
-			</ul>
+			<div>
+				<button>
+					<a class="nav-link btn btn-outline-danger" href="{{ path("static") }}">Retour à la page d'accueil</a>
+				</button>
+			</div>
 		</p>
-{% endblock %}
+	{% endblock %}
