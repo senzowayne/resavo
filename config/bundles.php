@@ -14,5 +14,6 @@ return [
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
-    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
+    ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
 ];
