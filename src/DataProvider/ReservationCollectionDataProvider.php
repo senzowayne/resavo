@@ -31,9 +31,9 @@ final class ReservationCollectionDataProvider implements CollectionDataProviderI
 
     public function getCollection(string $resourceClass, string $operationName = null)
     {
-        if ($operationName === 'get')
-        {
+        if ($operationName === 'get') {
             return $this->reservationRepo->findBy(['user' => $this->security->getUser()]);
         }
     }
 }
+
