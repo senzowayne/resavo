@@ -20,7 +20,7 @@ class NotificationController extends AbstractController
         $this->mailer = $mailer;
     }
 
-    final public function mailConfirmation(Reservation $booking): TemplatedEmail
+    final public function mailConfirmation(Booking $booking): TemplatedEmail
     {
         $user = $booking->getUser();
 

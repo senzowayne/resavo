@@ -168,9 +168,11 @@ class Paypal
      * @ORM\PrePersist
      * @throws Exception
      */
-    public function setPaymentDate(): void
+    public function setPaymentDate(): self
     {
         $this->payment_date = new DateTime();
+
+        return $this;
     }
 
     /**
@@ -184,9 +186,11 @@ class Paypal
     /**
      * @param mixed $payer_email
      */
-    public function setPayerEmail($payer_email): void
+    public function setPayerEmail($payer_email): self
     {
         $this->payer_email = $payer_email;
+
+        return $this;
     }
 
     public function getUser(): ?User

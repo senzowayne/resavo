@@ -179,15 +179,17 @@ class BookingController extends AbstractController
 
         $data = GetOrder::getOrder($data['id']);
        if ($data['status'] == 'COMPLETED') {
-            $payment = new Paypal();
-            $payment->setPaymentId($data['orderID']);
-            $payment->setPaymentCurrency($data['currency']);
-            $payment->setPaymentAmount($data['value']);
-            $payment->setPaymentDate();
-            $payment->setPaymentStatus($data['status']);
-            $payment->setPayerEmail($data['mail']);
-            $payment->setUser($this->getUser());
-            $payment->setCapture(0);
+            $payment = (new Paypal())
+                ->setPaymentId($data['orderID'])
+                ->setPaymentCurrency($data['currency'])
+                ->setPaymentAmount($data['value'])
+                ->setPaymentDate()
+                ->setPaymentStatus($data['status'])
+                ->setPayerEmail($data['mail'])
+                ->setUser($this->getUser())
+                ->setCapture(0)
+            ;
+
             $this->manager->persist($payment);
             $this->manager->flush();
 
@@ -199,7 +201,7 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-    public function capturePayment(Booking $booking, $payment)
+    public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
