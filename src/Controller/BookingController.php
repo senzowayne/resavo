@@ -49,10 +49,9 @@ class BookingController extends AbstractController
      * @Route("/reserve", name="new_reservation",  methods={"POST", "GET"})
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
-     * @param Request $request
      * @return Response
      */
-    public function index(Request $request, $room = null)
+    public function index(Request $request, Room $room = null)
     {
         $booking = new Booking();
         $form = $this->createForm(BookingType::class, $booking);
@@ -60,10 +59,16 @@ class BookingController extends AbstractController
 
         $repoDate = $this->manager->getRepository(DateBlocked::class);
         $blocked = $repoDate->myfindAll();
-        $paypalClient = "https://www.paypal.com/sdk/js?client-id=" . $this->getParameter('CLIENT_ID') . "&currency=EUR&debug=false&disable-card=amex&intent=authorize";
+        $paypalClient = "https://www.paypal.com/sdk/js?client-id=" .
+            $this->getParameter('CLIENT_ID') .
+            "&currency=EUR&debug=false&disable-card=amex&intent=authorize"
+        ;
 
         return $this->render('reservation/index.html.twig', [
-            'form' => $form->createView(), 'room' => $room, 'blocked' => $blocked, 'client' => $paypalClient
+            'form' => $form->createView(),
+            'room' => $room,
+            'blocked' => $blocked,
+            'client' => $paypalClient
         ]);
     }
 
@@ -73,7 +78,8 @@ class BookingController extends AbstractController
     public function reservationPage() {
 
         return $this->render('reservation/booking.html.twig', [
-            'controller_name' => 'Controller', 'reservation' => 'reservation'
+            'controller_name' => 'Controller',
+            'reservation' => 'reservation'
         ]);
     }
 
@@ -95,12 +101,15 @@ class BookingController extends AbstractController
                 array_push($datas, $value);
         }
         return $this->render('reservation/booking-day.html.twig', [
-            'booking' => $datas, 'meeting1' => $meeting1, 'meeting2'=> $meeting2, 'meeting3' => $meeting3
+            'booking' => $datas,
+            'meeting1' => $meeting1,
+            'meeting2'=> $meeting2,
+            'meeting3' => $meeting3
         ]);
     }
 
 
-    public function createBooking()
+    public function createBooking(): Booking
     {
         $date = new DateTime($_POST['date']);
         if (!$this->check->verifyDate($date)) {
@@ -112,24 +121,21 @@ class BookingController extends AbstractController
         $meeting = $this->manager->getRepository(Meeting::class)->findOneBy(['label' => htmlspecialchars($_POST['meeting'])]);
         $room = $this->manager->getRepository(Room::class)->findOneBy(['name' => $room]);
 
-        $booking = new Booking();
-        $booking->setNotices($_POST['notices'])
-                    ->setBookingDate($date)
-                    ->setRoom($room)
-                    ->setMeeting($meeting)
-                    ->setNbPerson($_POST['nbPerson'])
-                    ->setTotal($_POST['total']);
-
-        return $booking;
+        return (new Booking())
+            ->setNotices($_POST['notices'])
+            ->setBookingDate($date)
+            ->setRoom($room)
+            ->setMeeting($meeting)
+            ->setNbPerson($_POST['nbPerson'])
+            ->setTotal($_POST['total'])
+        ;
     }
 
     /**
      * @Route("/api-reserve", name="reserve", methods={"POST"})
-     * @param Request $request
-     * @return Response
      * @throws Exception
      */
-    public function reserve(Request $request)
+    public function reserve(Request $request): JsonResponse
     {
         $booking = $this->createBooking();
         $user = $this->getUser();
@@ -153,7 +159,10 @@ class BookingController extends AbstractController
 
             if ($this->capturePayment($booking, $payment)) {
                 $this->notification->mailConfirmation($booking);
-                $this->addFlash('success', 'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail());
+                $this->addFlash(
+                    'success',
+                    'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail()
+                );
             }
 
             return $this->json('Réservation ok');
@@ -166,11 +175,9 @@ class BookingController extends AbstractController
     /**
      * Reponse de l'API paypal & entré en bdd des informations d'auritsation du paiment
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST", "GET"})
-     * @param Request $request
-     * @return JsonResponse
      * @throws Exception
      */
-    public function authorizePayment(Request $request)
+    public function authorizePayment(Request $request): JsonResponse
     {
         $this->session->remove('pay');
         $data = $request->request->get('authorization');
@@ -179,15 +186,17 @@ class BookingController extends AbstractController
 
         $data = GetOrder::getOrder($data['id']);
        if ($data['status'] == 'COMPLETED') {
-            $payment = new Paypal();
-            $payment->setPaymentId($data['orderID']);
-            $payment->setPaymentCurrency($data['currency']);
-            $payment->setPaymentAmount($data['value']);
-            $payment->setPaymentDate();
-            $payment->setPaymentStatus($data['status']);
-            $payment->setPayerEmail($data['mail']);
-            $payment->setUser($this->getUser());
-            $payment->setCapture(0);
+            $payment = (new Paypal())
+                ->setPaymentId($data['orderID'])
+                ->setPaymentCurrency($data['currency'])
+                ->setPaymentAmount($data['value'])
+                ->setPaymentDate()
+                ->setPaymentStatus($data['status'])
+                ->setPayerEmail($data['mail'])
+                ->setUser($this->getUser())
+                ->setCapture(0)
+            ;
+
             $this->manager->persist($payment);
             $this->manager->flush();
 
@@ -199,7 +208,10 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-    public function capturePayment(Booking $booking, $payment)
+    /**
+     * @return bool|RedirectResponse
+     */
+    public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
@@ -234,7 +246,7 @@ class BookingController extends AbstractController
      * @Route("/resume", name="resume")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function resume()
+    public function resume(): JsonResponse
     {
         return $this->render('reservation/resume.html.twig');
     }

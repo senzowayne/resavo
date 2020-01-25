@@ -14,8 +14,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields="email",
- * message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier")
+ * @UniqueEntity(
+ *     fields="email",
+ *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
+ * )
  */
 class User implements UserInterface
 {
@@ -176,9 +178,6 @@ class User implements UserInterface
         return $this->slug;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
     public function setSlug(): void
     {
         $generator = new SlugGenerator();
@@ -265,17 +264,15 @@ class User implements UserInterface
     }
 
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getFirstName();
     }
 
     /**
      * Returns the username used to authenticate the user.
-     *
-     * @return string The username
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->email;
     }
@@ -286,7 +283,7 @@ class User implements UserInterface
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
@@ -299,7 +296,7 @@ class User implements UserInterface
         return $this->payments;
     }
 
-    public function addPaiement(Paypal $payment): self
+    public function addPayment(Paypal $payment): self
     {
         if (!$this->payments->contains($payment)) {
             $this->payments[] = $payment;
@@ -309,7 +306,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removePaiement(Paypal $payment): self
+    public function removePayment(Paypal $payment): self
     {
         if ($this->payments->contains($payment)) {
             $this->payments->removeElement($payment);

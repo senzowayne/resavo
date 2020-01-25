@@ -9,12 +9,18 @@ class PasswordUpdate
     private $oldPassword;
 
     /**
-     * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au moins 4 caractères")
+     * @Assert\Length(
+     *     min="4",
+     *     minMessage="Votre mot de passe doit faire au moins 4 caractères"
+     * )
      */
     private $newPasswordUpdate;
 
     /**
-     * @Assert\EqualTo(propertyPath="newPasswordUpdate", message="Vous n'avez pas correctemment confirmé votre mot de passe")
+     * @Assert\EqualTo(
+     *     propertyPath="newPasswordUpdate",
+     *     message="Vous n'avez pas correctemment confirmé votre mot de passe"
+     * )
      */
     private $confirmPassword;
 

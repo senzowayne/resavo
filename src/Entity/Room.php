@@ -34,12 +34,12 @@ class Room
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity="Booking", mappedBy="room")
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
     private $bookings;
 
     /**
-     * @ORM\OneToMany(targetEntity="Meeting", mappedBy="room")
+     * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */
     private $meetings;
 
@@ -49,7 +49,7 @@ class Room
         $this->meetings = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }
