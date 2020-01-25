@@ -27,7 +27,7 @@ class Meeting
     private $label;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="meetings")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $room;

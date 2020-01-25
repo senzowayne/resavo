@@ -57,7 +57,7 @@ class Paypal
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Booking", mappedBy="payment", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment", cascade={"persist", "remove"})
      */
     private $booking;
 
@@ -71,49 +71,34 @@ class Paypal
      */
     private $captureId;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         return $this->payment_id;
     }
 
-    /**
-     * @param mixed $payment_id
-     */
-    public function setPaymentId($payment_id): self
+    public function setPaymentId(string $payment_id): self
     {
         $this->payment_id = $payment_id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentStatus()
+    public function getPaymentStatus(): string
     {
         return $this->payment_status;
     }
 
-    /**
-     * @param mixed $payment_status
-     */
-    public function setPaymentStatus($payment_status): self
+    public function setPaymentStatus(string $payment_status): self
     {
         $this->payment_status = $payment_status;
 
@@ -128,38 +113,26 @@ class Paypal
         return $this->payment_amount;
     }
 
-    /**
-     * @param mixed $payment_amount
-     */
-    public function setPaymentAmount($payment_amount): self
+    public function setPaymentAmount(float $payment_amount): self
     {
         $this->payment_amount = $payment_amount;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentCurrency()
+    public function getPaymentCurrency(): string
     {
         return $this->payment_currency;
     }
 
-    /**
-     * @param mixed $payment_currency
-     */
-    public function setPaymentCurrency($payment_currency): self
+    public function setPaymentCurrency(string $payment_currency): self
     {
         $this->payment_currency = $payment_currency;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentDate()
+    public function getPaymentDate(): DateTime
     {
         return $this->payment_date;
     }
@@ -175,18 +148,12 @@ class Paypal
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPayerEmail()
+    public function getPayerEmail(): string
     {
         return $this->payer_email;
     }
 
-    /**
-     * @param mixed $payer_email
-     */
-    public function setPayerEmail($payer_email): self
+    public function setPayerEmail(string $payer_email): self
     {
         $this->payer_email = $payer_email;
 

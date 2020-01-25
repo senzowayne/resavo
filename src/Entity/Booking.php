@@ -41,7 +41,7 @@ class Booking
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="bookings")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
@@ -229,8 +229,10 @@ class Booking
         return $this->total;
     }
 
-    public function setTotal($total): void
+    public function setTotal($total): self
     {
         $this->total = $total;
+
+        return $this;
     }
 }

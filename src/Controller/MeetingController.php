@@ -6,9 +6,9 @@ use App\Entity\Room;
 use App\Entity\Meeting;
 use App\Entity\DateBlocked;
 use App\Entity\Booking;
-use App\Repository\MeetingRepository;
-use BraintreeHttp\Serializer\Json;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,7 +20,7 @@ class MeetingController extends AbstractController
      * Recuperer les seances d'une salle
      * @Route("/reservation/seance/horaire", methods={"POST"})
      */
-    public function seance(EntityManagerInterface $manager, int $room = 1): JsonResponse
+    public function seance(EntityManagerInterface $manager, int $room = 1): Response
     {
         if (isset($_POST['room'])) {
             $room = htmlentities($_POST['room']);
@@ -39,44 +39,40 @@ class MeetingController extends AbstractController
 
     /**
      * @Route("/reservation/verif/dispo", name="dispo", methods={"POST"})
-     * @param Request                $request
-     * @param EntityManagerInterface $manager
-     *
      * @return JsonResponse
      * @throws Exception
-     * @throws \Exception
      */
-    public function verifDispo(Request $request, EntityManagerInterface $manager): JsonResponse
+    public function verifDispo(Request $request, EntityManagerInterface $manager): Response
     {
         $posts = $request->request;
         $date = $posts->get('date');
-        $seance = $posts->get('seance');
-        $salle = $posts->get('salle');
+        $meeting = $posts->get('meeting');
+        $room = $posts->get('room');
 
         $blockedDate = $manager->getRepository(DateBlocked::class);
-        $verifDate = $blockedDate->findOneBy([
+        $verifyDate = $blockedDate->findOneBy([
           'blockedDate' => new \DateTime($date)
         ]);
 
-        if ($verifDate) {
+        if ($verifyDate) {
             return $this->json(['message' => 'Cette date n\'est pas disponible']);
         }
 
         try {
-            $valueSalle = $manager->getRepository(Room::class)->findOneBy([
-                'name' => $salle
+            $roomValue = $manager->getRepository(Room::class)->findOneBy([
+                'name' => $room
             ]);
 
-            $valueSeance = $manager->getRepository(Meeting::class)->findOneBy([
-            'label' => $seance,
-            'room' => $valueSalle
+            $meetingValue = $manager->getRepository(Meeting::class)->findOneBy([
+            'label' => $meeting,
+            'room' => $roomValue
             ]);
 
-            if (null !== $valueSeance->getId()) {
+            if (null !== $meetingValue->getId()) {
                 $resa = $manager->getRepository(Booking::class)->findOneBy([
                   'bookingDate' => new \DateTime($date),
-                  'meeting' => $valueSeance->getId(),
-                  'room' => $salle
+                  'meeting' => $meetingValue->getId(),
+                  'room' => $room
                 ]);
             }
         } catch (Exception $e) {
@@ -84,17 +80,12 @@ class MeetingController extends AbstractController
         }
 
         if ($resa) {
-            $reponse = new JsonResponse([
+            return new JsonResponse([
               'message' => 'Cette réservation est deja prise'
             ]);
-
-            return $reponse;
         }
-
-        $reponse = new JsonResponse([
+        return new JsonResponse([
           'message' => 'Cette réservation est disponible'
         ]);
-
-        return $reponse;
     }
 }
