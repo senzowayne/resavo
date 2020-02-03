@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<div class="container p-4">
+		<p class="col text-center black-text">
+			<h1>Oups 404</h1>
+			<h2>Notre application a retourné une erreur 404 : page inexistante.</h2>
+			<br>
+			<div>
+				<button class="btn btn-warning">
+					<a href="{{ path("static") }}">Retour à la page d'accueil</a>
+				</button>
+			</div>
+		</p>
+	{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	{# All other HTML erros - including 500 #}
+	<div class="container p-4">
+		<p class="col text-center black-text">
+			<h1>Oups!
+			</h1>
+			<h2>Désolé
+				{{ app.user.prenom | default('') }}
+				notre système de reservation a retourné une erreur
+				{{ status_code | default('') }}
+				{{ status_text | default('')}}.</h2>
+			<div>
+				N'hésitez pas à contacter le webmaster du site pour la corriger.
+			</div>
+			<br>
+			<div>
+				<button class="btn btn-warning">
+					<a href="{{ path("static") }}">Retour à la page d'accueil</a>
+				</button>
+			</div>
+		</p>
+	{% endblock %}
