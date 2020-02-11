@@ -5,18 +5,13 @@ namespace App\Controller;
 use App\Entity\Booking;
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
 
 /**
  * @Route("/user")
@@ -28,7 +23,7 @@ class UserController extends AbstractController
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function new(Request $request, UserPasswordEncoderInterface $encoder)
     {
@@ -45,10 +40,17 @@ class UserController extends AbstractController
             $em->flush();
 
             $repo = $em->getRepository(User::class);
-            $user = $repo->findOneBy(['name' => $user->getName(), 'firstName' => $user->getFirstName(), 'email' => $user->getEmail()]);
+            $user = $repo->findOneBy([
+                'name' => $user->getName(),
+                 'firstName' => $user->getFirstName(),
+                 'email' => $user->getEmail()]
+            );
 
 
-            $this->addFlash('success', 'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.');
+            $this->addFlash(
+                'success',
+                'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.'
+            );
 
             return $this->redirectToRoute('app_login');
         }
@@ -61,7 +63,10 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
-     * @Security("is_granted('ROLE_USER') and user == user.getEmail()", message="Vous n'avez pas le droit d'accéder à cette partie du site sans etre authentifier")
+     * @Security(
+     *     "is_granted('ROLE_USER') and user == user.getEmail()",
+     *     message="Vous n'avez pas le droit d'accéder à cette partie du site sans etre authentifier"
+     * )
      */
     public function edit(Request $request, User $user): Response
     {
@@ -84,7 +89,10 @@ class UserController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="user_delete", methods={"DELETE"})
-     * @Security("is_granted('ROLE_USER') and user == user.getEmail()", message="Vous n'avez pas le droit d'accéder à cette partie du site")
+     * @Security(
+     *     "is_granted('ROLE_USER') and user == user.getEmail()",
+     *     message="Vous n'avez pas le droit d'accéder à cette partie du site"
+     * )
      */
     public function delete(Request $request, User $user): Response
     {
@@ -107,7 +115,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         $repo = $manager->getRepository(Booking::class);
-        $data = $repo->findBy(['user' => $user], ['dateBooking' => 'DESC'], 10);
+        $data = $repo->findBy(['user' => $user], ['bookingDate' => 'DESC'], 10);
 
         return $this->render('user/historique.html.twig', ['data' => $data ]);
     }
