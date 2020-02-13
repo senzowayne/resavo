@@ -17,20 +17,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MeetingController extends AbstractController
 {
     /**
-     * Recuperer les seances d'une salle
+     * Récupérer les seances d'une salle
      * @Route("/reservation/seance/horaire", methods={"POST"})
      */
-    public function seance(EntityManagerInterface $manager, int $room = 1): Response
+    public function meeting(EntityManagerInterface $manager, int $room = 1): Response
     {
         if (isset($_POST['room'])) {
             $room = htmlentities($_POST['room']);
         }
 
-        $repo = $manager->getRepository(Meeting::class);
-        $seance = $repo->findBy(['room' => $room]);
+        $meetings = $manager
+            ->getRepository(Meeting::class)
+            ->findBy(['room' => $room]);
 
         $datas = [];
-        foreach ($seance as $data) {
+        foreach ($meetings as $data) {
             $datas[$data->getId()] = $data->getLabel();
         }
 
@@ -42,46 +43,45 @@ class MeetingController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function verifDispo(Request $request, EntityManagerInterface $manager): Response
+    public function AvailabilityCheck(Request $request, EntityManagerInterface $manager): Response
     {
-        $posts = $request->request;
-        $date = $posts->get('date');
-        $meeting = $posts->get('meeting');
-        $room = $posts->get('room');
+        $date = $request->request->get('date');
+        $meeting = $request->request->get('meeting');
+        $room = $request->request->get('room');
 
-        $blockedDate = $manager->getRepository(DateBlocked::class);
-        $verifyDate = $blockedDate->findOneBy([
-          'blockedDate' => new \DateTime($date)
-        ]);
+        $verifyDate = $manager
+            ->getRepository(DateBlocked::class)
+            ->findOneBy([
+              'blockedDate' => new \DateTime($date)
+            ]);
 
         if ($verifyDate) {
             return $this->json(['message' => 'Cette date n\'est pas disponible']);
         }
 
         try {
-            $roomValue = $manager->getRepository(Room::class)->findOneBy([
-                'name' => $room
-            ]);
+            $roomValue = $manager
+                ->getRepository(Room::class)
+                ->findOneBy(['name' => $room]);
 
-            $meetingValue = $manager->getRepository(Meeting::class)->findOneBy([
-            'label' => $meeting,
-            'room' => $roomValue
-            ]);
+            $meetingValue = $manager
+                ->getRepository(Meeting::class)
+                ->findOneBy(['label' => $meeting, 'room' => $roomValue->getId()]);
 
             if (null !== $meetingValue->getId()) {
-                $resa = $manager->getRepository(Booking::class)->findOneBy([
+                $booking = $manager->getRepository(Booking::class)->findOneBy([
                   'bookingDate' => new \DateTime($date),
                   'meeting' => $meetingValue->getId(),
-                  'room' => $room
+                  'room' => $roomValue->getId()
                 ]);
             }
         } catch (Exception $e) {
             $e->getMessage();
         }
 
-        if ($resa) {
+        if ($booking) {
             return new JsonResponse([
-              'message' => 'Cette réservation est deja prise'
+              'message' => 'Cette réservation est déjà prise'
             ]);
         }
         return new JsonResponse([

@@ -54,7 +54,7 @@ class Booking
     private $createAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Meeting")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Controller\NotificationController;
+use App\Entity\Booking;
+use App\Entity\Meeting;
 use App\Entity\Paypal;
-use App\Entity\Reservation;
-use App\Entity\Salle;
-use App\Entity\Seance;
+use App\Entity\Room;
 use App\Entity\User;
 use DateTime;
-use PHPUnit\Framework\TestCase;;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
@@ -30,27 +30,27 @@ class NotificationControllerTest extends TestCase
             ->method('send');
 
         $user = (new User())
-            ->setNom('Resavo')
-            ->setPrenom('Jean')
+            ->setName('Resavo')
+            ->setFirstName('Jean')
             ->setEmail('test@resavo.fr')
         ;
 
-        $meeting = (new Seance())->setLibelle('14h 16h');
+        $meeting = (new Meeting())->setLabel('14h 16h');
 
-        $room = (new Salle())->setNom('Salle Miami');
+        $room = (new Room())->setName('Salle Miami');
 
         $payment = (new Paypal())->setUser($user);
         $payment->setPaymentCurrency('Eur');
         $payment->setPaymentAmount(125.00);
 
-        $booking = (new Reservation())
+        $booking = (new Booking())
             ->setUser($user)
-            ->setDateReservation(new DateTime('2020/01/10'))
-            ->setSeance($meeting)
-            ->setSalle($room)
-            ->setNbPersonne(3)
-            ->setRemarques(null)
-            ->setPaiement($payment)
+            ->setBookingDate(new DateTime('2020/01/10'))
+            ->setMeeting($meeting)
+            ->setRoom($room)
+            ->setNbPerson(3)
+            ->setName(null)
+            ->setPayment($payment)
         ;
         $booking->setTotal(3 * 125.00);
 
