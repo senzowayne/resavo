@@ -28,11 +28,9 @@ class MeetingRepositoryTest extends KernelTestCase
     final public function testSearchByLabelAndRoom(): void
     {
         // Arrange
-        $room = (new Room())
-            ->setId(1)
-            ->setName("Salle Bora-Bora")
-            ->setDescription("Salle 1")
-            ->setPrice(90)
+        $room = $this->entityManager
+            ->getRepository(Room::class)
+            ->findOneBy(['name' => "Salle Bora-Bora"])
         ;
         $meetingLabel = "12h30 - 14h30";
 

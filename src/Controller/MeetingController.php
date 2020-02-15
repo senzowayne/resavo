@@ -43,7 +43,7 @@ class MeetingController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function AvailabilityCheck(Request $request, EntityManagerInterface $manager): Response
+    public function availabilityCheck(Request $request, EntityManagerInterface $manager): Response
     {
         $date = $request->request->get('date');
         $meeting = $request->request->get('meeting');

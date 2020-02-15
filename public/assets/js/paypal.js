@@ -20,21 +20,21 @@ console.log('ready');
 
 num = $('#number-salle');
 if (num.text() === "Salle Bora-Bora") {
-  $('#reservation_salle').prop('disabled', true);
+  $('#booking_room').prop('disabled', true);
   $('#reservation_seance option:eq(0)').prop('selected', true);
   valueSalle = 'Salle Bora-Bora';
   acc = 38
 }
 if (num.text() === 'Salle Miami') {
-  $('#reservation_salle option:eq(1)').prop('selected', true);
-  $('#reservation_salle').prop('disabled', true);
+  $('#booking_room option:eq(1)').prop('selected', true);
+  $('#booking_room').prop('disabled', true);
   $('#reservation_seance options[0]').prop('selected', true);
   valueSalle = 'Salle Miami';
   acc = 45
 }
 if (num.text() === 'Salle Phuket') {
-  $('#reservation_salle option:eq(2)').prop('selected', true);
-  $('#reservation_salle').prop('disabled', true);
+  $('#booking_room option:eq(2)').prop('selected', true);
+  $('#booking_room').prop('disabled', true);
   valueSalle = 'Salle Phuket';
   acc = 45
 }
@@ -42,7 +42,7 @@ if (num.text() === 'Salle Phuket') {
 // Fonction pour ajouter une remarque
 $('#btn-remarque').click(function() {
   $('#resa1').show()
-})
+});
 /***************
  INITIALITION
  ****************/
@@ -70,7 +70,7 @@ $('#messageSalle').append(messageSalle);
 //revenir a la reservation
 $('#annuler').on('click', function() {
   $('#payMe').hide("slow");
-  $('#reservation_salle, #reservation_seance, #reservation_date_reservation, #reservation_remarques, #reservation_nbPersonne').prop('disabled', false);
+  $('#booking_room, #reservation_seance, #reservation_date_reservation, #booking_notices, #reservation_nbPersonne').prop('disabled', false);
   $('#resa, #resa1').show();
 });
 
@@ -82,7 +82,7 @@ $('#buttonValide').click(function() {
     }, 'slow');
     $('#payMe').show("slow");
     resume()
-    $('#reservation_salle, #reservation_seance, #reservation_date_reservation, #reservation_remarques, #reservation_nbPersonne').prop('disabled', true);
+    $('#booking_room, #reservation_seance, #reservation_date_reservation, #booking_notices, #reservation_nbPersonne').prop('disabled', true);
     $('#resa, #resa1').hide();
   }
 });
@@ -139,9 +139,9 @@ $('#messageSalle').append(messageSalle);
 * ***********************************************
  NOMBRE DE PERSONNES EN FONCTION DE LA SALLE ****
  */
-salle = $('#reservation_salle').on('change', function() {
+salle = $('#booking_room').on('change', function() {
   if (valueSalle == "Salle Bora-Bora") {
-    valueSalle = $('#reservation_salle').find(":selected").text()
+    valueSalle = $('#booking_room').find(":selected").text()
     prix = 75;
     $('#reservation_nbPersonne').empty();
     $('#messageSalle').empty();
@@ -156,7 +156,7 @@ salle = $('#reservation_salle').on('change', function() {
     messageSalle = 'Cette salle ne peut comporter maximum <span class="text-danger">4</span> personnes';
 
   } else if (valueSalle === "Salle Miami") {
-    valueSalle = $('#reservation_salle').find(":selected").text()
+    valueSalle = $('#booking_room').find(":selected").text();
     prix = 90;
     $('#messageSalle').empty();
     $('#reservation_nbPersonne').empty();
@@ -207,7 +207,7 @@ $('#reservation_seance').on('change', function() {
 });
 
 // Si quelconque changement sur tout les champs ré-iniatilise la variable avec la nouvelle valeur
-$('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #reservation_seance').on('change', function() {
+$('#reservation_date_reservation, #reservation_nbPersonne, #booking_room, #reservation_seance').on('change', function() {
   if (valueSalle === 'Salle Bora-Bora') {
     nomSalle = 'Salle Bora-Bora';
   } else if (valueSalle === "Salle Miami") {
@@ -297,7 +297,7 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
   } else {
     pluriel = '';
   }
-  valueRemarque = $('#reservation_remarques').val();
+  valueRemarque = $('#booking_notices').val();
   //console.log(valueSeance);
   if (valueSeance !== "0") {
     $('#buttonValide').prop("disabled", true);
@@ -320,12 +320,12 @@ $('#reservation_date_reservation, #reservation_nbPersonne, #reservation_salle, #
 $('#reservation_date_reservation').on('change', function() {
   valueSeance = "0";
   valueTextSeance = $('#reservation_seance').find(":selected").text()
-})
+});
 
 // Si quelconque changement sur remarque ré-iniatilise la variable avec la nouvelle valeur
-$('#reservation_remarques').on('change', function() {
-  valueRemarque = $('#reservation_remarques').val();
-})
+$('#booking_notices').on('change', function() {
+  valueRemarque = $('#booking_notices').val();
+});
 
 /* FONCTION BUTTON PAYPAL */
 paypal.Buttons({
@@ -381,10 +381,10 @@ function createReservation() {
       method: 'post',
       data: {
         'date': valueDate,
-        'seance': valueTextSeance,
-        'salle': valueSalle,
-        'nbPersonne': valuePersonnes,
-        'remarques': valueRemarque,
+        'meeting': valueTextSeance,
+        'room': valueSalle,
+        'nbPerson': valuePersonnes,
+        'notices': valueRemarque,
         'weekEnd': valueweekEnd,
         'total': prix,
       },
@@ -403,7 +403,7 @@ function createReservation() {
 }
 
 
-//Fonction qui genere le texte resumant la commande
+//Fonction qui génère le texte résumant la commande
 function resume() {
   if (valueDate !== null && $("#reservation_seance option:selected").index() !== 0) {
     $('#resume').empty().append('<hr>Vous avez selectionné la date du : <strong>' + valueDate + '</strong> de <strong>' + $('#reservation_seance').find(":selected").text() + '</strong> pour <strong>' + valuePersonnes + ' personne' + pluriel + ' </strong> dans la <strong>' + nomSalle + '<br>Total de la commande : ' + prix + '€ <br> Seul un acompte de <span style="color:green"> ' + acc + '€ </span> vous sera prélevé lors du paiement en ligne </strong>');
@@ -427,8 +427,8 @@ function verifDispo() {
       dataType: 'json',
       data: {
         'date': valueDate,
-        'seance': $('#reservation_seance').find(":selected").text(),
-        'salle': valueSalle
+        'meeting': $('#reservation_seance').find(":selected").text(),
+        'room': valueSalle
       },
       beforeSend: function() {
         $('#dispo').empty().append(`<div class="text-center"><div class="spinner-grow text-success" role="status">
