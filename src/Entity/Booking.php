@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -111,7 +112,7 @@ class Booking
         return $this->user;
     }
 
-    public function setUser(?User $user)
+    public function setUser(?UserInterface $user)
     {
         $this->user = $user;
 

@@ -9,26 +9,26 @@ use DateTime;
 class CheckBookingController
 {
     /**
-     * Verifie que l'on ne reserve pas dans le passé ni dans les 2 jours suivant la date du jour
+     * Vérifie que l'on ne reserve pas dans le passé ni dans les 2 jours suivant la date du jour
      */
     public function verifyDate(DateTime $date): bool
     {
         $today = new DateTime('now');
         $today->modify('+1 day');
 
-        return ($date < $today) ? false : true;
+        return $date >= $today;
     }
 
     /**
-     * Verifie que le total est bien le montant attendu
+     * Vérifie que le total est bien le montant attendu
      */
     public function verifyTotal($room, $nbPerson, $total)
     {
-        //TODO A REDEFINIR
+        //TODO A REDÉFINIR
     }
 
     /**
-     * Permet de verifier que le paiment envoyer est bien celui attendu
+     * Permet de vérifier que le paiement envoyer est bien celui attendu
      *
      * @param Paypal  $payment
      * @param Booking $booking
@@ -37,7 +37,7 @@ class CheckBookingController
      */
     public function verifyPayment(Paypal $payment, Booking $booking)
     {
-        //TODO A REDEFINIR
+        //TODO A REDÉFINIR
         return true;
     }
 }

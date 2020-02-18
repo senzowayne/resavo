@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use DateTime;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -72,7 +72,7 @@ class Paypal
      */
     private $captureId;
 
-    public function __toString(): string
+    public function __toString()
     {
         return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/;
     }
@@ -166,7 +166,7 @@ class Paypal
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

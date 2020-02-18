@@ -15,6 +15,7 @@ use Exception;
 use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,9 +50,8 @@ class BookingController extends AbstractController
      * @Route("/reserve", name="new_reservation",  methods={"POST", "GET"})
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
-     * @return Response
      */
-    public function index(Request $request, Room $room = null)
+    public function index(Request $request, Room $room = null): Response
     {
         $booking = new Booking();
         $form = $this->createForm(BookingType::class, $booking);
@@ -59,9 +59,9 @@ class BookingController extends AbstractController
 
         $repoDate = $this->manager->getRepository(DateBlocked::class);
         $blocked = $repoDate->myfindAll();
-        $paypalClient = "https://www.paypal.com/sdk/js?client-id=" .
+        $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
             $this->getParameter('CLIENT_ID') .
-            "&currency=EUR&debug=false&disable-card=amex&intent=authorize"
+            '&currency=EUR&debug=false&disable-card=amex&intent=authorize'
         ;
 
         return $this->render('reservation/index.html.twig', [
@@ -75,7 +75,7 @@ class BookingController extends AbstractController
     /**
      * @Route("/before-reservation", name="before_reservation")
      */
-    public function reservationPage() {
+    public function reservationPage(): Response {
 
         return $this->render('reservation/booking.html.twig', [
             'controller_name' => 'Controller',
@@ -86,7 +86,7 @@ class BookingController extends AbstractController
     /**
      * @Route("/resa", name="resa_day")
      */
-    public function bookingDay()
+    public function bookingDay(): Response
     {
         $date = new DateTime();
         $manager = $this->getDoctrine()->getManager();
@@ -98,7 +98,7 @@ class BookingController extends AbstractController
         $meeting3 = $roomRepository->findBy(['room' => 3]);
         $datas = [];
         foreach ($booking as $key => $value) {
-                array_push($datas, $value);
+                $datas[] = $value;
         }
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $datas,
@@ -108,26 +108,27 @@ class BookingController extends AbstractController
         ]);
     }
 
-
-    public function createBooking(): Booking
+    private function createBooking(Request $request): Booking
     {
-        $date = new DateTime($_POST['date']);
+        $date = new DateTime($request->request->get('date'));
         if (!$this->check->verifyDate($date)) {
-            throw new LogicException("Vous ne pouvez reserver que 2 jours après la date d'aujourd'hui !", 1);
+            throw new LogicException("Vous ne pouvez réserver que 2 jours après la date d'aujourd'hui !", 1);
         }
         $date->format('dd-mm-yyyy');
-        $room = $_POST['room'];
+        $room = $request->request->get('room');
 
-        $meeting = $this->manager->getRepository(Meeting::class)->findOneBy(['label' => htmlspecialchars($_POST['meeting'])]);
+        $meeting = $this->manager
+            ->getRepository(Meeting::class)
+            ->findOneBy(['label' => htmlspecialchars($request->request->get('meeting'))]);
         $room = $this->manager->getRepository(Room::class)->findOneBy(['name' => $room]);
 
         return (new Booking())
-            ->setNotices($_POST['notices'])
+            ->setNotices($request->request->get('notices'))
             ->setBookingDate($date)
             ->setRoom($room)
             ->setMeeting($meeting)
-            ->setNbPerson($_POST['nbPerson'])
-            ->setTotal($_POST['total'])
+            ->setNbPerson($request->request->get('nbPerson'))
+            ->setTotal($request->request->get('total'))
         ;
     }
 
@@ -137,7 +138,7 @@ class BookingController extends AbstractController
      */
     public function reserve(Request $request): JsonResponse
     {
-        $booking = $this->createBooking();
+        $booking = $this->createBooking($request);
         $user = $this->getUser();
         $pay = $this->session->get('pay');
 
@@ -173,7 +174,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * Reponse de l'API paypal & entré en bdd des informations d'auritsation du paiment
+     * Réponse de l'API PayPal & entré en bdd des informations d'auritsation du paiement
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST", "GET"})
      * @throws Exception
      */
@@ -185,7 +186,7 @@ class BookingController extends AbstractController
         $this->session->set('authorizationID', $authID);
 
         $data = GetOrder::getOrder($data['id']);
-       if ($data['status'] == 'COMPLETED') {
+       if ($data['status'] === 'COMPLETED') {
             $payment = (new Paypal())
                 ->setPaymentId($data['orderID'])
                 ->setPaymentCurrency($data['currency'])
@@ -216,11 +217,11 @@ class BookingController extends AbstractController
         try {
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $captureId = $response->result->id;
-            if ("COMPLETED" !== $response->result->status) {
+            if ('COMPLETED' !== $response->result->status) {
                 $this->manager->remove($payment);
                 $this->manager->remove($booking);
                 $this->manager->flush();
-                $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
+                $this->addFlash('danger', 'Un problème d\'approvisionnement est survenu');
 
                 return $this->redirectToRoute('before_reservation');
             }
@@ -236,7 +237,7 @@ class BookingController extends AbstractController
             $this->manager->remove($payment);
             $this->manager->remove($booking);
             $this->manager->flush();
-            $this->addFlash('danger', 'Un problème d\'approvissionement est survenu');
+            $this->addFlash('danger', 'Un problème d\'approvisionnement est survenu');
 
             return false;
         }
@@ -246,7 +247,7 @@ class BookingController extends AbstractController
      * @Route("/resume", name="resume")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function resume(): JsonResponse
+    public function resume(): Response
     {
         return $this->render('reservation/resume.html.twig');
     }

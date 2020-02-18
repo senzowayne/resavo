@@ -112,7 +112,7 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -125,7 +125,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -173,7 +173,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -192,23 +192,23 @@ class User implements UserInterface
         return $this->bookings;
     }
 
-    public function addReservation(Booking $reservation): self
+    public function addBooking(Booking $booking): self
     {
-        if (!$this->bookings->contains($reservation)) {
-            $this->bookings[] = $reservation;
-            $reservation->setUser($this);
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeReservation(Booking $reservation): self
+    public function removeBooking(Booking $booking): self
     {
-        if ($this->bookings->contains($reservation)) {
-            $this->bookings->removeElement($reservation);
+        if ($this->bookings->contains($booking)) {
+            $this->bookings->removeElement($booking);
             // set the owning side to null (unless already changed)
-            if ($reservation->getUser() === $this) {
-                $reservation->setUser(null);
+            if ($booking->getUser() === $this) {
+                $booking->setUser(null);
             }
         }
 
@@ -226,11 +226,10 @@ class User implements UserInterface
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
-     *
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        $roles = $this->userRoles->map(function ($role) {
+        $roles = $this->userRoles->map(static function (Role $role) {
             return $role->getTitle();
         })->toArray();
         $roles[] = 'ROLE_USER';
@@ -243,10 +242,8 @@ class User implements UserInterface
      *
      * This should be the encoded password. On authentication, a plain-text
      * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->hash;
     }
@@ -255,16 +252,14 @@ class User implements UserInterface
      * Returns the salt that was originally used to encode the password.
      *
      * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
 
-    public function __toString(): string
+    public function __toString()
     {
         return $this->getFirstName();
     }
