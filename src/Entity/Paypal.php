@@ -77,12 +77,12 @@ class Paypal
         return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPaymentId(): string
+    public function getPaymentId(): ?string
     {
         return $this->payment_id;
     }
@@ -94,7 +94,7 @@ class Paypal
         return $this;
     }
 
-    public function getPaymentStatus(): string
+    public function getPaymentStatus(): ?string
     {
         return $this->payment_status;
     }
@@ -121,7 +121,7 @@ class Paypal
         return $this;
     }
 
-    public function getPaymentCurrency(): string
+    public function getPaymentCurrency(): ?string
     {
         return $this->payment_currency;
     }
@@ -133,7 +133,7 @@ class Paypal
         return $this;
     }
 
-    public function getPaymentDate(): DateTime
+    public function getPaymentDate(): ?DateTime
     {
         return $this->payment_date;
     }
@@ -149,7 +149,7 @@ class Paypal
         return $this;
     }
 
-    public function getPayerEmail(): string
+    public function getPayerEmail(): ?string
     {
         return $this->payer_email;
     }
