@@ -5,7 +5,7 @@ easy_admin:
       label: 'Client'
       list:
         title: 'Client'
-        fields: ['name', 'fisrtName', 'email', 'bookings', 'number']
+        fields: ['name', 'firstName', 'email', 'bookings', 'number']
       form:
         fields:
           - {property: 'name'}

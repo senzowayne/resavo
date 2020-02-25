@@ -49,7 +49,7 @@ class UserController extends AbstractController
 
             $this->addFlash(
                 'success',
-                'Félicitations ' . $user->getNom() . ' votre compte à bien été créer, vous pouvez desormais reservez.'
+                'Félicitations ' . $user->getName() . ' votre compte à bien été créer, vous pouvez desormais reservez.'
             );
 
             return $this->redirectToRoute('app_login');
