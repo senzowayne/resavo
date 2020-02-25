@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     itemOperations={"get"}
  * )
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields={"dateReservation", "seance", "salle"},
+ * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
  * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
  */
