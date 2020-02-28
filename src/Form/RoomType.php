@@ -2,26 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Salle;
+use App\Entity\Room;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SalleType extends AbstractType
+class RoomType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
+            ->add('name')
             ->add('description')
-            ->add('prix')
+            ->add('price')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Salle::class,
+            'data_class' => Room::class,
         ]);
     }
 }

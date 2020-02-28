@@ -19,7 +19,7 @@
         {% endif %}
         <section id="display" class="row mt-3">
             {% set week = '' %}
-            {% for data in resa %}
+            {% for data in booking %}
                 {% if loop.index == 1 %}
                     {% if data.soirWeek  %}
                         {% set week = 1 %}
@@ -30,14 +30,14 @@
             {% endfor %}
             <div class="col-sm-12 col-md text-left">
                 <h3>Salle Bora-Bora</h3>
-             {{ view._view_resa(resa, '1', seance1, week) }}
+             {{ view._view_booking(booking, '1', meeting1, week) }}
             </div> <div class="col-sm-12 col-md text-left">
                 <h3>Salle Miami</h3>
-                {{ view._view_resa(resa, '2', seance2, week) }}
+                {{ view._view_booking(booking, '2', meeting2, week) }}
 
             </div> <div class="col-sm-12 col-md text-left">
                 <h3>Salle Phuket</h3>
-                {{ view._view_resa(resa, '3', seance3, week) }}
+                {{ view._view_booking(booking, '3', meeting3, week) }}
 
             </div>
 

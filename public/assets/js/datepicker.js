@@ -1,38 +1,39 @@
     /***************
-     INITIALITION
+     INITIALISATION
      ****************/
 jourSelect = "";
 valueweekEnd= '';
 tarifNuit = false;
 jour = new Date().getDate();
-    lmois = (new Date().getMonth() + 1);
-    mois = '';
-    if (mois < 9) {
-        mois = 0 + '' + lmois
-    }
-    annee = new Date().getFullYear();
-   // valueDate = jour + '-' + mois + '-' + annee
+lmois = (new Date().getMonth() + 1);
+mois = '';
+if (mois < 9) {
+    mois = 0 + '' + lmois
+}
+annee = new Date().getFullYear();
+// valueDate = jour + '-' + mois + '-' + annee
 
 //Fonction qui charge les séances depuis la bdd
-function horaires(select, valueweekEnd){
+function horaires(select, valueweekEnd, horaire){
 $.ajax({
         url: "/reservation/seance/horaire",
         method: 'post',
         data: {
-            'salle': select,
+            'room': select,
             'weekEnd': valueweekEnd
         },
         success: function (result) {
-            seance = result
+            let seance = result;
+            // let horaire;
             horaire.empty();
             horaire.append(
                 $('<option>',
                     {
                         value: 0,
-                        text: 'Selectionnez une séance'
+                        text: 'Sélectionnez une séance'
                     })
-            )
-            for (var key in result) {
+            );
+            for (const key in result) {
                 //console.log("key " + key + " has value " + result[key]);
 
                 horaire.append($('<option>',
@@ -71,15 +72,15 @@ jQuery(function($){
         prevText: '&#x3c;Préc',
         nextText: 'Suiv&#x3e;',
         currentText: 'Aujourd\'hui',
-        monthNames: ['Janvier','Fevrier','Mars','Avril','Mai','Juin',
-            'Juillet','Aout','Septembre','Octobre','Novembre','Decembre'],
+        monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Aout','Septembre','Octobre','Novembre','Décembre'],
         monthNamesShort: ['Jan','Fev','Mar','Avr','Mai','Jun',
             'Jul','Aou','Sep','Oct','Nov','Dec'],
         dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
         dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
         dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
         weekHeader: 'Sm',
-       // defaultDate: new Date(),
+        // defaultDate: new Date(),
         dateFormat: 'dd-mm-yy',
         setDate: "-0d",
         firstDay: 1,
@@ -94,10 +95,10 @@ jQuery(function($){
         showAnim: "fadeIn",
         onSelect: (function(dateText){
             //valueDate = $(this).val(dateText);
-        var seldate = $(this).datepicker('getDate');
-        seldate = seldate.toDateString();
-        seldate = seldate.split(' ');
-        var weekday= new Array();
+            let seldate = $(this).datepicker('getDate');
+            seldate = seldate.toDateString();
+            seldate = seldate.split(' ');
+            const weekday = [];
             weekday['Mon']="Lundi";
             weekday['Tue']="Mardi";
             weekday['Wed']="Mercredi";
@@ -107,12 +108,12 @@ jQuery(function($){
             weekday['Sun']="Dimanche";
         var weekOfDay = weekday[seldate[0]];
         jourSelect = weekday[seldate[0]];
-        if (weekOfDay != "Vendredi" && weekOfDay != "Samedi" && weekOfDay != "Dimanche"){
+        if (weekOfDay !== "Vendredi" && weekOfDay !== "Samedi" && weekOfDay !== "Dimanche"){
             valueweekEnd = 0;
-            horaires($("#reservation_salle").val(), valueweekEnd)
+            horaires($("#booking_room").val(), valueweekEnd)
         } else {
             valueweekEnd = 1;
-            horaires($("#reservation_salle").val(), valueweekEnd)
+            horaires($("#booking_room").val(), valueweekEnd)
         }
 
         //valueDate = dateText;
@@ -128,4 +129,4 @@ jQuery(function($){
         $.datepicker.setDefaults($.datepicker.regional['fr']);
      $( "#reservation_date_reservation" ).datepicker();
 
-})
+});

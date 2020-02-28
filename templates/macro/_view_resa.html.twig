@@ -1,16 +1,16 @@
-{% macro _view_resa(resa, salle, seances, week) %}
+{% macro _view_booking(booking, room, meetings, week) %}
   {% set id = '' %}
 
-  {% if resa is not empty %}
-    {% for seance in seances if seance.salle.id == salle and seance.weekEnd == week %}
-      {% for data in resa if data.salle.id == salle and data.seance.id == seance.id %}
-        {% if data.salle.id == '1' %}
+  {% if booking is not empty %}
+    {% for meeting in meetings if meeting.room.id == room and meeting.weekEnd == week %}
+      {% for data in booking if data.room.id == room and data.meeting.id == meeting.id %}
+        {% if data.room.id == '1' %}
           {% set id = 'seance_bora-bora' %}
           {% set bg = 'bg-primary' %}
-        {% elseif data.salle.id == '2' %}
+        {% elseif data.room.id == '2' %}
           {% set id = 'seance_miami' %}
           {% set bg = 'bg-warning' %}
-        {% elseif data.salle.id == '3' %}
+        {% elseif data.room.id == '3' %}
           {% set id = 'seance_phuket' %}
           {% set bgHex = 'background-color: #9933CC !important;' %}
         {% endif %}
@@ -20,39 +20,39 @@
             <div class="card-header">
               {{ loop.parent.loop.index }}
               - Séance :
-              <strong>{{ data.seance.libelle | default('Non renseigné')  }}</strong>
+              <strong>{{ data.meeting.label | default('Non renseigné')  }}</strong>
             </div>
             <div class="card-body ">
               <a
-                href="/admin/?entity=Reservation&action=show&menuIndex=2&submenuIndex=-1&sortField=dateReservation&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DReservation%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DdateReservation%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Voir</a>
+                href="/admin/?entity=Booking&action=show&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Voir</a>
               <a
-                href="/admin/?entity=Reservation&action=edit&menuIndex=2&submenuIndex=-1&sortField=dateReservation&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DReservation%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DdateReservation%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Éditer</a>
-              <h5 class="card-title">{{ data.salle.nom | default('Non renseigné')  }}<br>
-                {{ data.nbPersonne }}
-                Personne{% if data.nbPersonne > 1 %}s{% endif %}
+                href="/admin/?entity=Booking&action=edit&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Éditer</a>
+              <h5 class="card-title">{{ data.room.name | default('Non renseigné')  }}<br>
+                {{ data.nbPerson }}
+                Personne{% if data.nbPerson > 1 %}s{% endif %}
               </h5>
               <p class="card-text">
                 <strong>Client:
-                </strong>{{ data.user.nom | default('Non renseigné')  }}
-                {{ data.user.prenom | default('')  }}
+                </strong>{{ data.user.name | default('Non renseigné')  }}
+                {{ data.user.firstName | default('')  }}
                 <br>
-                {% if data.nom == 'GROUPON'%}
+                {% if data.name == 'GROUPON'%}
                 <img width="30%" src="{{asset('assets/img/groupon.png')}}" alt="groupon logo"><br>
                 {% else %}
                   <strong>Résa:</strong>
-                {{ data.nom | default('Non renseigné')  }}
+                {{ data.name | default('Non renseigné')  }}
                 {%endif%}
                 <br>
                 <strong>Tél:
-                </strong>{{ data.user.numero | default('Non renseigné') }}<br>
-                {% if data.remarques %}
+                </strong>{{ data.user.number | default('Non renseigné') }}<br>
+                {% if data.notices %}
                   <strong>Remarques:</strong>
-                  {{ data.remarques }}
+                  {{ data.notices }}
                 {% endif %}
-                {% if 'resa_' in data.nom %}
+                {% if 'booking_' in data.name %}
                   <br>
                   <strong>Acompte :
-                    {{ data.paiement.paymentAmount|default('0') }}
+                    {{ data.payment.paymentAmount|default('0') }}
                     €</strong>
                 </p>
               {% endif %}
@@ -64,8 +64,8 @@
           <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 22rem;min-height: 22rem">
             <div class="card-header">
               {{ loop.parent.loop.index }}
-              - Séance:
-              {{ seance.libelle | default('Non renseigné')  }}
+              - Séance :
+              {{ meeting.label | default('Non renseigné') }}
             </div>
             <div class="card-body">
               <h5 class="card-title text-warning ">DISPONIBLE</h5>

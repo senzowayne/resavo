@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -19,8 +22,8 @@ class Paypal
     private $id;
 
     /**
-         * @ORM\Column(type="string", length=255)
-         */
+     * @ORM\Column(type="string", length=255)
+     */
     protected $payment_id;
 
     /**
@@ -49,15 +52,15 @@ class Paypal
     protected $payer_email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="paiements", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", mappedBy="paiement", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment", cascade={"persist", "remove"})
      */
-    private $reservation;
+    private $booking;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -74,44 +77,33 @@ class Paypal
         return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentId()
+    public function getPaymentId(): ?string
     {
         return $this->payment_id;
     }
 
-    /**
-     * @param mixed $payment_id
-     */
-    public function setPaymentId($payment_id): void
+    public function setPaymentId(string $payment_id): self
     {
         $this->payment_id = $payment_id;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentStatus()
+    public function getPaymentStatus(): ?string
     {
         return $this->payment_status;
     }
 
-    /**
-     * @param mixed $payment_status
-     */
-    public function setPaymentStatus($payment_status): void
+    public function setPaymentStatus(string $payment_status): self
     {
         $this->payment_status = $payment_status;
+
+        return $this;
     }
 
     /**
@@ -122,63 +114,51 @@ class Paypal
         return $this->payment_amount;
     }
 
-    /**
-     * @param mixed $payment_amount
-     */
-    public function setPaymentAmount($payment_amount): void
+    public function setPaymentAmount(float $payment_amount): self
     {
         $this->payment_amount = $payment_amount;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentCurrency()
+    public function getPaymentCurrency(): ?string
     {
         return $this->payment_currency;
     }
 
-    /**
-     * @param mixed $payment_currency
-     */
-    public function setPaymentCurrency($payment_currency): void
+    public function setPaymentCurrency(string $payment_currency): self
     {
         $this->payment_currency = $payment_currency;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentDate()
+    public function getPaymentDate(): ?DateTime
     {
         return $this->payment_date;
     }
 
     /**
      * @ORM\PrePersist
-     * @param \DateTimeInterface $createAt
-     * @return Reservation
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setPaymentDate(): void
+    public function setPaymentDate(): self
     {
-        $this->payment_date = new \DateTime();
+        $this->payment_date = new DateTime();
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPayerEmail()
+    public function getPayerEmail(): ?string
     {
         return $this->payer_email;
     }
 
-    /**
-     * @param mixed $payer_email
-     */
-    public function setPayerEmail($payer_email): void
+    public function setPayerEmail(string $payer_email): self
     {
         $this->payer_email = $payer_email;
+
+        return $this;
     }
 
     public function getUser(): ?User
@@ -186,25 +166,25 @@ class Paypal
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getReservation(): ?Reservation
+    public function getBooking(): ?Booking
     {
-        return $this->reservation;
+        return $this->booking;
     }
 
-    public function setReservation(Reservation $reservation): self
+    public function setBooking(Booking $booking): self
     {
-        $this->reservation = $reservation;
+        $this->booking = $booking;
 
         // set the owning side of the relation if necessary
-        if ($this !== $reservation->getPaiement()) {
-            $reservation->setPaiement($this);
+        if ($this !== $booking->getPayment()) {
+            $booking->setPayment($this);
         }
 
         return $this;

@@ -14,8 +14,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields="email",
- * message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier")
+ * @UniqueEntity(
+ *     fields="email",
+ *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
+ * )
  */
 class User implements UserInterface
 {
@@ -26,21 +28,19 @@ class User implements UserInterface
      */
     private $id;
 
-
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Groups({"resa:read"})
+     */
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
-    private $nom;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Groups({"resa:read"})
-     */
-    private $prenom;
+    private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255, unique = true)
@@ -80,14 +80,14 @@ class User implements UserInterface
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Reservation", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user", cascade={"persist"})
      */
-    private $reservations;
+    private $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
-    private $paiements;
+    private $payments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
@@ -98,12 +98,12 @@ class User implements UserInterface
      * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
-    private $numero;
+    private $number;
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
-        $this->paiements = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->payments = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
     }
 
@@ -112,26 +112,27 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
+        $this->setSlug();
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->prenom;
+        return $this->firstName;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setFirstName(string $firstName): self
     {
-        $this->prenom = $prenom;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -172,47 +173,42 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @param string $slug
-     * @return User
-     */
-    public function setSlug()
+    public function setSlug(): void
     {
         $generator = new SlugGenerator();
-        $this->slug = $generator->generate($this->nom);
+        $this->slug = $generator->generate($this->name);
     }
 
     /**
-     * @return Collection|Reservation[]
+     * @return Collection|Booking[]
      */
-    public function getReservations(): Collection
+    public function getBookings(): Collection
     {
-        return $this->reservations;
+        return $this->bookings;
     }
 
-    public function addReservation(Reservation $reservation): self
+    public function addBooking(Booking $booking): self
     {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations[] = $reservation;
-            $reservation->setUser($this);
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeReservation(Reservation $reservation): self
+    public function removeBooking(Booking $booking): self
     {
-        if ($this->reservations->contains($reservation)) {
-            $this->reservations->removeElement($reservation);
+        if ($this->bookings->contains($booking)) {
+            $this->bookings->removeElement($booking);
             // set the owning side to null (unless already changed)
-            if ($reservation->getUser() === $this) {
-                $reservation->setUser(null);
+            if ($booking->getUser() === $this) {
+                $booking->setUser(null);
             }
         }
 
@@ -230,11 +226,10 @@ class User implements UserInterface
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
-     *
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        $roles = $this->userRoles->map(function ($role) {
+        $roles = $this->userRoles->map(static function (Role $role) {
             return $role->getTitle();
         })->toArray();
         $roles[] = 'ROLE_USER';
@@ -247,10 +242,8 @@ class User implements UserInterface
      *
      * This should be the encoded password. On authentication, a plain-text
      * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->hash;
     }
@@ -259,26 +252,22 @@ class User implements UserInterface
      * Returns the salt that was originally used to encode the password.
      *
      * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
 
     public function __toString()
     {
-        return $this->getPrenom();
+        return $this->getFirstName();
     }
 
     /**
      * Returns the username used to authenticate the user.
-     *
-     * @return string The username
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->email;
     }
@@ -289,7 +278,7 @@ class User implements UserInterface
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
@@ -297,28 +286,28 @@ class User implements UserInterface
     /**
      * @return Collection|Paypal[]
      */
-    public function getPaiements(): Collection
+    public function getPayments(): Collection
     {
-        return $this->paiements;
+        return $this->payments;
     }
 
-    public function addPaiement(Paypal $paiement): self
+    public function addPayment(Paypal $payment): self
     {
-        if (!$this->paiements->contains($paiement)) {
-            $this->paiements[] = $paiement;
-            $paiement->setUser($this);
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePaiement(Paypal $paiement): self
+    public function removePayment(Paypal $payment): self
     {
-        if ($this->paiements->contains($paiement)) {
-            $this->paiements->removeElement($paiement);
+        if ($this->payments->contains($payment)) {
+            $this->payments->removeElement($payment);
             // set the owning side to null (unless already changed)
-            if ($paiement->getUser() === $this) {
-                $paiement->setUser(null);
+            if ($payment->getUser() === $this) {
+                $payment->setUser(null);
             }
         }
 
@@ -353,14 +342,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getNumero(): ?string
+    public function getNumber(): ?string
     {
-        return $this->numero;
+        return $this->number;
     }
 
-    public function setNumero(string $numero): self
+    public function setNumber(string $number): self
     {
-        $this->numero = $numero;
+        $this->number = $number;
 
         return $this;
     }

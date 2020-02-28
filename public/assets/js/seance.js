@@ -1,21 +1,22 @@
 $(document).ready(() => {
-    select = $('#reservation_salle');
-    horaire = $('#reservation_seance');
-    datepicker = $("#reservation_date_reservation")
-    if (jourSelect = "Vendredi") {
-      valueweekEnd = 1
+    let select = $('#booking_room');
+    let horaire = $('#reservation_seance');
+    let datepicker = $("#reservation_date_reservation");
+    let valueWeekEnd = 0;
+    if (jourSelect === "Vendredi") {
+      valueWeekEnd = 1;
     }
-    horaires($('#reservation_salle').val(), valueweekEnd);
+    horaires(select.val(), valueWeekEnd);
 
-    $('#reservation_salle, #reservation_date_reservation').on('change', function () {
-      if (jourSelect == "Vendredi" || jourSelect == "Samedi" || jourSelect == "Dimanche") {
-        valueweekEnd = 1;
-      } else {
-        valueweekEnd = 0;
-      }
-        horaires(select.val(), valueweekEnd)
+    $('#booking_room, #reservation_date_reservation').on('change', function () {
+        if (jourSelect == "Vendredi" || jourSelect == "Samedi" || jourSelect == "Dimanche") {
+            valueWeekEnd = 1;
+        } else {
+            valueWeekEnd = 0;
+        }
+        horaires(select.val(), valueWeekEnd, horaire)
     });
 
-    datepicker.datepicker({onSelect: horaires(select.val(), valueweekEnd)});
+    datepicker.datepicker({onSelect: horaires(select.val(), valueWeekEnd, horaire)});
 
 });

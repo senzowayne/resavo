@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,11 +21,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     itemOperations={"get"}
  * )
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields={"dateReservation", "seance", "salle"},
+ * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
- * @ORM\Entity(repositoryClass="App\Repository\ReservationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
  */
-class Reservation
+class Booking
 {
     /**
      * @ORM\Id()
@@ -31,18 +35,18 @@ class Reservation
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reservations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Salle", inversedBy="reservations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
-    private $salle;
+    private $room;
 
     /**
      * @ORM\Column(type="datetime")
@@ -51,44 +55,44 @@ class Reservation
     private $createAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Seance")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read"})
      */
-    private $seance;
+    private $meeting;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read"})
      */
-    private $dateReservation;
+    private $bookingDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      * @Groups({"resa:read"})
      */
-    private $nbPersonne;
+    private $nbPerson;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      * @Groups({"resa:read"})
      */
-    private $nom;
+    private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="reservation", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $paiement;
+    private $payment;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      * @Groups({"resa:read"})
      */
-    private $Remarques;
+    private $notices;
 
 
     /**
@@ -108,124 +112,128 @@ class Reservation
         return $this->user;
     }
 
-    public function setUser(?User $user)
+    public function setUser(?UserInterface $user)
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getSalle(): ?Salle
+    public function getRoom(): ?Room
     {
-        return $this->salle;
+        return $this->room;
     }
 
-    public function setSalle(?Salle $salle): self
+    public function setRoom(?Room $room): self
     {
-        $this->salle = $salle;
+        $this->room = $room;
 
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeInterface
+    public function getCreateAt(): ?DateTimeInterface
     {
         return $this->createAt;
     }
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**
      * @ORM\PrePersist
+     *
+     * @throws Exception
      */
     public function setCreateAt(): self
     {
-        $this->createAt =  new \DateTime();
+        $this->createAt =  new DateTime();
 
         return $this;
     }
 
-    public function getSeance(): ?Seance
+    public function getMeeting(): ?Meeting
     {
-        return $this->seance;
+        return $this->meeting;
     }
 
-    public function setSeance(?Seance $seance): self
+    public function setMeeting(?Meeting $meeting): self
     {
-        $this->seance = $seance;
+        $this->meeting = $meeting;
 
         return $this;
     }
 
-    public function getDateReservation(): ?\DateTimeInterface
+    public function getBookingDate(): ?DateTimeInterface
     {
-        return $this->dateReservation;
+        return $this->bookingDate;
     }
 
-    public function setDateReservation(\DateTimeInterface $dateReservation): self
+    public function setBookingDate(DateTimeInterface $bookingDate): self
     {
-        $this->dateReservation = $dateReservation;
+        $this->bookingDate = $bookingDate;
 
         return $this;
     }
 
-    public function getNbPersonne(): ?int
+    public function getNbPerson(): ?int
     {
-        return $this->nbPersonne;
+        return $this->nbPerson;
     }
 
-    public function setNbPersonne(?int $nbPersonne): self
+    public function setNbPerson(?int $nbPerson): self
     {
-        $this->nbPersonne = $nbPersonne;
+        $this->nbPerson = $nbPerson;
 
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getPaiement(): ?Paypal
+    public function getPayment(): ?Paypal
     {
-        return $this->paiement;
+        return $this->payment;
     }
 
-    public function setPaiement(Paypal $paiement): self
+    public function setPayment(Paypal $payment): self
     {
-        $this->paiement = $paiement;
+        $this->payment = $payment;
 
         return $this;
     }
 
-    public function getRemarques(): ?string
+    public function getNotices(): ?string
     {
-        return $this->Remarques;
+        return $this->notices;
     }
 
-    public function setRemarques(?string $Remarques): self
+    public function setNotices(?string $notices): self
     {
-        $this->Remarques = $Remarques;
+        $this->notices = $notices;
 
         return $this;
     }
-    
+
     public function getTotal()
     {
         return $this->total;
     }
 
-    public function setTotal($total): void
+    public function setTotal($total): self
     {
         $this->total = $total;
+
+        return $this;
     }
 }

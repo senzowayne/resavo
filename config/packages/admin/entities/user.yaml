@@ -5,27 +5,27 @@ easy_admin:
       label: 'Client'
       list:
         title: 'Client'
-        fields: ['nom', 'prenom', 'email', 'reservations', 'numero']
+        fields: ['name', 'firstName', 'email', 'bookings', 'number']
       form:
         fields:
-          - {property: 'nom'}
-          - {property: 'prenom', type_options: { required: false }}
+          - {property: 'name'}
+          - {property: 'firstName', type_options: { required: false }}
           - {property: 'email',  type: 'email'}
-          - {property: 'numero'}
+          - {property: 'number'}
         form_options: { validation_groups: false }
       new:
         fields:
-            - {property: 'nom'}
-            - {property: 'prenom', type_options: { required: false }}
+            - {property: 'name'}
+            - {property: 'firstName', type_options: { required: false }}
             - {property: 'email',  type: 'email'}
-            - {property: 'numero'}
+            - {property: 'number'}
             - {property: 'hash', label: 'mot de passe'}
       edit:
         fields:
-            - {property: 'nom'}
-            - {property: 'prenom', type_options: { required: false }}
+            - {property: 'name'}
+            - {property: 'firstName', type_options: { required: false }}
             - {property: 'email',  type: 'email'}
-            - {property: 'numero'}
+            - {property: 'number'}
 
       search:
-        fields: ['nom', 'email', 'numero']
+        fields: ['name', 'email', 'number']
