@@ -65,8 +65,7 @@ class BookingController extends AbstractController
         $blocked = $repoDate->myfindAll();
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
             $this->getParameter('CLIENT_ID') .
-            '&currency=EUR&debug=false&disable-card=amex&intent=authorize'
-        ;
+            '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
 
         return $this->render('reservation/index.html.twig', [
             'form' => $form->createView(),
@@ -79,7 +78,8 @@ class BookingController extends AbstractController
     /**
      * @Route("/before-reservation", name="before_reservation")
      */
-    public function reservationPage(): Response {
+    public function reservationPage(): Response
+    {
 
         return $this->render('reservation/booking.html.twig', [
             'controller_name' => 'Controller',
@@ -102,12 +102,12 @@ class BookingController extends AbstractController
         $meeting3 = $roomRepository->findBy(['room' => 3]);
         $datas = [];
         foreach ($booking as $key => $value) {
-                $datas[] = $value;
+            $datas[] = $value;
         }
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $datas,
             'meeting1' => $meeting1,
-            'meeting2'=> $meeting2,
+            'meeting2' => $meeting2,
             'meeting3' => $meeting3
         ]);
     }
@@ -132,8 +132,7 @@ class BookingController extends AbstractController
             ->setRoom($room)
             ->setMeeting($meeting)
             ->setNbPerson($request->request->get('nbPerson'))
-            ->setTotal($request->request->get('total'))
-        ;
+            ->setTotal($request->request->get('total'));
     }
 
     /**
@@ -149,6 +148,11 @@ class BookingController extends AbstractController
 
         if ($this->check->verifyPayment($pay, $booking)) {
             $payment = $this->manager->getRepository(Paypal::class)->find($pay);
+            $this->logger->info(
+                'Details => ' . $request->request->get('date') . '
+                ' . $request->request->get('room') . '
+                ' . $request->request->get('meeting'));
+            
             $booking->setPayment($payment);
             $booking->setUser($user);
             $this->manager->persist($booking);
@@ -191,15 +195,14 @@ class BookingController extends AbstractController
         $authID = $request->request->get('authorizationID');
         $this->session->set('authorizationID', $authID);
 
-        if (null == $authID)
-        {
+        if (null == $authID) {
             $this->logger->error('Aucune authorizationID envoyé');
             throw new Exception('Aucune authorizationID envoyé');
         }
         $this->logger->info('authorizationID : ' . $data['id'] . ' User e-mail : ' . $this->getUser()->getEmail());
 
         $data = GetOrder::getOrder($data['id']);
-       if ($data['status'] === 'COMPLETED') {
+        if ($data['status'] === 'COMPLETED') {
             $payment = (new Paypal())
                 ->setPaymentId($data['orderID'])
                 ->setPaymentCurrency($data['currency'])
@@ -208,8 +211,7 @@ class BookingController extends AbstractController
                 ->setPaymentStatus($data['status'])
                 ->setPayerEmail($data['mail'])
                 ->setUser($this->getUser())
-                ->setCapture(0)
-            ;
+                ->setCapture(0);
 
             $this->manager->persist($payment);
             $this->manager->flush();
