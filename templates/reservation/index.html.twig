@@ -76,7 +76,7 @@
 
                 <div class="col mt-3 pl-2">
                     <h2 class="pb-2">Selectionner une séance</h2>
-                    <select id="reservation_seance" name="reservation[meeting]" class="form-control"></select>
+                    <div id="app"></div>
                 </div>
                 <div class="col-10 offset-1 mt-3" id="dispo"></div>
                 <div class="row pl mt-2">
@@ -117,18 +117,14 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
+    {{ encore_entry_script_tags('resavo') }}
     <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker.js') }}"></script>
-    <script src="{{client}}"></script>
+    <script src="{{ client }}"></script>
     <script src="{{ asset('assets/js/seance.js') }}"></script>
     <script src="{{ asset('assets/js/paypal.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"
             integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i"
             crossorigin="anonymous"></script>
-    <script src="{{ asset('assets/js/snow.js') }}"></script>
-    <script type="text/javascript">
-        window.onload = function(){
-            snow.init(10);
-        };
     </script>
 {% endblock %}

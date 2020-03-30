@@ -11,7 +11,7 @@ if (document.getElementById('app')) {
         delimiters: ['${', '}'],
         render: function (h) {
             return (
-                <MaResa/>
+                < MaResa />
             )
         }
     })
