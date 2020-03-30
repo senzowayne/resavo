@@ -419,7 +419,7 @@ function verifDispo() {
   if (valueDate !== null && $("#reservation_seance option:selected").index() !== 0) {
     const PATH_SAVE_RECIT_CONTENT = '/reservation/verif/dispo';
     compare = {
-      "message": "Cette réservation est deja prise"
+      "message": "Cette réservation est déjà prise"
     };
     $.ajax({
       url: PATH_SAVE_RECIT_CONTENT,

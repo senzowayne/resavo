@@ -13,6 +13,7 @@ use App\Form\BookingType;
 use DateTime;
 use Exception;
 use LogicException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,17 +34,20 @@ class BookingController extends AbstractController
     private $check;
     private $manager;
     private $session;
+    private $logger;
 
     public function __construct(
         EntityManagerInterface $manager,
         NotificationController $notification,
         CheckBookingController $check,
-        SessionInterface $session)
+        SessionInterface $session,
+        LoggerInterface $logger)
     {
         $this->notification = $notification;
         $this->check = $check;
         $this->manager = $manager;
         $this->session = $session;
+        $this->logger = $logger;
     }
 
     /**
@@ -61,8 +65,7 @@ class BookingController extends AbstractController
         $blocked = $repoDate->myfindAll();
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
             $this->getParameter('CLIENT_ID') .
-            '&currency=EUR&debug=false&disable-card=amex&intent=authorize'
-        ;
+            '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
 
         return $this->render('reservation/index.html.twig', [
             'form' => $form->createView(),
@@ -75,7 +78,8 @@ class BookingController extends AbstractController
     /**
      * @Route("/before-reservation", name="before_reservation")
      */
-    public function reservationPage(): Response {
+    public function reservationPage(): Response
+    {
 
         return $this->render('reservation/booking.html.twig', [
             'controller_name' => 'Controller',
@@ -98,12 +102,12 @@ class BookingController extends AbstractController
         $meeting3 = $roomRepository->findBy(['room' => 3]);
         $datas = [];
         foreach ($booking as $key => $value) {
-                $datas[] = $value;
+            $datas[] = $value;
         }
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $datas,
             'meeting1' => $meeting1,
-            'meeting2'=> $meeting2,
+            'meeting2' => $meeting2,
             'meeting3' => $meeting3
         ]);
     }
@@ -128,8 +132,7 @@ class BookingController extends AbstractController
             ->setRoom($room)
             ->setMeeting($meeting)
             ->setNbPerson($request->request->get('nbPerson'))
-            ->setTotal($request->request->get('total'))
-        ;
+            ->setTotal($request->request->get('total'));
     }
 
     /**
@@ -141,14 +144,20 @@ class BookingController extends AbstractController
         $booking = $this->createBooking($request);
         $user = $this->getUser();
         $pay = $this->session->get('pay');
+        $this->logger->info('Création de la réservation -- ' . $this->getUser()->getEmail());
 
         if ($this->check->verifyPayment($pay, $booking)) {
             $payment = $this->manager->getRepository(Paypal::class)->find($pay);
-
+            $this->logger->info(
+                'Details => ' . $request->request->get('date') . '
+                ' . $request->request->get('room') . '
+                ' . $request->request->get('meeting'));
+            
             $booking->setPayment($payment);
             $booking->setUser($user);
             $this->manager->persist($booking);
             $this->manager->flush();
+            $this->logger->info(' Verification du paiement && Enregistrement de la réservation -- ' . $this->getUser()->getEmail());
             $booking->setName(
                 'booking_' . substr($this->getUser()->getName(), 0, 3) .
                 '&' . $booking->getId() . '&' . $this->getUser()->getId()
@@ -180,13 +189,20 @@ class BookingController extends AbstractController
      */
     public function authorizePayment(Request $request): JsonResponse
     {
+        $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
         $data = $request->request->get('authorization');
         $authID = $request->request->get('authorizationID');
         $this->session->set('authorizationID', $authID);
 
+        if (null == $authID) {
+            $this->logger->error('Aucune authorizationID envoyé');
+            throw new Exception('Aucune authorizationID envoyé');
+        }
+        $this->logger->info('authorizationID : ' . $data['id'] . ' User e-mail : ' . $this->getUser()->getEmail());
+
         $data = GetOrder::getOrder($data['id']);
-       if ($data['status'] === 'COMPLETED') {
+        if ($data['status'] === 'COMPLETED') {
             $payment = (new Paypal())
                 ->setPaymentId($data['orderID'])
                 ->setPaymentCurrency($data['currency'])
@@ -195,8 +211,7 @@ class BookingController extends AbstractController
                 ->setPaymentStatus($data['status'])
                 ->setPayerEmail($data['mail'])
                 ->setUser($this->getUser())
-                ->setCapture(0)
-            ;
+                ->setCapture(0);
 
             $this->manager->persist($payment);
             $this->manager->flush();
@@ -215,12 +230,14 @@ class BookingController extends AbstractController
     public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
+            $this->logger->info('Capture du paiement -- User e-mail : ' . $this->getUser()->getEmail());
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $captureId = $response->result->id;
             if ('COMPLETED' !== $response->result->status) {
                 $this->manager->remove($payment);
                 $this->manager->remove($booking);
                 $this->manager->flush();
+                $this->logger->error('Paiement non capturé -- suppression de la réservation User e-mail : ' . $this->getUser()->getEmail());
                 $this->addFlash('danger', 'Un problème d\'approvisionnement est survenu');
 
                 return $this->redirectToRoute('before_reservation');
