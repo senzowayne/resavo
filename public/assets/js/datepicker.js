@@ -23,7 +23,7 @@ $.ajax({
             'weekEnd': valueweekEnd
         },
         success: function (result) {
-            let seance = result;
+            /*  let seance = result;
             // let horaire;
             horaire.empty();
             horaire.append(
@@ -36,12 +36,12 @@ $.ajax({
             for (const key in result) {
                 //console.log("key " + key + " has value " + result[key]);
 
-                horaire.append($('<option>',
+              horaire.append($('<option>',
                     {
                         value: key,
                         text: result[key]
                     }))
-            }
+            }*/
 
             $('this option:first').prop('selected', true);
             resume()

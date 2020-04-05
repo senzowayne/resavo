@@ -3,7 +3,8 @@ import Vue from 'vue';
 
 window.axios = axios;
 window.Vue = Vue;
-import MaResa from './MaResa.vue';
+import Metting from './components/Meeting.vue';
+import Room from "./components/Room";
 
 if (document.getElementById('app')) {
     new Vue({
@@ -11,8 +12,9 @@ if (document.getElementById('app')) {
         delimiters: ['${', '}'],
         render: function (h) {
             return (
-                < MaResa />
-            )
+                <div>
+                < Room />
+                </div>)
         }
     })
 }
