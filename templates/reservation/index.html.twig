@@ -10,6 +10,9 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -99,9 +102,27 @@
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
     {{ encore_entry_script_tags('resavo') }}
     <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker.js') }}"></script>
     <script src="{{ client }}"></script>
-    <script src="{{ asset('assets/js/seance.js') }}"></script>
     <script src="{{ asset('assets/js/paypal.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#reservation_date_reservation',
+            vuetify: new Vuetify(),
+            data () {
+                return {
+                    picker: new Date().toISOString().substr(0, 10),
+                }
+            },
+            template: '<v-app id="inspire">\n' +
+                '    <v-row  align="start">\n' +
+                '      <v-date-picker dark locale="fr" full-width\n' +
+                '      :landscape="$vuetify.breakpoint.smAndUp"\n' +
+                '      class="mt-4"  v-model="picker"></v-date-picker>\n' +
+                '  <input id="dateSelected" type="hidden" :value="picker">  ' +
+                '</v-row>\n' +
+                '  </v-app>'
+        })
     </script>
 {% endblock %}

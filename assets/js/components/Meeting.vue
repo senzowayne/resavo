@@ -10,12 +10,17 @@
                 {{ meeting.label }}
             </option>
         </select>
+        <hr>
+        <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" />
     </div>
 </template>
 
 <script>
+
+    import Available from "./Available";
     export default {
         name: "Meeting",
+        components: { Available },
         props: ['room'],
         data() {
             return {
@@ -30,9 +35,23 @@
         watch: {
             room: function(newVal, oldVal) {
                 this.getMeeting();
+                this.setDefaultValue();
             }
         },
         methods: {
+            setDefaultValue() {
+                switch (this.room) {
+                    case 1 :
+                        this.meetingSelected = 1;
+                        break;
+                    case 2 :
+                        this.meetingSelected = 6;
+                        break;
+                    case 3 :
+                        this.meetingSelected = 11;
+                        break;
+                }
+            },
             handleMeetingSelected(val) {
                 this.meetingSelected = val;
             },
