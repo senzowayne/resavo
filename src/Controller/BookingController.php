@@ -55,12 +55,8 @@ class BookingController extends AbstractController
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(Request $request, Room $room = null): Response
+    public function index(): Response
     {
-        $booking = new Booking();
-        $form = $this->createForm(BookingType::class, $booking);
-        $form->handleRequest($request);
-
         $repoDate = $this->manager->getRepository(DateBlocked::class);
         $blocked = $repoDate->myfindAll();
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
@@ -68,8 +64,6 @@ class BookingController extends AbstractController
             '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
 
         return $this->render('reservation/index.html.twig', [
-            'form' => $form->createView(),
-            'room' => $room,
             'blocked' => $blocked,
             'client' => $paypalClient
         ]);
