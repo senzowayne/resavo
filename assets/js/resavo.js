@@ -3,18 +3,23 @@ import Vue from 'vue';
 
 window.axios = axios;
 window.Vue = Vue;
-import Room from "./components/Room";
 
-if (document.getElementById('app')) {
-    new Vue({
-        el: '#app',
-        delimiters: ['${', '}'],
-        render: function (h) {
-            return (
-                <div>
-                    < Room/>
-                </div>)
-        }
-    })
-}
+import DatePicker from "./components/DatePicker"
+import Vuetify from "vuetify";
+
+Vue.use(Vuetify);
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById('app')) {
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            render: function (h) {
+                return (
+                    <DatePicker/>
+                )
+            }
+        })
+    }
+})
 

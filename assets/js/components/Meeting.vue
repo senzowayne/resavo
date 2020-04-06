@@ -11,7 +11,7 @@
             </option>
         </select>
         <hr>
-        <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" />
+        <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date" />
     </div>
 </template>
 
@@ -21,7 +21,7 @@
     export default {
         name: "Meeting",
         components: { Available },
-        props: ['room'],
+        props: ['room', 'date'],
         data() {
             return {
                 meetingSelected: 1,
@@ -36,7 +36,7 @@
             room: function(newVal, oldVal) {
                 this.getMeeting();
                 this.setDefaultValue();
-            }
+            },
         },
         methods: {
             setDefaultValue() {
@@ -56,7 +56,6 @@
                 this.meetingSelected = val;
             },
             getMeeting() {
-
                 axios.get(`/api/meetings?room=${this.room}`)
                     .then(({data}) => {
                         // handle success

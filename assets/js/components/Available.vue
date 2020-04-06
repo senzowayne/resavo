@@ -8,7 +8,7 @@
 <script>
     export default {
         name: "available",
-        props: ['room', 'meeting'],
+        props: ['room', 'meeting', 'date'],
         data() {
             return {
                 message: '',
@@ -17,12 +17,15 @@
             }
         },
         watch: {
-            room: function (newVal, oldVal) {
+            room: function () {
                 this.getAvailable();
             },
-            meeting: function (newVal, oldVal) {
+            meeting: function () {
                 this.getAvailable();
             },
+            date: function () {
+                this.getAvailable();
+            }
         },
         methods: {
             handleIsAvailable(val) {

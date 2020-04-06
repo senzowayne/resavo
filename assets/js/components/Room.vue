@@ -12,7 +12,7 @@
                 </option>
             </select>
         </div>
-        <Meeting v-bind:room="roomSelected" />
+        <Meeting v-bind:room="roomSelected" :date="this.date" />
     </div>
 </template>
 
@@ -21,6 +21,7 @@
 
     export default {
         name: "Room",
+        props: ['date'],
         components: { Meeting },
         data() {
             return {
