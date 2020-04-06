@@ -36,7 +36,7 @@
                 this.roomSelected = val;
             },
             getRoom() {
-                axios.get(`https://127.0.0.1:8000/api/rooms`)
+                axios.get(`/api/rooms`)
                     .then(({data}) => {
                         // handle success
                         this.rooms = data['hydra:member'];

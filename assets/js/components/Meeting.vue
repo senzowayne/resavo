@@ -56,7 +56,8 @@
                 this.meetingSelected = val;
             },
             getMeeting() {
-                axios.get(`https://127.0.0.1:8000/api/meetings?room=${this.room}`)
+
+                axios.get(`/api/meetings?room=${this.room}`)
                     .then(({data}) => {
                         // handle success
                         this.meetings = data['hydra:member'];

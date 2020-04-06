@@ -31,7 +31,7 @@
             getAvailable() {
                 var date = document.getElementById('dateSelected').value;
                 axios({
-                    url: `https://127.0.0.1:8000/reservation/verif/dispo?room=${this.room}&meeting=${this.meeting}&date=${date}`,
+                    url: `/reservation/verif/dispo?room=${this.room}&meeting=${this.meeting}&date=${date}`,
                     method: 'get'
                 }).then(({data}) => {
                     if (data.available == false) {
