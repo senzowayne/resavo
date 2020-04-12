@@ -2,7 +2,7 @@
     <div class="col mt-3 pl-2">
            <span class="pb-2">
             <strong>
-                Vous avez selectionné la salle :
+                Vous avez selectionné la séance :
             </strong>
         </span>
         <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected">

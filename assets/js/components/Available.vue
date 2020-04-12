@@ -1,26 +1,40 @@
 <template>
     <div>
-        <div v-show="isAvailable && display" class="alert alert-success" role="alert">
+        <div v-show="isAvailable && display" class="alert light-blue lighten-5" role="alert">
             Vous avez selectionné : <br>
-            <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong>{{ this.roomText }}</strong> | Séance : <strong>{{ this.meetingText }}</strong></small>
+            <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong>{{ this.roomText }}</strong> | Séance :
+                <strong>{{ this.meetingText }}</strong></small>
 
             <br>
-            <i class="fas fa-check"></i>{{message}}</div>
-        <div v-show="!isAvailable && display" class="alert alert-danger" role="alert"><i class="fas fa-times"></i>{{message}}</div>
+            <i class="fas fa-check"></i>{{message}}
+        </div>
 
-        <span style="display: none;" id="resume" :data-date="this.date" :data-room="this.room" :data-meeting="this.meeting" :data-available="this.isAvailable"></span>
+        <div v-show="!isAvailable && display" class="alert deep-orange lighten-5" role="alert">
+            Vous avez selectionné : <br>
+            <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong>{{ this.roomText }}</strong> | Séance :
+                <strong>{{ this.meetingText }}</strong></small>
+
+            <br>
+            <i class="fas fa-times"></i>{{message}}
+        </div>
+
+        <span style="display: none;" id="resume" :data-date="this.date" :data-room="this.room"
+              :data-meeting="this.meeting" :data-available="this.isAvailable"></span>
     </div>
 </template>
 
 <script>
+    import store from "../resavoStore";
+
     export default {
         name: "available",
         props: ['room', 'meeting', 'date'],
+        store: store,
         data() {
             return {
                 message: '',
                 display: false,
-                isAvailable: true,
+                isAvailable: false,
                 roomText: null,
                 meetingText: null
             }
@@ -34,6 +48,9 @@
             },
             date: function () {
                 this.getAvailable();
+            },
+            isAvailable: function (newVal) {
+                store.commit('IS_AVAILABLE', newVal)
             }
         },
         methods: {

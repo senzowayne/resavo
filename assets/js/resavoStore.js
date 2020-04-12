@@ -4,9 +4,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        date: '',
+        date: new Date().toISOString().substr(0, 10),
         meeting: 1,
         room: 1,
+        isAvailable: false
     },
     mutations: {
         CHANGE_DATE: (state, newDate) => {
@@ -17,12 +18,16 @@ export default new Vuex.Store({
         },
         CHANGE_ROOM: (state, newRoom) => {
             state.room = newRoom
+        },
+        IS_AVAILABLE: (state, bool) => {
+            state.isAvailable = bool
         }
     },
     getters:{
         date: state => state.date,
         room: state => state.room,
-        meeting: state => state.meeting
+        meeting: state => state.meeting,
+        isAvailable: state => state.isAvailable
     },
     actions: {
     }
