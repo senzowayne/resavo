@@ -1,9 +1,9 @@
 <template>
     <div class="col">
-        <div class="col mt-3 pl-2">
+        <div class="col pl-2">
         <span class="pb-2">
             <strong>
-                Vous avez selectionner la salle :
+                Vous avez selectionné la salle :
             </strong>
         </span>
             <select id="reservation_room" name="reservation[room]" class="form-control" v-model="roomSelected">
@@ -41,7 +41,6 @@
                     .then(({data}) => {
                         // handle success
                         this.rooms = data['hydra:member'];
-                        console.log(data['hydra:member']);
                     })
                     .catch(function (error) {
                         // handle error

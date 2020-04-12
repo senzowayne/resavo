@@ -2,7 +2,7 @@
     <div class="col mt-3 pl-2">
            <span class="pb-2">
             <strong>
-                Vous avez selectionner la salle :
+                Vous avez selectionné la salle :
             </strong>
         </span>
         <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected">
@@ -26,7 +26,6 @@
             return {
                 meetingSelected: 1,
                 meetings: [],
-                message: 'Hello Vue'
             }
         },
         created() {
@@ -60,7 +59,6 @@
                     .then(({data}) => {
                         // handle success
                         this.meetings = data['hydra:member'];
-                        console.log(data['hydra:member']);
                     })
                     .catch(function (error) {
                         // handle error

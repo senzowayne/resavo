@@ -8,8 +8,6 @@
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
@@ -30,70 +28,12 @@
             </li>
         </ul>
         <hr>
-
-        <!--  <div class="row mt-4" id="payMe">
-
-              <div class="card text-center col">
-                  <div class="card-header">
-                      Pour valider votre reservation
-                  </div>
-                  <div class="card-body">
-
-                      <p class="card-text" id="validatePay">
-                          <strong>Si vous avez un compte paypal cliquez sur le boutton
-                              Paypal,<br>
-                              cliquez sur Visa ou mastercard pour un payment classique par carte bancaire
-                          </strong></p>
-                      <div id="pay"></div>
-                      <span><a id="annuler" href="#">Revenir à la réservation</a></span>
-                  </div>
-                  <div class="card-footer text-muted">
-                      En cas de problème n'hesitez pas a nous contactez au 01.34.17.78.24
-                  </div>
-              </div>
-
-          </div> -->
-
         <div id="app"></div>
-        <div id="tarif"></div>
+        <hr>
 
-        <div class="col-10 offset-1 mt-3" id="dispo"></div>
-        <div class="row pl mt-2">
-            <hr>
-            <div id="resa1" class="col  pl-4">
-                <h2>Remarques</h2>
-            </div>
-        </div>
-        <div class="col pt-0">
-            {#<input id="buttonDispo" class="btn btn-outline-warning" type="button" value="Verifier disponibilité">#}
-            <button id="btn-remarque" type="button" class="col btn btn-sm btn-warning">Une
-                remarque
-            </button>
-            <input id="buttonValide" class="col btn btn-sm red accent-4" type="button"
-                   value="Confirmer">
-        </div>
-        <p class="col text-center" id="resume"></p>
-
-    </div>
-
-
-    <!-- col button -->
-    <div class="row mt-4">
-
-
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-11"></div>
-        <div class="col-1">
-        </div>
-    </div>
     </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('resavo') }}
-    <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ client }}"></script>
-    <script src="{{ asset('assets/js/paypal.js') }}"></script>
 {% endblock %}
