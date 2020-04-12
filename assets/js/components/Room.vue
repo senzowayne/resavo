@@ -18,6 +18,7 @@
 
 <script>
     import Meeting from "./Meeting";
+    import store from "../resavoStore";
 
     export default {
         name: "Room",
@@ -31,6 +32,11 @@
         },
         created() {
             this.getRoom();
+        },
+        watch: {
+            roomSelected: function (newVal, oldVal) {
+                store.commit('CHANGE_ROOM', newVal)
+            }
         },
         methods: {
             handleRoomSelected(val) {

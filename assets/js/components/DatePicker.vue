@@ -18,9 +18,18 @@
 <script>
     import Room from "./Room";
     import Meeting from "./Meeting";
+    import store from "../resavoStore";
 
     export default {
         components: {Room, Meeting},
+        created() {
+            store.commit('CHANGE_DATE', this.picker)
+        },
+        watch:{
+          picker: function (newVal) {
+              store.commit('CHANGE_DATE', newVal)
+          }
+        },
         data() {
             return {
                 picker: new Date().toISOString().substr(0, 10)

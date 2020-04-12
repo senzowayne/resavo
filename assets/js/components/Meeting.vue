@@ -18,10 +18,13 @@
 <script>
 
     import Available from "./Available";
+    import store from "../resavoStore";
+
     export default {
         name: "Meeting",
         components: { Available },
         props: ['room', 'date'],
+        store: store,
         data() {
             return {
                 meetingSelected: 1,
@@ -30,12 +33,16 @@
         },
         created() {
             this.getMeeting();
+
         },
         watch: {
             room: function(newVal, oldVal) {
                 this.getMeeting();
                 this.setDefaultValue();
             },
+            meetingSelected: function (newVal, oldVal) {
+                store.commit('CHANGE_MEETING', newVal)
+            }
         },
         methods: {
             setDefaultValue() {
