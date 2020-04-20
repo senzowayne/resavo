@@ -59,13 +59,18 @@
             },
             getAvailable() {
                 var date = document.getElementById('dateSelected').value;
+                this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
+                this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
                 axios({
-                    url: `/reservation/verif/dispo?room=${this.room}&meeting=${this.meeting}&date=${date}`,
-                    method: 'get'
+                    url: "/api/booking/available",
+                    method: 'post',
+                    data: {
+                        room: this.roomText,
+                        meeting: this.meetingText,
+                        bookingDate: date
+                    }
                 }).then(({data}) => {
-                    this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
-                    this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
-                    if (data.available == false) {
+                    if (data == false) {
                         this.isAvailable = false
                         this.message = " Cette séance est déjà prise."
                     } else {

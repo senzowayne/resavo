@@ -14,12 +14,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use App\Controller\AvailableBookingController;
 
 /**
  * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
  *     collectionOperations={
  *         "get",
- *         "post"
+ *         "post",
+ *         "available"={
+ *             "denormalization_context"={"groups"={"available:write"}},
+ *             "method"="POST",
+ *             "path"="/booking/available",
+ *             "deserialize"=false,
+ *             "validate"=false,
+ *             "controller"=AvailableBookingController::class,
+ *          }
  *     },
  *     itemOperations={"get"}
  * )
@@ -49,7 +58,7 @@ class Booking
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"resa:read"})
+     * @Groups({"resa:read","available:write"})
      */
     private $room;
 
@@ -62,13 +71,13 @@ class Booking
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"resa:read"})
+     * @Groups({"resa:read","available:write"})
      */
     private $meeting;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"resa:read"})
+     * @Groups({"resa:read","available:write"})
      */
     private $bookingDate;
 
