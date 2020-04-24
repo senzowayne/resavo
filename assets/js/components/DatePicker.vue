@@ -3,7 +3,7 @@
         <div class="mt-3 pl-2 col-4 col-sm offset-1">
             <v-app id="inspire" style="height: 360px!important;">
                 <v-row align="start">
-                    <v-date-picker dark locale="fr" full-width :landscape="$vuetify.breakpoint.smAndUp" class="mt-4"
+                    <v-date-picker :min="today" dark locale="fr" full-width :landscape="$vuetify.breakpoint.smAndUp" class="mt-4"
                                    v-model="picker"></v-date-picker>
                     <input id="dateSelected" type="hidden" :value="picker">
                 </v-row>
@@ -32,7 +32,8 @@
         },
         data() {
             return {
-                picker: new Date().toISOString().substr(0, 10)
+                picker: new Date().toISOString().substr(0, 10),
+                today: new Date().toISOString().substr(0, 10)
             }
         }
     }
