@@ -12,12 +12,14 @@
                                    year-icon="mdi-calendar-blank"
                                    prev-icon="mdi-skip-previous"
                                    next-icon="mdi-skip-next"
-                                   v-model="picker"></v-date-picker>
+                                   v-model="picker"
+                                   :allowed-dates="allowedDates">
+                    </v-date-picker>
                     <input id="dateSelected" type="hidden" :value="picker">
                 </v-row>
             </v-app>
         </div> <!-- end col -->
-        <div class="col">  
+        <div class="col">
             <Room v-bind:date="picker"/>
         </div>
     </div>
@@ -32,21 +34,35 @@
         components: {Room, Meeting},
         created() {
             store.commit('CHANGE_DATE', this.picker)
+            this.getDisableDate();
+
         },
-        watch:{
-          picker: function (newVal) {
-              store.commit('CHANGE_DATE', newVal)
-          }
+        watch: {
+            picker: function (newVal) {
+                store.commit('CHANGE_DATE', newVal)
+            }
+        },
+        methods: {
+            allowedDates(date) {
+                return !this.disableDate.includes(date);
+            },
+            getDisableDate() {
+                axios.get(`/api/date_blockeds`)
+                    .then(({data}) => {
+                        let response = data['hydra:member'];
+                        this.disableDate = response.map(function (date) {
+                            return date.blockedDate.substr(0, 10);
+                        })
+                    })
+            }
         },
         data() {
             return {
                 picker: new Date().toISOString().substr(0, 10),
                 min: new Date().toISOString().substr(0, 10),
-                max: (new Date(new Date().setMonth(new Date().getMonth() + 1))).toISOString().substr(0, 10)
+                max: (new Date(new Date().setMonth(new Date().getMonth() + 3))).toISOString().substr(0, 10),
+                disableDate: []
             }
         }
     }
 </script>
-<style>
-    @import "https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css";
-</style>
