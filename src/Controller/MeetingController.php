@@ -39,15 +39,15 @@ class MeetingController extends AbstractController
     }
 
     /**
-     * @Route("/reservation/verif/dispo", name="dispo", methods={"POST"})
+     * @Route("/reservation/verif/dispo", name="dispo", methods={"GET"})
      * @return JsonResponse
      * @throws Exception
      */
     public function availabilityCheck(Request $request, EntityManagerInterface $manager): Response
     {
-        $date = $request->request->get('date');
-        $meeting = $request->request->get('meeting');
-        $room = $request->request->get('room');
+        $date = $request->query->get('date');
+        $meeting = $request->query->get('meeting');
+        $room = $request->query->get('room');
 
         $verifyDate = $manager
             ->getRepository(DateBlocked::class)
@@ -59,33 +59,27 @@ class MeetingController extends AbstractController
             return $this->json(['message' => 'Cette date n\'est pas disponible']);
         }
 
-        try {
             $roomValue = $manager
                 ->getRepository(Room::class)
-                ->findOneBy(['name' => $room]);
+                ->find($room);
 
             $meetingValue = $manager
                 ->getRepository(Meeting::class)
-                ->findOneBy(['label' => $meeting, 'room' => $roomValue->getId()]);
+                ->find($meeting);
 
-            if (null !== $meetingValue->getId()) {
                 $booking = $manager->getRepository(Booking::class)->findOneBy([
                   'bookingDate' => new \DateTime($date),
-                  'meeting' => $meetingValue->getId(),
-                  'room' => $roomValue->getId()
+                  'meeting' => $meetingValue,
+                  'room' => $roomValue
                 ]);
-            }
-        } catch (Exception $e) {
-            $e->getMessage();
-        }
 
         if ($booking) {
             return new JsonResponse([
-              'message' => 'Cette réservation est déjà prise'
+              'available' => false
             ]);
         }
         return new JsonResponse([
-          'message' => 'Cette réservation est disponible'
+          'available' => true
         ]);
     }
 }

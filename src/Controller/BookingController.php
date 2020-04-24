@@ -55,12 +55,8 @@ class BookingController extends AbstractController
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(Request $request, Room $room = null): Response
+    public function index(): Response
     {
-        $booking = new Booking();
-        $form = $this->createForm(BookingType::class, $booking);
-        $form->handleRequest($request);
-
         $repoDate = $this->manager->getRepository(DateBlocked::class);
         $blocked = $repoDate->myfindAll();
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
@@ -68,8 +64,6 @@ class BookingController extends AbstractController
             '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
 
         return $this->render('reservation/index.html.twig', [
-            'form' => $form->createView(),
-            'room' => $room,
             'blocked' => $blocked,
             'client' => $paypalClient
         ]);
@@ -114,25 +108,26 @@ class BookingController extends AbstractController
 
     private function createBooking(Request $request): Booking
     {
-        $date = new DateTime($request->request->get('date'));
-        if (!$this->check->verifyDate($date)) {
-            throw new LogicException("Vous ne pouvez réserver que 2 jours après la date d'aujourd'hui !", 1);
-        }
-        $date->format('dd-mm-yyyy');
-        $room = $request->request->get('room');
+        $data = json_decode($request->getContent(), true);
 
-        $meeting = $this->manager
-            ->getRepository(Meeting::class)
-            ->findOneBy(['label' => htmlspecialchars($request->request->get('meeting'))]);
-        $room = $this->manager->getRepository(Room::class)->findOneBy(['name' => $room]);
+        $date = new DateTime($data['date']);
+        /* if (!$this->check->verifyDate($date)) {
+             throw new LogicException("Vous ne pouvez réserver que 2 jours après la date d'aujourd'hui !", 1);
+         }*/
+        $date->format('dd-mm-yyyy');
+        $roomId = $data['room'];
+        $meetingId = $data['meeting'];
+
+        $meeting = $this->manager->getRepository(Meeting::class)->find($meetingId);
+        $room = $this->manager->getRepository(Room::class)->find($roomId);
 
         return (new Booking())
-            ->setNotices($request->request->get('notices'))
+            ->setNotices($data['notices'])
             ->setBookingDate($date)
             ->setRoom($room)
             ->setMeeting($meeting)
-            ->setNbPerson($request->request->get('nbPerson'))
-            ->setTotal($request->request->get('total'));
+            ->setNbPerson($data['nbPerson'])
+            ->setTotal($data['total']);
     }
 
     /**
@@ -152,7 +147,7 @@ class BookingController extends AbstractController
                 'Details => ' . $request->request->get('date') . '
                 ' . $request->request->get('room') . '
                 ' . $request->request->get('meeting'));
-            
+
             $booking->setPayment($payment);
             $booking->setUser($user);
             $this->manager->persist($booking);
@@ -191,14 +186,10 @@ class BookingController extends AbstractController
     {
         $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
-        $data = $request->request->get('authorization');
-        $authID = $request->request->get('authorizationID');
-        $this->session->set('authorizationID', $authID);
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+        $this->session->set('authorizationID', $data['authorizationID']);
 
-        if (null == $authID) {
-            $this->logger->error('Aucune authorizationID envoyé');
-            throw new Exception('Aucune authorizationID envoyé');
-        }
         $this->logger->info('authorizationID : ' . $data['id'] . ' User e-mail : ' . $this->getUser()->getEmail());
 
         $data = GetOrder::getOrder($data['id']);

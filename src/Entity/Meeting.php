@@ -3,9 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
+ * @ApiResource(attributes={"normalization_context"={"groups"={"meeting:read"}}},
+ *     collectionOperations={
+ *         "get",
+ *     },
+ *     itemOperations={"get"}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
+ * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
  */
 class Meeting
 {
@@ -13,6 +24,7 @@ class Meeting
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"meeting:read"})
      */
     private $id;
 
@@ -23,12 +35,14 @@ class Meeting
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"meeting:read"})
      */
     private $label;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"meeting:read"})
      */
     private $room;
 
