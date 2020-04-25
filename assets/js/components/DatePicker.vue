@@ -1,6 +1,6 @@
 <template>
     <div id="resa" class="row mt-3">
-        <div class="mt-3 pl-2 col-4 col-sm offset-1">
+        <div class="mt-3 pl-2 col-4 col-sm offset-1"> <!-- start col -->
             <v-app id="inspire" style="height: 360px!important;">
                 <v-row align="start">
                     <v-date-picker :min="min" :max="max"
@@ -15,7 +15,6 @@
                                    v-model="picker"
                                    :allowed-dates="allowedDates">
                     </v-date-picker>
-                    <input id="dateSelected" type="hidden" :value="picker">
                 </v-row>
             </v-app>
         </div> <!-- end col -->
@@ -35,7 +34,6 @@
         created() {
             store.commit('CHANGE_DATE', this.picker)
             this.getDisableDate();
-
         },
         watch: {
             picker: function (newVal) {
@@ -44,6 +42,10 @@
         },
         methods: {
             allowedDates(date) {
+                // Ne pas tomber sur currentDate si celle-ci est bloquée
+                if (this.disableDate.includes(this.picker) && (this.min < date && this.max > date)) {
+                    this.picker = date
+                }
                 return !this.disableDate.includes(date);
             },
             getDisableDate() {

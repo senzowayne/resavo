@@ -42,9 +42,11 @@
         watch: {
             room: function () {
                 this.getAvailable();
+                this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
             },
             meeting: function () {
                 this.getAvailable();
+                this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
             },
             date: function () {
                 this.getAvailable();
@@ -58,16 +60,13 @@
                 this.isAvailable = val;
             },
             getAvailable() {
-                var date = document.getElementById('dateSelected').value;
-                this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
-                this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
                 axios({
                     url: "/api/booking/available",
                     method: 'post',
                     data: {
                         room: this.roomText,
                         meeting: this.meetingText,
-                        bookingDate: date
+                        bookingDate: this.date
                     }
                 }).then(({data}) => {
                     if (data == false) {
