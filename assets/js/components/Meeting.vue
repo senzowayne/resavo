@@ -1,17 +1,33 @@
 <template>
-    <div class="col mt-3 pl-2">
+    <div>
+        <div class="col mt-3 pl-2" v-if="meetings.length > 0 && this.room !== null">
            <span class="pb-2">
             <strong>
                 Vous avez sélectionné la séance :
             </strong>
         </span>
-        <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected">
-            <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
-                {{ meeting.label }}
-            </option>
-        </select>
-        <hr>
-        <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date"/>
+            <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected"
+                    :data-seance="meetings.length">
+                <option :value=null disabled>Sélectionnez votre séance</option>
+                <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
+                    {{ meeting.label }}
+                </option>
+            </select>
+            <small><span style="color: red">{{this.meetings.length}}</span> {{this.meetings.length > 1 ? 'séances' :
+                'séance'}} disponible</small>
+            <hr>
+            <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date"/>
+        </div>
+        <div v-else-if="this.room == null" class="col mt-3 pl-2">
+
+        </div>
+        <div v-else class="col mt-3 pl-2" id="no-seance">
+           <span class="pb-2">
+            <strong>
+               Aucune séance n'est disponible pour cette salle !
+            </strong>
+        </span>
+        </div>
     </div>
 </template>
 
@@ -26,7 +42,7 @@
         store: store,
         data() {
             return {
-                meetingSelected: 1,
+                meetingSelected: null,
                 meetings: [],
             }
         },
@@ -35,12 +51,8 @@
         },
         watch: {
             room: function () {
+                this.meetingSelected = null
                 this.getMeeting();
-                this.meetingSelected = document.getElementById('reservation_seance').options[0].value
-            },
-            date: function () {
-                const seance = document.getElementById('reservation_seance')
-                this.meetingSelected = seance.options[seance.options['selectedIndex']].value
             },
             meetingSelected: (newVal) => {
                 store.commit('CHANGE_MEETING', newVal)
@@ -51,13 +63,20 @@
                 this.meetingSelected = val;
             },
             getMeeting() {
-                axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
-                    .then(({data}) => {
-                        this.meetings = data['hydra:member'];
-                        setTimeout(function () {
-                            document.getElementById('reservation_seance').options['selectedIndex'] = 0
-                        }, 100)
-                    }).catch((error) => console.log(error));
+                if (this.room !== null) {
+                    axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
+                        .then(({data}) => {
+                            this.meetings = data['hydra:member'];
+                            if (this.meetings.length === 0) {
+                                let val = document.getElementById('reservation_room').value
+                                document.getElementById('reservation_room').options[val - 1].disabled = true
+                            } else {
+                                setTimeout(function () {
+                                    document.getElementById('reservation_seance').options['selectedIndex'] = 0
+                                }, 100)
+                            }
+                        }).catch((error) => console.log(error));
+                }
             }
         }
     }

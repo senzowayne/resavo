@@ -28,6 +28,7 @@ use App\Controller\AvailableBookingController;
  *             "deserialize"=false,
  *             "validate"=false,
  *             "controller"=AvailableBookingController::class,
+ *              "status"=200
  *          }
  *     },
  *     itemOperations={"get"}

@@ -23,6 +23,8 @@
                 <i class="fas fa-times"></i>{{message}}
             </div>
         </transition>
+        <span style="display: none;" id="resume" :data-date="this.date" :data-room="this.room"
+              :data-meeting="this.meeting" :data-available="this.isAvailable"></span>
     </div>
 </template>
 
@@ -45,7 +47,6 @@
         watch: {
             room: function () {
                 this.handleText()
-                this.getAvailable();
             },
             meeting: function () {
                 this.handleText()
@@ -70,16 +71,17 @@
                 this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
             },
             getAvailable() {
-                if (this.roomText !== '' && this.meetingText !== '')
+                if (this.roomText !== '' && this.meetingText !== '' && this.meeting !== null && this.room !== null) {
                     axios({
                         url: "/api/booking/available",
                         method: 'post',
                         data: {
-                            room: this.roomText,
-                            meeting: this.meetingText,
+                            room: this.room,
+                            meeting: this.meeting,
                             bookingDate: this.date
                         }
                     }).then(({data}) => {
+
                         if (data === false) {
                             this.isAvailable = false
                             this.message = " Cette séance n'est pas disponible."
@@ -89,6 +91,10 @@
                         }
                         this.display = true;
                     }).catch((error) => console.log(error))
+                } else {
+                    this.isAvailable = false
+                    this.display = false
+                }
             }
         }
     }
