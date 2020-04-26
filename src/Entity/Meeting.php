@@ -10,10 +10,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(attributes={"normalization_context"={"groups"={"meeting:read"}}},
- *     collectionOperations={
- *         "get",
- *     },
- *     itemOperations={"get"}
+ *     collectionOperations={"get"},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
  * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
@@ -47,6 +44,11 @@ class Meeting
     private $room;
 
     /**
+     * @ORM\Column(type="boolean", options={"default" = 1})
+     */
+    private $isActive;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -75,6 +77,18 @@ class Meeting
     public function setRoom(?Room $room): self
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

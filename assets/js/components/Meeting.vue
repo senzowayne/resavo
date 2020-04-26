@@ -51,7 +51,7 @@
                 this.meetingSelected = val;
             },
             getMeeting() {
-                axios.get(`/api/meetings?room=${this.room}`)
+                axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
                     .then(({data}) => {
                         this.meetings = data['hydra:member'];
                         setTimeout(function () {
