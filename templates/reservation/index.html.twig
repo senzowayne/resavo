@@ -9,21 +9,7 @@
 {% endblock %}
 {% block body %}
     <div class="container">
-        <input id="dateBlocked" type="hidden"
-               data-blocked="{% for date in blocked %}{{ date.blockedDate | date('d-m-Y') }}{% if not loop.last %},{% endif %}{% endfor %}">
-        <h1 class="col text-center">Réservation</h1>
-        <ul class="nav justify-content-center">
-            <li class="nav-item">
-                <a class="nav-link btn btn-sm blue-grey lighten-3" href="{{ path("historique") }}">Mes Réservations</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-sm  blue-grey darken-4" href="{{ path('logout') }}">Déconnexion</a>
-            </li>
-        </ul>
-        <hr>
         <div id="app"></div>
-
-
     </div>
 {% endblock %}
 {% block javascripts %}

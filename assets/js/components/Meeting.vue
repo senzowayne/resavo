@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!maintenance">
         <div class="col mt-3 pl-2" v-if="meetings.length > 0 && this.room !== null">
            <span class="pb-2">
             <strong>
@@ -63,7 +63,7 @@
                 this.meetingSelected = val;
             },
             getMeeting() {
-                if (this.room !== null) {
+                if (this.room !== null && this.date !== null) {
                     axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
                         .then(({data}) => {
                             this.meetings = data['hydra:member'];
