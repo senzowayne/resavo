@@ -57,6 +57,9 @@
                         this.disableDate = response.map(function (date) {
                             return date.blockedDate.substr(0, 10);
                         })
+                        // disable current date
+                        let date = new Date().toISOString().substr(0, 10)
+                        this.disableDate.push(date)
                     })
             }
         },
