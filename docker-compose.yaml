@@ -1,0 +1,64 @@
+version: '3.3'
+services:
+  php:
+    image: christopherlafay/php:latest
+    depends_on:
+      - db
+    environment:
+      - PHP_DATE_TIMEZONE=Europe/Paris
+    volumes:
+      - .:/srv/symfony:rw,cached
+      - ./var:/srv/symfony/var:rw
+      - ./public:/srv/symfony/public:rw,delegated
+  nginx:
+    image: christopherlafay/nginx:latest
+    depends_on:
+      - php
+    volumes:
+      - ./public:/srv/symfony/public:ro
+    ports:
+      - "80:80"
+
+  phpmyadmin:
+    image: christopherlafay/phpmyadmin:latest
+    depends_on:
+      - db
+    environment:
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    ports:
+      - "8080:80"
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'sf4'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'root'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - db-resavo:/var/lib/mysql
+#  mercure:
+#    container_name: mercure
+#    image: dunglas/mercure
+#    environment:
+#      - JWT_KEY=!ChangeMe!
+#      - DEMO=1
+#      - ALLOW_ANONYMOUS=1
+#      - PUBLISH_ALLOWED_ORIGINS=http://localhost:3000/.well-known/mercure
+#      - DEBUG=1
+#      - CORS_ALLOWED_ORIGINS=*
+#    ports:
+#      - "3000:80"
+# Names our volume
+volumes:
+  db-resavo:
