@@ -22,6 +22,7 @@
         "symfony/framework-bundle": "4.4.*",
         "symfony/google-mailer": "4.4.*",
         "symfony/mailer": "4.4.*",
+        "symfony/mercure-bundle": "^0.2.3",
         "symfony/messenger": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",

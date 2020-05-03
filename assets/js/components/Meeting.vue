@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!maintenance">
+    <div>
         <div class="col mt-3 pl-2" v-if="meetings.length > 0 && this.room !== null">
            <span class="pb-2">
             <strong>
@@ -65,7 +65,7 @@
             getMeeting() {
                 if (this.room !== null && this.date !== null) {
                     axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
-                        .then(({data}) => {
+                        .then(({data, headers}) => {
                             this.meetings = data['hydra:member'];
                             if (this.meetings.length === 0) {
                                 let val = document.getElementById('reservation_room').value
@@ -74,6 +74,13 @@
                                 setTimeout(function () {
                                     document.getElementById('reservation_seance').options['selectedIndex'] = 0
                                 }, 100)
+                            }
+                            let hubUrl = "http://localhost:3000/.well-known/mercure"
+                            const url = new URL(`${hubUrl}?topic=${document.location.origin}/api/meetings/{id}`);
+                            const eventSource = new EventSource(url);
+                            // The callback will be called every time an update is published
+                            eventSource.onmessage = (e) => {
+                                this.getMeeting()
                             }
                         }).catch((error) => console.log(error));
                 }
