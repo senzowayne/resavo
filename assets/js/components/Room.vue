@@ -6,14 +6,14 @@
                 Vous avez sélectionné la salle :
             </strong>
         </span>
-            <select id="reservation_room" name="reservation[room]" class="form-control" v-model="roomSelected">
+            <select :disabled="maintenance" id="reservation_room" name="reservation[room]" class="form-control" v-model="roomSelected">
                 <option :value=null disabled>Sélectionnez votre salle</option>
-                <option v-for="room in rooms" :value="room.id" @input="handleRoomSelected($event)">
+                <option v-for="room in rooms" :value="room.id" @input="handleRoomSelected($event)" :disabled="maintenance">
                     {{ room.name }}
                 </option>
             </select>
         </div>
-        <Meeting v-bind:room="roomSelected" :date="this.date"/>
+        <Meeting v-bind:room="roomSelected" :date="this.date" :maintenance="maintenance"/>
     </div>
 </template>
 
@@ -23,7 +23,7 @@
 
     export default {
         name: "Room",
-        props: ['date'],
+        props: ['date', 'maintenance'],
         components: {Meeting},
         data() {
             return {
@@ -46,16 +46,10 @@
             getRoom() {
                 axios.get(`/api/rooms`)
                     .then(({data}) => {
-                        // handle success
                         this.rooms = data['hydra:member'];
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    })
-                    .then(function () {
-                        // always executed
-                    });
+                    }).catch(function (error) {
+                    console.log(error);
+                })
             }
         }
     }

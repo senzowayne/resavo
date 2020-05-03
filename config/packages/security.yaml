@@ -23,12 +23,6 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
-
-
-
-
-
-
             # activate different ways to authenticate
 
             # http_basic: true
@@ -45,4 +39,4 @@ security:
          - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/reservation, role: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: /reservation/reserve, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/config, roles: ROLE_ADMIN }

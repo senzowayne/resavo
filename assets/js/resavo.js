@@ -5,9 +5,7 @@ import 'es6-promise/auto'
 
 window.axios = axios;
 window.Vue = Vue;
-
-import DatePicker from "./components/DatePicker"
-import Payment from "./components/Payment"
+import Reservation from './pages/reservation'
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);
@@ -21,8 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             render: function (h) {
                 return (
                     <div>
-                        <DatePicker/>
-                        <Payment/>
+                        <Reservation />
                     </div>
                 )
             }

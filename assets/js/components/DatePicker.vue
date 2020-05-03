@@ -12,13 +12,14 @@
                                    prev-icon="mdi-skip-previous"
                                    next-icon="mdi-skip-next"
                                    v-model="picker"
+                                   :disabled="maintenance"
                                    :allowed-dates="allowedDates">
                     </v-date-picker>
                 </v-row>
             </v-app>
         </div> <!-- end col -->
         <div class="col">
-            <Room v-bind:date="picker"/>
+            <Room v-bind:date="picker" :maintenance="maintenance"/>
         </div>
     </div>
 </template>
@@ -27,8 +28,10 @@
     import Room from "./Room";
     import Meeting from "./Meeting";
     import store from "../resavoStore";
+    import axios from "axios";
 
     export default {
+        props: ['maintenance'],
         components: {Room, Meeting},
         created() {
             store.commit('CHANGE_DATE', this.picker)
