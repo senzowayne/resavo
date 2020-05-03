@@ -1,79 +1,82 @@
 <template>
-    <div class="col mt-3 pl-2">
+    <div>
+        <div class="col mt-3 pl-2" v-if="meetings.length > 0 && this.room !== null">
            <span class="pb-2">
             <strong>
-                Vous avez selectionné la séance :
+                Vous avez sélectionné la séance :
             </strong>
         </span>
-        <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected">
-            <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
-                {{ meeting.label }}
-            </option>
-        </select>
-        <hr>
-        <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date" />
+            <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected"
+                    :data-seance="meetings.length">
+                <option :value=null disabled>Sélectionnez votre séance</option>
+                <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
+                    {{ meeting.label }}
+                </option>
+            </select>
+            <small><span style="color: red">{{this.meetings.length}}</span> {{this.meetings.length > 1 ? 'séances' :
+                'séance'}} disponible</small>
+            <hr>
+            <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date"/>
+        </div>
+        <div v-else-if="this.room == null" class="col mt-3 pl-2">
+
+        </div>
+        <div v-else class="col mt-3 pl-2" id="no-seance">
+           <span class="pb-2">
+            <strong>
+               Aucune séance n'est disponible pour cette salle !
+            </strong>
+        </span>
+        </div>
     </div>
 </template>
 
 <script>
-
     import Available from "./Available";
     import store from "../resavoStore";
 
     export default {
         name: "Meeting",
-        components: { Available },
+        components: {Available},
         props: ['room', 'date'],
         store: store,
         data() {
             return {
-                meetingSelected: 1,
+                meetingSelected: null,
                 meetings: [],
             }
         },
-        created() {
+        mounted() {
             this.getMeeting();
-
         },
         watch: {
-            room: function(newVal, oldVal) {
+            room: function () {
+                this.meetingSelected = null
                 this.getMeeting();
-                this.setDefaultValue();
             },
-            meetingSelected: function (newVal, oldVal) {
+            meetingSelected: (newVal) => {
                 store.commit('CHANGE_MEETING', newVal)
             }
         },
         methods: {
-            setDefaultValue() {
-                switch (this.room) {
-                    case 1 :
-                        this.meetingSelected = 1;
-                        break;
-                    case 2 :
-                        this.meetingSelected = 6;
-                        break;
-                    case 3 :
-                        this.meetingSelected = 11;
-                        break;
-                }
-            },
             handleMeetingSelected(val) {
                 this.meetingSelected = val;
             },
             getMeeting() {
-                axios.get(`/api/meetings?room=${this.room}`)
-                    .then(({data}) => {
-                        // handle success
-                        this.meetings = data['hydra:member'];
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    })
-                    .then(function () {
-                        // always executed
-                    });
+                if (this.room !== null) {
+                    axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
+                        .then(({data}) => {
+                            this.meetings = data['hydra:member'];
+                            if (this.meetings.length === 0) {
+                                let val = document.getElementById('reservation_room').value
+                                document.getElementById('reservation_room').options[val - 1].disabled = true
+                            } else {
+                                setTimeout(function () {
+                                    document.getElementById('reservation_seance').options['selectedIndex'] = 0
+                                }, 100)
+                            }
+                        }).catch((error) => console.log(error));
+                }
             }
         }
     }

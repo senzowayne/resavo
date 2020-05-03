@@ -28,7 +28,8 @@ services:
     App\Service\Paypal\:
         resource: '../src/Service/Paypal'
 
-    'App\Doctrine\CurrentUserExtension':
+    'App\Doctrine\':
+        resource: '../src/Doctrine'
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
             - { name: api_platform.doctrine.orm.query_extension.item }

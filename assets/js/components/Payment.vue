@@ -66,8 +66,7 @@
                                             'total': 90,
                                         }
                                     }).then(function (reponse) {
-                                        //On traite la suite une fois la réponse obtenue
-                                        console.log(reponse);
+                                       window.location.href = "/reservation/resume";
                                     }).catch(function (erreur) {
                                         //On traite ici les erreurs éventuellement survenues
                                         console.log(erreur);

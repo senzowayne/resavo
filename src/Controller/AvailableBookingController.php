@@ -32,8 +32,8 @@ class AvailableBookingController
         $posts = json_decode($request->getContent(), true);
 
         $date = new \DateTime($posts['bookingDate']);
-        $room = $this->roomRepository->findOneBy(['name' => $posts['room']]);
-        $meeting = $this->meetingRepository->findOneBy(['room' => $room, 'label' => $posts['meeting']]);
+        $room = $this->roomRepository->find($posts['room']);
+        $meeting = $this->meetingRepository->findOneBy(['room' => $room, 'id' => $posts['meeting']]);
 
         $data = $this->bookingRepository->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
 

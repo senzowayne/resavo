@@ -2,10 +2,9 @@
     <div id="resa" class="row mt-3">
         <div class="mt-3 pl-2 col-4 col-sm offset-1"> <!-- start col -->
             <v-app id="inspire" style="height: 360px!important;">
-                <v-row align="start">
+                <v-row align="start" justify="center">
                     <v-date-picker :min="min" :max="max"
                                    dark
-                                   full-width
                                    locale="fr"
                                    :landscape="$vuetify.breakpoint.smAndUp"
                                    class="mt-4"

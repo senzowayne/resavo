@@ -2,16 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Booking;
 use App\Entity\Meeting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
-/**
- * @method Meeting|null find($id, $lockMode = null, $lockVersion = null)
- * @method Meeting|null findOneBy(array $criteria, array $orderBy = null)
- * @method Meeting[]    findAll()
- * @method Meeting[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class MeetingRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,32 +15,43 @@ class MeetingRepository extends ServiceEntityRepository
         parent::__construct($registry, Meeting::class);
     }
 
-    // /**
-    //  * @return Meeting[] Returns an array of Meeting objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Retourne les ids des séances déjà prise
+     * @param int $room
+     * @param string $date
+     * @return array|int|string
+     * @throws \Exception
+     */
+    public function meetingBlocked(int $room, string $date)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->_em->createQueryBuilder()
+            ->select('m.id')
+            ->from(Booking::class, 'b')
+            ->leftJoin(Meeting::class, 'm', Join::WITH, 'b.meeting = m')
+            ->where('b.room = :room')
+            ->andWhere('b.bookingDate = :date')
+            ->setParameter('room', $room)
+            ->setParameter('date', new \DateTime($date))
             ->getQuery()
-            ->getResult()
-        ;
+            ->getArrayResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Meeting
+    /**
+     * Retourne uniquement les séances disponible
+     * @param int $room
+     * @param array $booking
+     * @return int|mixed|string
+     */
+    public function meetingAvailable(int $room, array $booking)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $query = $this->createQueryBuilder('m')
+            ->where('m.room = :room')
+            ->setParameter('room', $room);
+
+        if (!empty($booking)) {
+            $query->andWhere('m.id NOT IN(:booking)')
+                ->setParameter('booking', $booking);
+        }
+        return $query->getQuery()->getResult();
     }
-    */
 }
