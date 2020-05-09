@@ -31,7 +31,8 @@ use App\Controller\AvailableBookingController;
  *              "status"=200
  *          }
  *     },
- *     itemOperations={"get"}
+ *     itemOperations={"get"},
+ *     mercure="true"
  * )
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
