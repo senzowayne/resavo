@@ -53,7 +53,6 @@ class Booking
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"resa:read"})
      */
     private $user;
 
@@ -66,7 +65,6 @@ class Booking
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"resa:read"})
      */
     private $createAt;
 
@@ -86,14 +84,12 @@ class Booking
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
-     * @Groups({"resa:read"})
      */
     private $nbPerson;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
-     * @Groups({"resa:read"})
      */
     private $name;
 
@@ -106,14 +102,12 @@ class Booking
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
-     * @Groups({"resa:read"})
      */
     private $notices;
 
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"resa:read"})
      */
     private $total;
 
