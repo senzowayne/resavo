@@ -121,6 +121,13 @@ class BookingController extends AbstractController
         $meeting = $this->manager->getRepository(Meeting::class)->find($meetingId);
         $room = $this->manager->getRepository(Room::class)->find($roomId);
 
+        if (null === $meeting) {
+            throw $this->createNotFoundException('The meeting does not exist');
+        }
+        if (null === $room) {
+            throw $this->createNotFoundException('The room does not exist');
+        }
+
         return (new Booking())
             ->setNotices($data['notices'])
             ->setBookingDate($date)
@@ -132,7 +139,8 @@ class BookingController extends AbstractController
 
     /**
      * @Route("/api-reserve", name="reserve", methods={"POST"})
-     * @throws Exception
+     * @param Request $request
+     * @return JsonResponse
      */
     public function reserve(Request $request): JsonResponse
     {
@@ -171,15 +179,17 @@ class BookingController extends AbstractController
             }
 
             return $this->json('Réservation ok');
-        } else {
-            $this->addFlash('danger', 'un problème est survenu pendant la réservation');
         }
-        return $this->json('ok');
+        $msg = 'un problème est survenu pendant la réservation';
+        $this->addFlash('danger', $msg);
+        return $this->json($msg);
     }
 
     /**
      * Réponse de l'API PayPal & entré en bdd des informations d'auritsation du paiement
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST", "GET"})
+     * @param Request $request
+     * @return JsonResponse
      * @throws Exception
      */
     public function authorizePayment(Request $request): JsonResponse
@@ -216,6 +226,8 @@ class BookingController extends AbstractController
     }
 
     /**
+     * @param Booking $booking
+     * @param Paypal $payment
      * @return bool|RedirectResponse
      */
     public function capturePayment(Booking $booking, Paypal $payment)
