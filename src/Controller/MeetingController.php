@@ -17,28 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MeetingController extends AbstractController
 {
     /**
-     * Récupérer les seances d'une salle
-     * @Route("/reservation/seance/horaire", methods={"POST"})
-     */
-    public function meeting(EntityManagerInterface $manager, int $room = 1): Response
-    {
-        if (isset($_POST['room'])) {
-            $room = htmlentities($_POST['room']);
-        }
-
-        $meetings = $manager
-            ->getRepository(Meeting::class)
-            ->findBy(['room' => $room]);
-
-        $datas = [];
-        foreach ($meetings as $data) {
-            $datas[$data->getId()] = $data->getLabel();
-        }
-
-        return $this->json($datas);
-    }
-
-    /**
      * @Route("/reservation/verif/dispo", name="dispo", methods={"GET"})
      * @return JsonResponse
      * @throws Exception

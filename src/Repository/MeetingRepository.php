@@ -46,6 +46,7 @@ class MeetingRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('m')
             ->where('m.room = :room')
+            ->andWhere('m.isActive = true')
             ->setParameter('room', $room);
 
         if (!empty($booking)) {
