@@ -44,6 +44,22 @@
                 meetingText: ''
             }
         },
+        mounted() {
+            // mercure hub
+            let hubUrl = this.hubLink ?? "http://localhost:3000/.well-known/mercure"
+            const url = new URL(`${hubUrl}?topic=${document.location.origin}/api/bookings/{id}`);
+            const eventSource = new EventSource(url);
+            // The callback will be called every time an update is published
+            eventSource.onmessage = (e) => {
+                let data = JSON.parse(e.data)
+                if (data.room === `/api/rooms/${this.room}` &&
+                    data.bookingDate.substr(0, 10) === this.date &&
+                    data.meeting === `/api/meetings/${this.meeting}`
+                ) {
+                    this.getAvailable()
+                }
+            }
+        },
         watch: {
             room: function () {
                 this.handleText()
