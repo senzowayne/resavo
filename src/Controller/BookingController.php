@@ -58,13 +58,11 @@ class BookingController extends AbstractController
     public function index(): Response
     {
         $repoDate = $this->manager->getRepository(DateBlocked::class);
-        $blocked = $repoDate->myfindAll();
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
             $this->getParameter('CLIENT_ID') .
             '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
 
         return $this->render('reservation/index.html.twig', [
-            'blocked' => $blocked,
             'client' => $paypalClient
         ]);
     }
