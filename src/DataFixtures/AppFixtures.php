@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ConfigMerchant;
 use App\Entity\Role;
 use App\Entity\Room;
 use App\Entity\Meeting;
@@ -21,17 +22,17 @@ class AppFixtures extends Fixture
 
         for ($i = 1; $i <= 3; $i++) {
             $room[$i] = (new Room())
-                ->setName($roomName[$i -1])
+                ->setName($roomName[$i - 1])
                 ->setPrice(90)
-                ->setDescription('Salle ' . $i)
-            ;
+                ->setDescription('Salle ' . $i);
 
             for ($x = 0; $x <= 4; $x++) {
                 if ($e >= 5) {
                     $e = 0;
                 }
                 $meeting[$x] = new Meeting();
-                $meeting[$x]->setLabel($labelMeetings[$e]);
+                $meeting[$x]->setLabel($labelMeetings[$e])
+                            ->setIsActive(true);
                 $room[$i]->addMeeting($meeting[$x]);
                 $e++;
                 $manager->persist($meeting[$x]);
@@ -52,11 +53,18 @@ class AppFixtures extends Fixture
 
         $adminRole = (new Role())
             ->setTitle('ROLE_ADMIN')
-            ->addUser($admin)
-        ;
+            ->addUser($admin);
+
+        $configMerchant = (new ConfigMerchant())
+            ->setNameMerchant('Résavo')
+            ->setPaymentService('Paypal')
+            ->setDescription('Résavo système de réservation')
+            ->setPatternColor('Pattern color 1')
+            ->setMaintenance(false);
 
         $manager->persist($admin);
         $manager->persist($adminRole);
+        $manager->persist($configMerchant);
 
         $manager->flush();
     }
