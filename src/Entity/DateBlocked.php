@@ -29,7 +29,12 @@ class DateBlocked
     /**
      * @ORM\Column(type="date")
      */
-    private $blockedDate;
+    private $start;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $end;
 
     public function getId(): ?int
     {
@@ -48,14 +53,26 @@ class DateBlocked
         return $this;
     }
 
-    public function getBlockedDate(): ?DateTimeInterface
+    public function getStart(): ?DateTimeInterface
     {
-        return $this->blockedDate;
+        return $this->start;
     }
 
-    public function setBlockedDate(DateTimeInterface $blockedDate): self
+    public function setStart(DateTimeInterface $start): self
     {
-        $this->blockedDate = $blockedDate;
+        $this->start = $start;
+
+        return $this;
+    }
+
+    public function getEnd(): ?\DateTimeInterface
+    {
+        return $this->end;
+    }
+
+    public function setEnd(\DateTimeInterface $end): self
+    {
+        $this->end = $end;
 
         return $this;
     }

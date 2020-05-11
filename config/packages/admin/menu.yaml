@@ -12,5 +12,5 @@ easy_admin:
           - { label: 'Autres'}
           - { label: 'Client', entity: 'User', icon: 'user',  params: { sortField: 'name', sortDirection: 'ASC' }}
           - { label: 'Séance', entity: 'Meeting', icon: 'clock', params: { sortField: 'id', sortDirection: 'ASC' } }
-          - { label: 'Bloqué une date', entity: 'DateBlocked', icon: 'clock', params: { sortField: 'blockedDate', sortDirection: 'DESC' }}
+          - { label: 'Bloqué une date', entity: 'DateBlocked', icon: 'clock', params: { sortField: 'start', sortDirection: 'DESC' }}
           - { label: 'Paiement', entity: 'Paypal'}
