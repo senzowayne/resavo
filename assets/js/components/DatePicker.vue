@@ -1,5 +1,5 @@
 <template>
-    <div id="resa" class="row mt-3">
+    <div v-if="refresh" id="resa" class="row mt-3">
         <div class="mt-3 pl-2 col-4 col-sm offset-1"> <!-- start col -->
             <v-app id="inspire" style="height: 360px!important;">
                 <v-row align="start" justify="center">
@@ -40,6 +40,9 @@
         watch: {
             picker: function (newVal) {
                 store.commit('CHANGE_DATE', newVal)
+            },
+            refresh: function () {
+
             }
         },
         methods: {
@@ -53,10 +56,8 @@
             getDisableDate() {
                 axios.get(`/api/date_blockeds`)
                     .then(({data}) => {
-                        let response = data['hydra:member'];
-                        this.disableDate = response.map(function (date) {
-                            return date.blockedDate.substr(0, 10);
-                        })
+                        this.disableDate = data['hydra:member']
+                        this.refresh = true
                         // disable current date
                         let date = new Date().toISOString().substr(0, 10)
                         this.disableDate.push(date)
@@ -68,7 +69,8 @@
                 picker: new Date().toISOString().substr(0, 10),
                 min: new Date().toISOString().substr(0, 10),
                 max: (new Date(new Date().setMonth(new Date().getMonth() + 3))).toISOString().substr(0, 10),
-                disableDate: []
+                disableDate: [],
+                refresh: false
             }
         }
     }

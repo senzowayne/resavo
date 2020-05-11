@@ -1,5 +1,13 @@
 easy_admin:
-    entities:
-      DateBlocked:
-        class: App\Entity\DateBlocked
-        label: 'Bloquer une date'
+  entities:
+    DateBlocked:
+      class: App\Entity\DateBlocked
+      label: 'Bloquer une date'
+      list:
+        actions:
+          - { name: 'new', icon: 'pencil', label: 'Bloqué une date' }
+      form:
+        fields:
+          - 'cause'
+          - {property: 'start',  type_options: { widget: 'single_text' }}
+          - {property: 'end',  type_options: { widget: 'single_text' }}
