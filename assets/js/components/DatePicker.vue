@@ -1,13 +1,14 @@
 <template>
     <div v-if="refresh" id="resa" class="row mt-3">
-        <div class="mt-3 pl-2 col-4 col-sm offset-1"> <!-- start col -->
-            <v-app id="inspire" style="height: 360px!important;">
-                <v-row align="start" justify="center">
+        <div class="col-sm-12 col-md-6 mb-4"> <!-- start col -->
+            <v-app id="inspire" style="height: 390px!important;margin: 10px;overflow: hidden;">
                     <v-date-picker :min="min" :max="max"
                                    dark
+                                   height="100px"
                                    locale="fr"
                                    :landscape="$vuetify.breakpoint.smAndUp"
                                    class="mt-4"
+                                   width="auto"
                                    year-icon="mdi-calendar-blank"
                                    prev-icon="mdi-skip-previous"
                                    next-icon="mdi-skip-next"
@@ -15,7 +16,6 @@
                                    :disabled="maintenance"
                                    :allowed-dates="allowedDates">
                     </v-date-picker>
-                </v-row>
             </v-app>
         </div> <!-- end col -->
         <div class="col">
