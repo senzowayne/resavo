@@ -9,11 +9,13 @@
             <select ref="reservation_seance" id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected"
                     :data-seance="meetings.length">
                 <option :value=null disabled>Sélectionnez votre séance</option>
-                <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
-                    {{ meeting.label }}
+                <option :disabled="meeting.status === 'blocked'" v-for="meeting in meetings" :value="meeting[0].id" @input="handleMeetingSelected($event)">
+                    {{ meeting[0].label }}
                 </option>
             </select>
-            <small><span style="color: red">{{this.meetings.length}}</span> {{this.meetings.length > 1 ? 'séances' :
+            <small><span style="color: red">{{this.meetings.filter(m => m.status === 'available')
+                .length}}</span> {{this.meetings.filter(m => m.status === 'available')
+                .length > 1 ? 'séances' :
                 'séance'}} disponible</small>
             <hr>
             <Available v-bind:room="this.room" v-bind:meeting="meetingSelected" :date="this.date"/>
@@ -58,10 +60,9 @@
             eventSource.onmessage = (e) => {
                 let data = JSON.parse(e.data)
                 const meetings = [...this.meetings]
-
                 meetings.forEach(function (m, index) {
-                    if (m.id === data.id) {
-                       meetings[index] = data
+                    if (m[0].id === data.id) {
+                       meetings[index][0] = data
                     }
                 })
                 this.refresh = false
@@ -81,7 +82,7 @@
         },
         methods: {
             handleMeetingSelected(val) {
-                this.meetingSelected = val;
+                this.meetingSelected = val[0];
             },
             getMeeting() {
                 if (this.room !== null && this.date !== null) {

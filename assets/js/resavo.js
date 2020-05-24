@@ -6,6 +6,7 @@ import 'es6-promise/auto'
 window.axios = axios;
 window.Vue = Vue;
 import Reservation from './pages/reservation'
+import Notification from "./components/Notification";
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             render: function (h) {
                 return (
                     <div>
+                        <Notification />
                         <Reservation />
                     </div>
                 )

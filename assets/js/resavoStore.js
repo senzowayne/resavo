@@ -10,9 +10,17 @@ export default new Vuex.Store({
         room: 1,
         roomText: '',
         isAvailable: false,
-        isMaintenance: false
+        isMaintenance: false,
+        notifDisplay: false,
+        notifMsg: ''
     },
     mutations: {
+        CHANGE_NOTIF_DISPLAY: (state, bool) => {
+            state.notifDisplay = bool
+        },
+        CHANGE_NOTIF_MSG: (state, msg) => {
+            state.notifMsg = msg
+        },
         CHANGE_DATE: (state, newDate) => {
             state.date = newDate
         },
@@ -36,6 +44,8 @@ export default new Vuex.Store({
         }
     },
     getters:{
+        notifDisplay: state => state.notifDisplay,
+        notifMsg: state => state.notifMsg,
         date: state => state.date,
         room: state => state.room,
         roomText: state => state.roomText,

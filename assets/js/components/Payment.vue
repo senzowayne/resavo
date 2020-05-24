@@ -52,8 +52,6 @@
             setLoaded: function () {
                 paypal.Buttons({
                     createOrder: (data, actions) => {
-                        this.loading = true;
-                        this.message = 'Paiement en cours de traitement ..'
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
@@ -71,6 +69,7 @@
                                 authorization: authorization,
                                 authorizationID: authorizationID
                             };
+                            this.loading = true;
                             this.message = 'Vérification du paiement ..'
                             axios.post('/reservation/paypal-transaction-complete?id=' + authorizationID, data)
                                 .then((reponse) => {
@@ -86,8 +85,17 @@
                                             'notices': '',
                                             'total': 90,
                                         }
-                                    }).then(function (reponse) {
-                                        window.location.href = "/reservation/resume";
+                                    }).then(({data}) => {
+                                        if (data.error !== '') {
+                                            this.message = 'Il semble y avoir une erreur, veuillez nous contacter'
+                                            store.commit('CHANGE_NOTIF_DISPLAY', true)
+                                            store.commit('CHANGE_NOTIF_MSG', data.msg)
+                                            setTimeout(() =>
+                                                    store.commit('CHANGE_NOTIF_DISPLAY', false)
+                                                , 10000)
+                                        } else {
+                                            window.location.href = "/reservation/resume";
+                                        }
                                     }).catch((erreur) => {
                                         this.message = 'Il semble y avoir une erreur, veuillez nous contacter'
                                         console.log(erreur);

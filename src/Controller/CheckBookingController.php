@@ -4,27 +4,25 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Paypal;
-use DateTime;
 
 class CheckBookingController
 {
     /**
      * Vérifie que l'on ne reserve pas dans le passé ni dans les 2 jours suivant la date du jour
+     * @param \DateTime $date
+     * @return bool
      */
-    public function verifyDate(DateTime $date): bool
+    public function verifyDate(\DateTime $date): bool
     {
-        $today = new DateTime('now');
-        $today->modify('+1 day');
+        $date = $date->format('Y-m-d');
+        $today = (new \DateTime('now'))->format('Y-m-d');
 
-        return $date >= $today;
+        return $date > $today;
     }
 
-    /**
-     * Vérifie que le total est bien le montant attendu
-     */
-    public function verifyTotal($room, $nbPerson, $total)
-    {
-        //TODO A REDÉFINIR
+    private function checkIsWeekEnd(string $date): bool {
+        $indexDay = date('w', strtotime($date));
+        return $indexDay == 0 || $indexDay == 5 || $indexDay == 6;
     }
 
     /**

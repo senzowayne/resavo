@@ -45,14 +45,15 @@ class MeetingRepository extends ServiceEntityRepository
     public function meetingAvailable(int $room, array $booking)
     {
         $query = $this->createQueryBuilder('m')
+            ->addSelect('m')
+            ->addSelect("CASE WHEN m.id IN(:booking) 
+            THEN 'blocked'
+            ELSE 'available' END as status")
+            ->setParameter('booking', $booking)
             ->where('m.room = :room')
             ->andWhere('m.isActive = true')
             ->setParameter('room', $room);
 
-        if (!empty($booking)) {
-            $query->andWhere('m.id NOT IN(:booking)')
-                ->setParameter('booking', $booking);
-        }
         return $query->getQuery()->getResult();
     }
 }
