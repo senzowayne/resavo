@@ -1,20 +1,39 @@
 <template>
-    <div v-show="$store.state.isAvailable" class="row mt-4" id="payMe">
-        <div class="card text-center col">
-            <div class="card-header">
-                Pour valider votre reservation
-            </div>
-            <div class="card-body">
+    <section>
+        <div v-show="$store.state.isAvailable && !this.loading" class="row mt-4" id="payMe">
+            <div class="card text-center col">
+                <div class="card-header">
+                    Pour valider votre reservation
+                </div>
+                <div class="card-body">
 
-                <p class="card-text" id="validatePay">
-                <div id="pay"></div>
-                <span><a id="annuler" href="#">Revenir à la réservation</a></span>
-            </div>
-            <div class="card-footer text-muted">
-                Version beta
+                    <p class="card-text" id="validatePay">
+                    <div id="pay"></div>
+                    <span><a id="annuler" href="#">Revenir à la réservation</a></span>
+                </div>
+                <div class="card-footer text-muted">
+                    Version beta
+                </div>
             </div>
         </div>
-    </div>
+        <div v-show="$store.state.isAvailable && this.loading" class="row mt-4">
+            <div class="card text-center col">
+                <div class="card-header">
+                    Veuillez patienter
+                </div>
+                <div class="card-body">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br>
+                    {{ message }}
+                </div>
+                <div class="card-footer text-muted">
+                    Version beta
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -31,9 +50,10 @@
         },
         methods: {
             setLoaded: function () {
-                this.loaded = true;
                 paypal.Buttons({
-                    createOrder: function (data, actions) {
+                    createOrder: (data, actions) => {
+                        this.loading = true;
+                        this.message = 'Paiement en cours de traitement ..'
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
@@ -42,8 +62,8 @@
                             }]
                         });
                     },
-                    onApprove: function (data, actions) {
-                        actions.order.authorize().then(function (authorization) {
+                    onApprove: (data, actions) => {
+                        actions.order.authorize().then((authorization) => {
                             var authorizationID = authorization.purchase_units[0]
                                 .payments.authorizations[0].id
                             const data = {
@@ -51,24 +71,25 @@
                                 authorization: authorization,
                                 authorizationID: authorizationID
                             };
+                            this.message = 'Vérification du paiement ..'
                             axios.post('/reservation/paypal-transaction-complete?id=' + authorizationID, data)
-                                .then(function (reponse) {
-                                    const resume = document.getElementById('resume');
+                                .then((reponse) => {
+                                    this.message = 'Enregistrement de votre réservation..'
                                     axios({
                                         method: 'post',
                                         url: '/reservation/api-reserve',
                                         data: {
-                                            'date': resume.dataset.date,
-                                            'meeting': resume.dataset.meeting,
-                                            'room': resume.dataset.room,
+                                            'date': store.state.date,
+                                            'meeting': store.state.meeting,
+                                            'room': store.state.room,
                                             'nbPerson': 2,
                                             'notices': '',
                                             'total': 90,
                                         }
                                     }).then(function (reponse) {
-                                       window.location.href = "/reservation/resume";
-                                    }).catch(function (erreur) {
-                                        //On traite ici les erreurs éventuellement survenues
+                                        window.location.href = "/reservation/resume";
+                                    }).catch((erreur) => {
+                                        this.message = 'Il semble y avoir une erreur, veuillez nous contacter'
                                         console.log(erreur);
                                     });
                                 }).catch(function (erreur) {
@@ -85,7 +106,8 @@
         },
         data() {
             return {
-                loaded: false,
+                loading: false,
+                message: ''
             }
         },
     }

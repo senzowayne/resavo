@@ -5,8 +5,9 @@
                     appear mode="in-out">
             <div v-show="isAvailable && display" class="alert light-blue lighten-5" role="alert">
                 Vous avez sélectionné : <br>
-                <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong>{{ this.roomText }}</strong> | Séance :
-                    <strong>{{ this.meetingText }}</strong></small>
+                <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong> {{ this.$store.getters.roomText
+                    }}</strong> | Séance :
+                    <strong>{{ this.$store.getters.meetingText }}</strong></small>
                 <br>
                 <i class="fas fa-check"></i>{{message}}
             </div>
@@ -17,14 +18,13 @@
                     appear mode="out-in">
             <div v-show="!isAvailable && display" class="alert deep-orange lighten-5" role="alert">
                 Vous avez sélectionné : <br>
-                <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong>{{ this.roomText }}</strong> | Séance :
-                    <strong>{{ this.meetingText }}</strong></small>
+                <small>Date : <strong>{{ this.date }}</strong> | Salle : <strong> {{ this.$store.getters.roomText
+                    }}</strong> | Séance :
+                    <strong>{{ this.$store.getters.meetingText }}</strong></small>
                 <br>
                 <i class="fas fa-times"></i>{{message}}
             </div>
         </transition>
-        <span style="display: none;" id="resume" :data-date="this.date" :data-room="this.room"
-              :data-meeting="this.meeting" :data-available="this.isAvailable"></span>
     </div>
 </template>
 
@@ -40,8 +40,6 @@
                 message: '',
                 display: false,
                 isAvailable: false,
-                roomText: '',
-                meetingText: ''
             }
         },
         mounted() {
@@ -52,29 +50,21 @@
             // The callback will be called every time an update is published
             eventSource.onmessage = (e) => {
                 let data = JSON.parse(e.data)
-                if (data.room === `/api/rooms/${this.room}` &&
-                    data.bookingDate.substr(0, 10) === this.date &&
-                    data.meeting === `/api/meetings/${this.meeting}`
-                ) {
-                    this.getAvailable()
-                }
+                setTimeout(() => {
+                    if (data.room === `/api/rooms/${this.room}` &&
+                        data.bookingDate.substr(0, 10) === this.date &&
+                        data.meeting === `/api/meetings/${this.meeting}`
+                    ) {
+                        this.getAvailable()
+                    }
+                }, 8000)
             }
         },
         watch: {
-            room: function () {
-                this.handleText()
-            },
             meeting: function () {
-                this.handleText()
                 this.getAvailable();
             },
             date: function () {
-                if (typeof document.getElementById('reservation_room').options[document.getElementById('reservation_room').value] != 'undefined')
-                    this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
-
-                if (typeof document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').value] != 'undefined')
-                    this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
-
                 this.getAvailable();
             },
             isAvailable: function (newVal) {
@@ -82,12 +72,8 @@
             }
         },
         methods: {
-            handleText() {
-                this.roomText = document.getElementById('reservation_room').options[document.getElementById('reservation_room').selectedIndex].text
-                this.meetingText = document.getElementById('reservation_seance').options[document.getElementById('reservation_seance').selectedIndex].text
-            },
             getAvailable() {
-                if (this.roomText !== '' && this.meetingText !== '' && this.meeting !== null && this.room !== null) {
+                if (this.meeting !== null && this.room !== null && this.date !== null) {
                     axios({
                         url: "/api/booking/available",
                         method: 'post',

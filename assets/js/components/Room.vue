@@ -6,7 +6,8 @@
                 Vous avez sélectionné la salle :
             </strong>
         </span>
-            <select id="reservation_room" name="reservation[room]" class="form-control" v-model="roomSelected">
+            <select ref="reservation_room" id="reservation_room" name="reservation[room]" class="form-control"
+                    v-model="roomSelected">
                 <option :value=null disabled>Sélectionnez votre salle</option>
                 <option v-for="room in rooms" :value="room.id" @input="handleRoomSelected($event)">
                     {{ room.name }}
@@ -37,6 +38,7 @@
         watch: {
             roomSelected: function (newVal, oldVal) {
                 store.commit('CHANGE_ROOM', newVal)
+                store.commit('CHANGE_ROOM_TEXT', this.$refs.reservation_room.options[document.getElementById('reservation_room').selectedIndex].text)
             }
         },
         methods: {
