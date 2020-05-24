@@ -59,6 +59,11 @@
                     }
                 }, 8000)
             }
+            window.addEventListener('beforeunload', function () {
+                if (eventSource !== null) {
+                    eventSource.close()
+                }
+            })
         },
         watch: {
             meeting: function () {

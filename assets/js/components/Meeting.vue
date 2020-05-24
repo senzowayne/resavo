@@ -69,6 +69,11 @@
                 this.meetings = meetings
                 this.refresh = true
             }
+            window.addEventListener('beforeunload', function () {
+                if (eventSource !== null) {
+                    eventSource.close()
+                }
+            })
         },
         watch: {
             room: function () {
