@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfigMerchant;
 use App\Service\Paypal\GetOrder;
 use App\Service\Paypal\CaptureAuthorization;
 use App\Entity\Paypal;
@@ -9,10 +10,7 @@ use App\Entity\Booking;
 use App\Entity\Room;
 use App\Entity\Meeting;
 use App\Entity\DateBlocked;
-use App\Form\BookingType;
-use DateTime;
 use Exception;
-use LogicException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,7 +55,6 @@ class BookingController extends AbstractController
      */
     public function index(): Response
     {
-        $repoDate = $this->manager->getRepository(DateBlocked::class);
         $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
             $this->getParameter('CLIENT_ID') .
             '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
@@ -84,7 +81,7 @@ class BookingController extends AbstractController
      */
     public function bookingDay(): Response
     {
-        $date = new DateTime();
+        $date = new \DateTime();
         $manager = $this->getDoctrine()->getManager();
         $repo = $manager->getRepository(Booking::class);
         $roomRepository = $manager->getRepository(Meeting::class);
@@ -108,10 +105,7 @@ class BookingController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $date = new DateTime($data['date']);
-        /* if (!$this->check->verifyDate($date)) {
-             throw new LogicException("Vous ne pouvez réserver que 2 jours après la date d'aujourd'hui !", 1);
-         }*/
+        $date = new \DateTime($data['date']);
         $date->format('dd-mm-yyyy');
         $roomId = $data['room'];
         $meetingId = $data['meeting'];
@@ -146,8 +140,20 @@ class BookingController extends AbstractController
         $user = $this->getUser();
         $pay = $this->session->get('pay');
         $this->logger->info('Création de la réservation -- ' . $this->getUser()->getEmail());
+        $configMerchantRepo = $this->manager->getRepository(ConfigMerchant::class);
+        $configMerchant = $configMerchantRepo->findAll();
 
-        if ($this->check->verifyPayment($pay, $booking)) {
+        if (!$this->check->verifyDate($booking->getBookingDate())) {
+            $msg = 'Vous ne pouvez pas réservé dans le passé !';
+            $json = [
+                'msg' => $msg,
+                'error' => 'booking in the past'
+                ];
+            $this->addFlash('danger', $msg);
+            return $this->json($json);
+        }
+
+        if ($this->check->verifyPayment($pay, $booking) && $configMerchant[0]->getMaintenance() === false) {
             $payment = $this->manager->getRepository(Paypal::class)->find($pay);
             $this->logger->info(
                 'Details => ' . $request->request->get('date') . '
@@ -169,16 +175,19 @@ class BookingController extends AbstractController
             $this->session->set('booking', $booking);
 
             if ($this->capturePayment($booking, $payment)) {
-                $this->notification->mailConfirmation($booking);
+              //  $this->notification->mailConfirmation($booking);
                 $this->addFlash(
                     'success',
                     'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail()
                 );
             }
-
-            return $this->json('Réservation ok');
+            $json = [
+                'msg' => 'Réservation ok',
+                'error' => ''
+            ];
+            return $this->json($json);
         }
-        $msg = 'un problème est survenu pendant la réservation';
+        $msg = 'Un problème est survenu pendant la réservation, veuillez nous contacter ou réessayer plus tard.';
         $this->addFlash('danger', $msg);
         return $this->json($msg);
     }
@@ -203,14 +212,14 @@ class BookingController extends AbstractController
         $data = GetOrder::getOrder($data['id']);
         if ($data['status'] === 'COMPLETED') {
             $payment = (new Paypal())
-                ->setPaymentId($data['orderID'])
-                ->setPaymentCurrency($data['currency'])
-                ->setPaymentAmount($data['value'])
-                ->setPaymentDate()
-                ->setPaymentStatus($data['status'])
-                ->setPayerEmail($data['mail'])
-                ->setUser($this->getUser())
-                ->setCapture(0);
+                    ->setPaymentId($data['orderID'])
+                    ->setPaymentCurrency($data['currency'])
+                    ->setPaymentAmount($data['value'])
+                    ->setPaymentDate()
+                    ->setPaymentStatus($data['status'])
+                    ->setPayerEmail($data['mail'])
+                    ->setUser($this->getUser())
+                    ->setCapture(0);
 
             $this->manager->persist($payment);
             $this->manager->flush();

@@ -85,8 +85,17 @@
                                             'notices': '',
                                             'total': 90,
                                         }
-                                    }).then(function (reponse) {
-                                        window.location.href = "/reservation/resume";
+                                    }).then(({data}) => {
+                                        if (data.error !== '') {
+                                            this.message = 'Il semble y avoir une erreur, veuillez nous contacter'
+                                            store.commit('CHANGE_NOTIF_DISPLAY', true)
+                                            store.commit('CHANGE_NOTIF_MSG', data.msg)
+                                            setTimeout(() =>
+                                                    store.commit('CHANGE_NOTIF_DISPLAY', false)
+                                                , 10000)
+                                        } else {
+                                            window.location.href = "/reservation/resume";
+                                        }
                                     }).catch((erreur) => {
                                         this.message = 'Il semble y avoir une erreur, veuillez nous contacter'
                                         console.log(erreur);
