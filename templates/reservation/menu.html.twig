@@ -3,29 +3,27 @@
     {#Add a logo #}
     <img width="30px" src="https://vuejs.org/images/logo.png">
     <ul class="navbar-nav ml-3 mr-auto">
-        {% if app.user %}
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" style="color:#c0e7f9" href="#" id="navbarDropdown" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Mon compte
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a class="nav-link" href="{{ path('easyadmin') }}">Administration</a>
-                    <a class="nav-link" href="{{ path('config_merchant') }}">Paramètres</a>
-                {% endif %}
-                <a class="nav-link" href="{{ path('new_reservation') }}">Nouvelle reservation</a>
-                <a class="dropdown-item" href="{{ path("historique") }}">Mes réservations</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{ path('update_password') }}">Changer de Mot de passe</a>
 
-            </div>
-        </li>
     </ul>
     <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('logout') }}" tabindex="-1"
-                   aria-disabled="true">Déconnexion</a>
+        {% if app.user %}
+            <li class="nav-item dropdown dropleft">
+                <a class="nav-link dropdown-toggle" style="color:#c0e7f9" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Mon compte
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="nav-link" href="{{ path('easyadmin') }}">Administration</a>
+                        <a class="nav-link" href="{{ path('config_merchant') }}">Paramètres</a>
+                    {% endif %}
+                    <a class="nav-link" href="{{ path('new_reservation') }}">Nouvelle reservation</a>
+                    <a class="dropdown-item" href="{{ path("historique") }}">Mes réservations</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path('update_password') }}">Changer de Mot de passe</a>
+                    <a class="nav-link text-danger" href="{{ path('logout') }}" tabindex="-1"
+                       aria-disabled="true">Déconnexion</a>
+                </div>
             </li>
         {% else %}
             <li class="nav-item active">
