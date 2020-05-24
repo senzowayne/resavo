@@ -33,7 +33,8 @@ final class MeetingDataProvider implements CollectionDataProviderInterface, Rest
             $date = $request->query->get('date');
             $room = $request->query->get('room');
 
-            $meetingBlocked = $this->meetingRepository->meetingBlocked($room, $date);
+            ($date !== null) ? $meetingBlocked = $this->meetingRepository->meetingBlocked($room, $date): $meetingBlocked = [];
+
             return $this->meetingRepository->meetingAvailable($room, $meetingBlocked);
         }
 }

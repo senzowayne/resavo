@@ -52,8 +52,6 @@
             setLoaded: function () {
                 paypal.Buttons({
                     createOrder: (data, actions) => {
-                        this.loading = true;
-                        this.message = 'Paiement en cours de traitement ..'
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
@@ -71,6 +69,7 @@
                                 authorization: authorization,
                                 authorizationID: authorizationID
                             };
+                            this.loading = true;
                             this.message = 'Vérification du paiement ..'
                             axios.post('/reservation/paypal-transaction-complete?id=' + authorizationID, data)
                                 .then((reponse) => {

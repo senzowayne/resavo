@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *     collectionOperations={"get"},
+ *     itemOperations={}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")
  */

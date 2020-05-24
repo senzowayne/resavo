@@ -11,6 +11,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource(attributes={"normalization_context"={"groups"={"meeting:read"}}},
  *     collectionOperations={"get"},
+ *     itemOperations={"get"},
  *     mercure="true"
  * )
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")

@@ -20,7 +20,6 @@ use App\Controller\AvailableBookingController;
  * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
  *     collectionOperations={
  *         "get",
- *         "post",
  *         "available"={
  *             "denormalization_context"={"groups"={"available:write"}},
  *             "method"="POST",
