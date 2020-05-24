@@ -6,7 +6,7 @@
                 Vous avez sélectionné la séance :
             </strong>
         </span>
-            <select id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected"
+            <select ref="reservation_seance" id="reservation_seance" name="reservation[meeting]" class="form-control" v-model="meetingSelected"
                     :data-seance="meetings.length">
                 <option :value=null disabled>Sélectionnez votre séance</option>
                 <option v-for="meeting in meetings" :value="meeting.id" @input="handleMeetingSelected($event)">
@@ -74,8 +74,9 @@
                 this.meetingSelected = null
                 this.getMeeting();
             },
-            meetingSelected: (newVal) => {
+            meetingSelected: function (newVal, oldVal) {
                 store.commit('CHANGE_MEETING', newVal)
+                store.commit('CHANGE_MEETING_TEXT', this.$refs.reservation_seance.options[document.getElementById('reservation_seance').selectedIndex].text)
             }
         },
         methods: {
@@ -89,11 +90,10 @@
                             this.hubLink = headers['link'].match(/<([^>]+)>;\s+rel="[^"]*mercure[^"]*"/)[1].replace('mercure/', 'localhost:3000/')
                             this.meetings = data['hydra:member'];
                             if (this.meetings.length === 0) {
-                                let val = document.getElementById('reservation_room').value
-                                document.getElementById('reservation_room').options[val - 1].disabled = true
+                                this.$refs.reservation_room.options[val - 1].disabled = true
                             } else {
-                                setTimeout(function () {
-                                    document.getElementById('reservation_seance').options['selectedIndex'] = 0
+                                setTimeout(() => {
+                                    this.$refs.reservation_seance.options['selectedIndex'] = 0
                                 }, 100)
                             }
                         }).catch((error) => console.log(error));
