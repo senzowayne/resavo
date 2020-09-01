@@ -9,7 +9,6 @@ use App\Entity\Paypal;
 use App\Entity\Booking;
 use App\Entity\Room;
 use App\Entity\Meeting;
-use App\Entity\DateBlocked;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -55,13 +54,10 @@ class BookingController extends AbstractController
      */
     public function index(): Response
     {
-        $paypalClient = 'https://www.paypal.com/sdk/js?client-id=' .
-            $this->getParameter('CLIENT_ID') .
-            '&currency=EUR&debug=false&disable-card=amex&intent=authorize';
+        $link = "https://www.paypal.com/sdk/js?client-id=%s&currency=EUR&debug=false&disable-card=amex&intent=authorize";
+        $paypalClient = sprintf($link, $this->getParameter('CLIENT_ID'));
 
-        return $this->render('reservation/index.html.twig', [
-            'client' => $paypalClient
-        ]);
+        return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
     }
 
     /**
@@ -69,11 +65,7 @@ class BookingController extends AbstractController
      */
     public function reservationPage(): Response
     {
-
-        return $this->render('reservation/booking.html.twig', [
-            'controller_name' => 'Controller',
-            'reservation' => 'reservation'
-        ]);
+        return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 
     /**
@@ -120,8 +112,8 @@ class BookingController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $date = new \DateTime($data['date']);
-        $date->format('dd-mm-yyyy');
+        $date = (new \DateTime($data['date']));
+
         $roomId = $data['room'];
         $meetingId = $data['meeting'];
 
@@ -136,12 +128,12 @@ class BookingController extends AbstractController
         }
 
         return (new Booking())
-            ->setNotices($data['notices'])
-            ->setBookingDate($date)
-            ->setRoom($room)
-            ->setMeeting($meeting)
-            ->setNbPerson($data['nbPerson'])
-            ->setTotal($data['total']);
+                ->setNotices($data['notices'])
+                ->setBookingDate($date)
+                ->setRoom($room)
+                ->setMeeting($meeting)
+                ->setNbPerson($data['nbPerson'])
+                ->setTotal($data['total']);
     }
 
     /**
@@ -154,51 +146,51 @@ class BookingController extends AbstractController
         $booking = $this->createBooking($request);
         $user = $this->getUser();
         $pay = $this->session->get('pay');
-        $this->logger->info('Création de la réservation -- ' . $this->getUser()->getEmail());
+        $this->logger->info(
+            sprintf('Création de la réservation -- %s',
+                $user->getEmail()
+            )
+        );
         $configMerchantRepo = $this->manager->getRepository(ConfigMerchant::class);
         $configMerchant = $configMerchantRepo->findAll();
 
-        if (!$this->check->verifyDate($booking->getBookingDate())) {
-            $msg = 'Vous ne pouvez pas réservé dans le passé !';
-            $json = [
-                'msg' => $msg,
-                'error' => 'booking in the past'
-                ];
-            $this->addFlash('danger', $msg);
-            return $this->json($json);
-        }
+        $this->check->verifyDate($booking->getBookingDate());
 
         if ($this->check->verifyPayment($pay, $booking) && $configMerchant[0]->getMaintenance() === false) {
             $payment = $this->manager->getRepository(Paypal::class)->find($pay);
+
             $this->logger->info(
-                'Details => ' . $request->request->get('date') . '
-                ' . $request->request->get('room') . '
-                ' . $request->request->get('meeting'));
+                sprintf('Détails: [date: %s - salle: %s - séance: %s',
+                        $request->request->get('date'),
+                        $request->request->get('room'),
+                        $request->request->get('meeting')
+                )
+            );
 
             $booking->setPayment($payment);
             $booking->setUser($user);
             $this->manager->persist($booking);
             $this->manager->flush();
-            $this->logger->info(' Verification du paiement && Enregistrement de la réservation -- ' . $this->getUser()->getEmail());
-            $booking->setName(
-                'booking_' . substr($this->getUser()->getName(), 0, 3) .
-                '&' . $booking->getId() . '&' . $this->getUser()->getId()
+            $this->logger->info(
+                sprintf('Vérification du paiement && Enregistrement de la réservation -- %s',
+                                $this->getUser()->getEmail()
+                )
             );
-            $this->manager->persist($booking);
-            $this->manager->flush();
             $this->session->remove('pay');
             $this->session->set('booking', $booking);
 
             if ($this->capturePayment($booking, $payment)) {
-              //  $this->notification->mailConfirmation($booking);
+                //  $this->notification->mailConfirmation($booking);
                 $this->addFlash(
                     'success',
-                    'Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur ' . $this->getUser()->getEmail()
+                    sprintf('Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
+                                    $this->getUser()->getEmail()
+                    )
                 );
             }
             $json = [
                 'msg' => 'Réservation ok',
-                'error' => ''
+                'error' => null
             ];
             return $this->json($json);
         }
@@ -208,7 +200,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * Réponse de l'API PayPal & entré en bdd des informations d'auritsation du paiement
+     * Réponse de l'API PayPal & entré en bdd des informations d'autorisation du paiement
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST", "GET"})
      * @param Request $request
      * @return JsonResponse
@@ -222,19 +214,23 @@ class BookingController extends AbstractController
         $data = json_decode($data, true);
         $this->session->set('authorizationID', $data['authorizationID']);
 
-        $this->logger->info('authorizationID : ' . $data['id'] . ' User e-mail : ' . $this->getUser()->getEmail());
+        $this->logger->info(
+            sprintf('authorizationID : %s - User e-mail : %s',
+                $data['id'],
+                $this->getUser()->getEmail())
+        );
 
         $data = GetOrder::getOrder($data['id']);
         if ($data['status'] === 'COMPLETED') {
             $payment = (new Paypal())
-                    ->setPaymentId($data['orderID'])
-                    ->setPaymentCurrency($data['currency'])
-                    ->setPaymentAmount($data['value'])
-                    ->setPaymentDate()
-                    ->setPaymentStatus($data['status'])
-                    ->setPayerEmail($data['mail'])
-                    ->setUser($this->getUser())
-                    ->setCapture(0);
+                        ->setPaymentId($data['orderID'])
+                        ->setPaymentCurrency($data['currency'])
+                        ->setPaymentAmount($data['value'])
+                        ->setPaymentDate()
+                        ->setPaymentStatus($data['status'])
+                        ->setPayerEmail($data['mail'])
+                        ->setUser($this->getUser())
+                        ->setCapture(0);
 
             $this->manager->persist($payment);
             $this->manager->flush();
