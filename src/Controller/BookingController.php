@@ -78,26 +78,41 @@ class BookingController extends AbstractController
 
     /**
      * @Route("/resa", name="resa_day")
+     * @param Request $request
+     * @return Response
      */
-    public function bookingDay(): Response
+    public function bookingDay(Request $request): Response
     {
-        $date = new \DateTime();
-        $manager = $this->getDoctrine()->getManager();
-        $repo = $manager->getRepository(Booking::class);
-        $roomRepository = $manager->getRepository(Meeting::class);
-        $booking = $repo->findBy(['bookingDate' => $date], ['room' => 'ASC']);
-        $meeting1 = $roomRepository->findBy(['room' => 1]);
-        $meeting2 = $roomRepository->findBy(['room' => 2]);
-        $meeting3 = $roomRepository->findBy(['room' => 3]);
-        $datas = [];
-        foreach ($booking as $key => $value) {
-            $datas[] = $value;
+        try {
+            $date = new \DateTime($request->query->get('d'));
+        } catch (\Exception $e) {
+            $date = new \DateTime();
         }
+
+        $em = $this->getDoctrine()->getManager();
+        $bookingRepo = $em->getRepository(Booking::class);
+        $meetingRepo = $em->getRepository(Meeting::class);
+        $roomRepo = $em->getRepository(Room::class);
+        $booking = $bookingRepo->findBy(['bookingDate' => $date], ['room' => 'ASC']);
+        $rooms = $roomRepo->findAll();
+
+        if (!(count($rooms) >= 3)) {
+            return $this->render('reservation/booking-day.html.twig', compact('date'));
+        }
+        $meeting1 = $meetingRepo->findBy(['room' => $rooms[0]]);
+        $meeting2 = $meetingRepo->findBy(['room' => $rooms[1]]);
+        $meeting3 = $meetingRepo->findBy(['room' => $rooms[2]]);
+        $data = [];
+        foreach ($booking as $key => $value) {
+            $data[] = $value;
+        }
+
         return $this->render('reservation/booking-day.html.twig', [
-            'booking' => $datas,
+            'booking' => $data,
             'meeting1' => $meeting1,
             'meeting2' => $meeting2,
-            'meeting3' => $meeting3
+            'meeting3' => $meeting3,
+            'date' => $date
         ]);
     }
 
