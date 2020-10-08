@@ -1,46 +1,43 @@
 {% extends 'base.html.twig' %}
+{% if booking is not defined %}{% set booking = [] %}{% endif %}
 {% import 'macro/_view_resa.html.twig' as view %}
     {% block header %}
-        <meta http-equiv="refresh" content="60000" />
+        <meta http-equiv="refresh" content="60000"/>
     {% endblock %}
 {% block body %}
-    </div>
-    </div>
-    </nav>
-    </div></div>
-    </div>
     <div class="container text-center">
         <h1>Réservation du jour</h1>
-        <span style="font-size: 34px">{{ "now"|date("d/m/Y") }}</span>
+        <span style="font-size: 34px">{{ date | date('d-m-Y') }}</span>
         <div id="Crono"></div>
-        <hr class="my-5">
- {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN') %}
+        <hr class="my-3">
+        <form action="{{ path('resa_day') }}" method="get">
+            <label for="start"></label>
+            <input type="date" id="start" name="d" value="{{ date | date('Y-m-d') }}">
+            <button type="submit" class="btn btn-dark btn-sm">ok</button>
+        </form>
+        <hr class="my-3">
             <a class="nav-link" href="{{ path('easyadmin') }}">Administration</a>
         {% endif %}
         <section id="display" class="row mt-3">
-            {% set week = '' %}
-            {% for data in booking %}
-                {% if loop.index == 1 %}
-                    {% if data.soirWeek  %}
-                        {% set week = 1 %}
-                    {% else %}
-                        {% set week = 0 %}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <div class="col-sm-12 col-md text-left">
                 <h3>Salle Bora-Bora</h3>
-             {{ view._view_booking(booking, '1', meeting1, week) }}
-            </div> <div class="col-sm-12 col-md text-left">
-                <h3>Salle Miami</h3>
-                {{ view._view_booking(booking, '2', meeting2, week) }}
-
-            </div> <div class="col-sm-12 col-md text-left">
-                <h3>Salle Phuket</h3>
-                {{ view._view_booking(booking, '3', meeting3, week) }}
-
+                {% if meeting1 is defined %}
+                    {{ view._view_booking(booking, meeting1[0].room.id, meeting1, 'bg-success') }}
+                {% endif %}
             </div>
-
+            <div class="col-sm-12 col-md text-left">
+                <h3>Salle Miami</h3>
+                {% if meeting2 is defined %}
+                    {{ view._view_booking(booking, meeting2[0].room.id, meeting2, 'bg-warning') }}
+                {% endif %}
+            </div>
+            <div class="col-sm-12 col-md text-left">
+                <h3>Salle Phuket</h3>
+                {% if meeting3 is defined %}
+                    {{ view._view_booking(booking, meeting3[0].room.id, meeting3, 'bg-secondary') }}
+                {% endif %}
+            </div>
         </section>
 
     </div>
@@ -48,72 +45,28 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="//daybrush.com/scenejs/release/latest/dist/scene.min.js"></script>
-
-     <script>/*
-        const scene1 = new Scene({
-        "#any":{
-            0: "opacity: 0;top:40px;" ,
-            1: "opacity: 1;top:0px;",
-        },
-            "#seance_bora-bora": {
-                0: {
-                    opacity: '0',
-                },
-                1.3: {
-                    opacity: '1',
-                }
-            },
-            "#seance_miami": {
-                0: {
-                    opacity: '0',
-                },
-                2.3: {
-                    opacity: '1',
-                }
-            },
-            "#seance_phuket": {
-                0: {
-                    opacity: '0',
-                },
-                2.9: {
-                    opacity: '1',
-                }
-            },
-        }, {
-            selector: true,
-            easing: "ease-in-out",
-        });
-        $( document ).ready(function() {
-            console.log( "ready!" );
-scene1.playCSS();
-        });*/
-    </script>
     <script>
-        setTimeout(function(){
+        setTimeout(function () {
             window.location.reload(1);
         }, 3600000);
-        setTimeout(function(){decompte();}, 1000);
-        var cpt = 3600 ;
-        var x ;
+        setTimeout(function () {
+            decompte();
+        }, 1000);
+        let cpt = 3600;
+        let x;
 
-        function decompte()
-        {
-            if(cpt>=0)
-            {
-                if(cpt>1)
-                {
-                    var sec = " secondes.";
+        function decompte() {
+            if (cpt >= 0) {
+                if (cpt > 1) {
+                    let sec = " secondes.";
                 } else {
-                    var sec = " seconde.";
+                    let sec = " seconde.";
                 }
-                document.getElementById("Crono").innerHTML = "Actualisation dans " + cpt + sec ;
-                cpt-- ;
-                x = setTimeout("decompte()",1000) ;
-            }
-            else
-            {
-                clearTimeout(x) ;
+                document.getElementById("Crono").innerHTML = "Actualisation dans " + cpt + sec;
+                cpt--;
+                x = setTimeout("decompte()", 1000);
+            } else {
+                clearTimeout(x);
             }
         }
     </script>

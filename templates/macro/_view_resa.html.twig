@@ -1,82 +1,67 @@
-{% macro _view_booking(booking, room, meetings, week) %}
-  {% set id = '' %}
+{% macro _view_booking(booking, room, meetings, bg) %}
+    {% set id = '' %}
 
-  {% if booking is not empty %}
-    {% for meeting in meetings if meeting.room.id == room and meeting.weekEnd == week %}
-      {% for data in booking if data.room.id == room and data.meeting.id == meeting.id %}
-        {% if data.room.id == '1' %}
-          {% set id = 'seance_bora-bora' %}
-          {% set bg = 'bg-primary' %}
-        {% elseif data.room.id == '2' %}
-          {% set id = 'seance_miami' %}
-          {% set bg = 'bg-warning' %}
-        {% elseif data.room.id == '3' %}
-          {% set id = 'seance_phuket' %}
-          {% set bgHex = 'background-color: #9933CC !important;' %}
-        {% endif %}
+        {% for meeting in meetings if meeting.room.id == room %}
+            {% for data in booking if data.room.id == room and data.meeting.id == meeting.id %}
+                <div id="{{ id }}">
+                    <div class="card text-white {{ bg | default('') }} mb-3 text-center"
+                         style="max-width: 22rem;min-height: 22rem; max-height: 22rem;{% if data.name ==  'INTERNE ' %}background-color:  #9370DB!important;{% endif %}">
+                        <div class="card-header">
+                            {{ loop.parent.loop.index }}
+                            - Séance :
+                            <strong>{{ data.meeting.label | default('Non renseigné') }}</strong>
+                        </div>
+                        <div class="card-body" style="color: black">
+                            <a style="color: floralwhite" href="/admin/?entity=Booking&action=show&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{ data.id }}">Voir</a>
+                            <a style="color: floralwhite" href="/admin/?entity=Booking&action=edit&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{ data.id }}">Éditer</a>
+                            <h5 class="card-title">{{ data.room.name | default('Non renseigné') }}<br>
+                                {{ data.nbPerson }}
+                                Personne{% if data.nbPerson > 1 %}s{% endif %}
+                            </h5>
+                            <p class="card-text" style="color: burlywood">
+                                <strong>Client:
+                                </strong>{{ data.user.name | default('Non renseigné') }}
+                                {{ data.user.firstName | default('') }}
+                                <br>
+                                {% if data.name == 'GROUPON' %}
+                                    <img width="30%" src="{{ asset('assets/img/groupon.png') }}" alt="groupon logo"><br>
+                                {% else %}
+                                    <strong>Résa:</strong>
+                                    {{ data.name | default('Non renseigné') }}
+                                {% endif %}
+                                <br>
+                                <strong>Tél:
+                                </strong>{{ data.user.number | default('Non renseigné') }}<br>
+                                {% if data.notices %}
+                                    <strong>Remarques:</strong>
+                                    {{ data.notices }}
+                                {% endif %}
+                                {% if 'booking_' in data.name %}
+                                <br>
+                                <strong>Acompte :
+                                    {{ data.payment.paymentAmount|default('0') }}
+                                    €</strong>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div id="seance_phuket">
+                    <div class="card text-white bg-dark mb-3 text-center"
+                         style="max-width: 22rem;min-height: 22rem">
+                        <div class="card-header">
+                            {{ loop.parent.loop.index }}
+                            - Séance :
+                            {{ meeting.label | default('Non renseigné') }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-warning ">DISPONIBLE</h5>
+                        </div>
+                    </div>
+                </div>
 
-        <div id="{{ id }}">
-          <div class="card text-white {{ bg | default('') }} mb-3 text-center" style="max-width: 22rem;min-height: 22rem; max-height: 22rem;{% if data.nom ==  'INTERNE ' %}background-color:  #9370DB!important;{% endif %}{{ bgHex | default('')}}">
-            <div class="card-header">
-              {{ loop.parent.loop.index }}
-              - Séance :
-              <strong>{{ data.meeting.label | default('Non renseigné')  }}</strong>
-            </div>
-            <div class="card-body ">
-              <a
-                href="/admin/?entity=Booking&action=show&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Voir</a>
-              <a
-                href="/admin/?entity=Booking&action=edit&menuIndex=2&submenuIndex=-1&sortField=bookingDate&sortDirection=DESC&page=1&referer=%252Fadmin%252F%253Fentity%253DBooking%2526action%253Dlist%2526menuIndex%253D2%2526submenuIndex%253D-1%2526sortField%253DbookingDate%2526sortDirection%253DDESC%2526page%253D1&id={{data.id}}">Éditer</a>
-              <h5 class="card-title">{{ data.room.name | default('Non renseigné')  }}<br>
-                {{ data.nbPerson }}
-                Personne{% if data.nbPerson > 1 %}s{% endif %}
-              </h5>
-              <p class="card-text">
-                <strong>Client:
-                </strong>{{ data.user.name | default('Non renseigné')  }}
-                {{ data.user.firstName | default('')  }}
-                <br>
-                {% if data.name == 'GROUPON'%}
-                <img width="30%" src="{{asset('assets/img/groupon.png')}}" alt="groupon logo"><br>
-                {% else %}
-                  <strong>Résa:</strong>
-                {{ data.name | default('Non renseigné')  }}
-                {%endif%}
-                <br>
-                <strong>Tél:
-                </strong>{{ data.user.number | default('Non renseigné') }}<br>
-                {% if data.notices %}
-                  <strong>Remarques:</strong>
-                  {{ data.notices }}
-                {% endif %}
-                {% if 'booking_' in data.name %}
-                  <br>
-                  <strong>Acompte :
-                    {{ data.payment.paymentAmount|default('0') }}
-                    €</strong>
-                </p>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      {% else %}
-        <div id="seance_phuket">
-          <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 22rem;min-height: 22rem">
-            <div class="card-header">
-              {{ loop.parent.loop.index }}
-              - Séance :
-              {{ meeting.label | default('Non renseigné') }}
-            </div>
-            <div class="card-body">
-              <h5 class="card-title text-warning ">DISPONIBLE</h5>
-            </div>
-          </div>
-        </div>
-
-      {% endfor %}
-    {% endfor %}
-  {% else %}
-    Aucune reservation pour aujourd'hui
-  {% endif %}
+            {% endfor %}
+        {% endfor %}
 
 {% endmacro %}
