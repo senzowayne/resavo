@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ConfigMerchant;
+use App\Manager\BookingManager;
 use App\Service\Paypal\GetOrder;
 use App\Service\Paypal\CaptureAuthorization;
 use App\Entity\Paypal;
@@ -30,6 +31,7 @@ class BookingController extends AbstractController
     private $notification;
     private $check;
     private $manager;
+    private $bookingManager;
     private $session;
     private $logger;
 
@@ -37,12 +39,14 @@ class BookingController extends AbstractController
         EntityManagerInterface $manager,
         NotificationController $notification,
         CheckBookingController $check,
+        BookingManager $bookingManager,
         SessionInterface $session,
         LoggerInterface $logger)
     {
         $this->notification = $notification;
         $this->check = $check;
         $this->manager = $manager;
+        $this->bookingManager = $bookingManager;
         $this->session = $session;
         $this->logger = $logger;
     }
@@ -108,34 +112,6 @@ class BookingController extends AbstractController
         ]);
     }
 
-    private function createBooking(Request $request): Booking
-    {
-        $data = json_decode($request->getContent(), true);
-
-        $date = (new \DateTime($data['date']));
-
-        $roomId = $data['room'];
-        $meetingId = $data['meeting'];
-
-        $meeting = $this->manager->getRepository(Meeting::class)->find($meetingId);
-        $room = $this->manager->getRepository(Room::class)->find($roomId);
-
-        if (null === $meeting) {
-            throw $this->createNotFoundException('The meeting does not exist');
-        }
-        if (null === $room) {
-            throw $this->createNotFoundException('The room does not exist');
-        }
-
-        return (new Booking())
-                ->setNotices($data['notices'])
-                ->setBookingDate($date)
-                ->setRoom($room)
-                ->setMeeting($meeting)
-                ->setNbPerson($data['nbPerson'])
-                ->setTotal($data['total']);
-    }
-
     /**
      * @Route("/api-reserve", name="reserve", methods={"POST"})
      * @param Request $request
@@ -143,7 +119,7 @@ class BookingController extends AbstractController
      */
     public function reserve(Request $request): JsonResponse
     {
-        $booking = $this->createBooking($request);
+        $booking = $this->bookingManager->createBooking($request);
         $user = $this->getUser();
         $pay = $this->session->get('pay');
         $this->logger->info(
@@ -152,11 +128,11 @@ class BookingController extends AbstractController
             )
         );
         $configMerchantRepo = $this->manager->getRepository(ConfigMerchant::class);
-        $configMerchant = $configMerchantRepo->findAll();
+        $configMerchant = $configMerchantRepo->findOneBy([]);
 
         $this->check->verifyDate($booking->getBookingDate());
 
-        if ($this->check->verifyPayment($pay, $booking) && $configMerchant[0]->getMaintenance() === false) {
+        if ($this->check->verifyPayment($pay, $booking) && $configMerchant->getMaintenance() === false) {
             $payment = $this->manager->getRepository(Paypal::class)->find($pay);
 
             $this->logger->info(
@@ -252,9 +228,12 @@ class BookingController extends AbstractController
     {
         try {
             $this->logger->info('Capture du paiement -- User e-mail : ' . $this->getUser()->getEmail());
-            $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
-            $captureId = $response->result->id;
-            if ('COMPLETED' !== $response->result->status) {
+            $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'), true);
+
+            $captureId = $response['orderID'];
+            $this->logger->info($response['orderID'] . ' -- ' . $response['status']);
+
+            if ('COMPLETED' !== $response['status'] && 'PENDING' !== $response['status']) {
                 $this->manager->remove($payment);
                 $this->manager->remove($booking);
                 $this->manager->flush();
