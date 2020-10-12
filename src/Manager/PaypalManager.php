@@ -8,13 +8,14 @@ use Psr\Log\LoggerInterface;
 use App\Service\Paypal\GetOrder;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\Paypal\CaptureAuthorization;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class PaypalManager extends AbstractManager
 {
-    private const SVC_NAME = '[PaypalManager ::';
+    private const SVC_NAME = '[PaypalManager] ::';
 
     private $em;
     private $logger;
@@ -40,7 +41,7 @@ class PaypalManager extends AbstractManager
         $this->security = $security;
     }
 
-    public function generateSandbox(): string
+    public function generateSandboxLink(): string
     {
         $link = "https://www.paypal.com/sdk/js?client-id=%s&currency=EUR&debug=false&disable-card=amex&intent=authorize";
         return sprintf($link, $this->getParameter('CLIENT_ID'));
@@ -64,9 +65,6 @@ class PaypalManager extends AbstractManager
 
     public function findOnePaiement(int $id): Paypal
     {
-        /**
-         * @var Paypal
-         */
         $paypal = $this->em
             ->getRepository(Paypal::class)
             ->find($id);
@@ -79,11 +77,11 @@ class PaypalManager extends AbstractManager
         return $paypal;
     }
 
-    public function requestAutorize($data): array
+    public function requestAutorize(Request $request): array
     {
         $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
-        $data = json_decode($data, true);
+        $data = json_decode($request->getContent(), true);
         $this->session->set('authorizationID', $data['authorizationID']);
 
         $this->logger->info(
@@ -104,17 +102,26 @@ class PaypalManager extends AbstractManager
     public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
-            $this->logger->info('Capture du paiement -- User e-mail : ' . $this->security->getUser()->getEmail());
+            $this->logger->info(
+                sprintf('%s Capture du paiement -- User e-mail : %s',
+                    self::SVC_NAME,
+                    $this->security->getUser()->getEmail())
+            );
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $this->logger->info(self::SVC_NAME . $response['orderID'] . ' -- ' . $response['status']);
 
             $captureId = $response['orderID'];
 
             if ('COMPLETED' !== $response['status'] && 'PENDING' !== $response['status']) {
+                $this->logger->error(
+                    sprintf('%s Paiement non capturé -- suppression de la réservation User e-mail : %s',
+                        self::SVC_NAME,
+                        $this->security->getUser()->getEmail())
+                );
                 $this->em->remove($payment);
                 $this->em->remove($booking);
                 $this->em->flush();
-                $this->logger->error('Paiement non capturé -- suppression de la réservation User e-mail : ' . $this->security->getUser()->getEmail());
+                $this->session->remove('authorizationID');
                 $this->addFlash('danger', 'Un problème d\'approvisionnement est survenu');
 
                 return $this->redirectToRoute('before_reservation');

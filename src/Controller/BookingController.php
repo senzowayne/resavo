@@ -48,7 +48,7 @@ class BookingController extends AbstractController
      */
     public function index(): Response
     {
-        $paypalClient = $this->paypalManager->generateSandbox();
+        $paypalClient = $this->paypalManager->generateSandboxLink();
 
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
     }
@@ -70,7 +70,7 @@ class BookingController extends AbstractController
      */
     public function authorizePayment(Request $request): JsonResponse
     {
-        $data = $this->paypalManager->requestAutorize($request->getContent());
+        $data = $this->paypalManager->requestAutorize($request);
 
         if ($data['status'] === 'COMPLETED') {
             $this->paypalManager->createPaiement($data);
@@ -93,6 +93,10 @@ class BookingController extends AbstractController
                                ->getRepository(ConfigMerchant::class)
                                ->findOneBy([]);
 
+        if (is_null($configMerchant)) {
+            throw new \LogicException('the configMerchant not found');
+        }
+
         if (!$configMerchant->getMaintenance()) {
 
             $payment = $this->paypalManager
@@ -108,7 +112,7 @@ class BookingController extends AbstractController
                 //  $this->notification->mailConfirmation($booking);
                 $this->addFlash(
                     'success',
-                    sprintf('Félicitations votre reservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
+                    sprintf('Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
                                     $this->getUser()->getEmail()
                     )
                 );
