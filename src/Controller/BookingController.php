@@ -5,19 +5,15 @@ namespace App\Controller;
 use App\Entity\ConfigMerchant;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
-use App\Entity\Booking;
-use App\Entity\Room;
-use App\Entity\Meeting;
-use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/reservation")
@@ -25,29 +21,24 @@ use Doctrine\ORM\EntityManagerInterface;
 class BookingController extends AbstractController
 {
     private $notification;
-    private $check;
     private $manager;
     private $bookingManager;
     private $paypalManager;
     private $session;
-    private $logger;
 
     public function __construct(
         EntityManagerInterface $manager,
         NotificationController $notification,
-        CheckBookingController $check,
         BookingManager $bookingManager,
         PaypalManager $paypalManager,
-        SessionInterface $session,
-        LoggerInterface $logger)
+        SessionInterface $session
+    )
     {
         $this->notification = $notification;
-        $this->check = $check;
         $this->manager = $manager;
         $this->bookingManager = $bookingManager;
         $this->paypalManager = $paypalManager;
         $this->session = $session;
-        $this->logger = $logger;
     }
 
     /**
@@ -97,32 +88,20 @@ class BookingController extends AbstractController
     public function reserve(Request $request): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
-        $user = $this->getUser();
-        $pay = $this->session->get('pay');
-        $this->logger->info(sprintf('Création de la réservation -- %s', $user->getEmail()));
-        $configMerchantRepo = $this->manager->getRepository(ConfigMerchant::class);
-        $configMerchant = $configMerchantRepo->findOneBy([]);
 
-        $this->check->verifyDate($booking->getBookingDate());
+        $configMerchant = $this->manager
+                               ->getRepository(ConfigMerchant::class)
+                               ->findOneBy([]);
 
-        if ($configMerchant->getMaintenance() === false) {
+        if (!$configMerchant->getMaintenance()) {
 
-            $payment = $this->paypalManager->findOnePaiement($pay);
-
-            $this->logger->info(
-                sprintf('Détails: [date: %s - salle: %s - séance: %s',
-                        $request->request->get('date'),
-                        $request->request->get('room'),
-                        $request->request->get('meeting'))
-            );
+            $payment = $this->paypalManager
+                            ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
-            $booking->setUser($user);
+            $booking->setUser($this->getUser());
             $this->bookingManager->save($booking);
-            $this->logger->info(
-                sprintf('Vérification du paiement && Enregistrement de la réservation -- %s', $this->getUser()->getEmail())
-            );
-            $this->session->remove('pay');
+
             $this->session->set('booking', $booking);
 
             if ($this->paypalManager->capturePayment($booking, $payment)) {
@@ -153,35 +132,15 @@ class BookingController extends AbstractController
      */
     public function bookingDay(Request $request): Response
     {
-        try {
-            $date = new \DateTime($request->query->get('d'));
-        } catch (\Exception $e) {
-            $date = new \DateTime();
-        }
-
-        $bookingRepo = $this->manager->getRepository(Booking::class);
-        $meetingRepo = $this->manager->getRepository(Meeting::class);
-        $roomRepo = $this->manager->getRepository(Room::class);
-        $booking = $bookingRepo->findBy(['bookingDate' => $date], ['room' => 'ASC']);
-        $rooms = $roomRepo->findAll();
-
-        if (!(count($rooms) >= 3)) {
-            return $this->render('reservation/booking-day.html.twig', compact('date'));
-        }
-        $meeting1 = $meetingRepo->findBy(['room' => $rooms[0]]);
-        $meeting2 = $meetingRepo->findBy(['room' => $rooms[1]]);
-        $meeting3 = $meetingRepo->findBy(['room' => $rooms[2]]);
-        $data = [];
-        foreach ($booking as $key => $value) {
-            $data[] = $value;
-        }
+        $result = $this->bookingManager
+                       ->getAllMeetingPerRoom($request->query->get('d'));
 
         return $this->render('reservation/booking-day.html.twig', [
-            'booking' => $data,
-            'meeting1' => $meeting1,
-            'meeting2' => $meeting2,
-            'meeting3' => $meeting3,
-            'date' => $date
+            'booking' => $result['booking'],
+            'meeting1' => $result['meeting1'],
+            'meeting2' => $result['meeting2'],
+            'meeting3' => $result['meeting3'],
+            'date' => $result['date']
         ]);
     }
 

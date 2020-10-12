@@ -2,19 +2,17 @@
 
 namespace App\Manager;
 
-use App\Entity\Booking;
 use App\Entity\Paypal;
-use App\Service\Paypal\CaptureAuthorization;
+use App\Entity\Booking;
+use Psr\Log\LoggerInterface;
 use App\Service\Paypal\GetOrder;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\Service\Paypal\CaptureAuthorization;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Security;
 
-class PaypalManager extends AbstractController
+class PaypalManager extends AbstractManager
 {
     private const SVC_NAME = '[PaypalManager ::';
 
@@ -34,7 +32,7 @@ class PaypalManager extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session,
         Security $security
-        )
+    )
     {
         $this->em = $em;
         $this->logger = $logger;
@@ -51,13 +49,13 @@ class PaypalManager extends AbstractController
     public function createPaiement(array $data): void
     {
         $payment = (new Paypal())
-                    ->setPaymentId($data['orderID'])
-                    ->setPaymentCurrency($data['currency'])
-                    ->setPaymentAmount($data['value'])
-                    ->setPaymentStatus($data['status'])
-                    ->setPayerEmail($data['mail'])
-                    ->setUser($this->security->getUser())
-                    ->setCapture(0);
+            ->setPaymentId($data['orderID'])
+            ->setPaymentCurrency($data['currency'])
+            ->setPaymentAmount($data['value'])
+            ->setPaymentStatus($data['status'])
+            ->setPayerEmail($data['mail'])
+            ->setUser($this->security->getUser())
+            ->setCapture(0);
 
         $this->em->persist($payment);
         $this->em->flush();
@@ -70,12 +68,14 @@ class PaypalManager extends AbstractController
          * @var Paypal
          */
         $paypal = $this->em
-                        ->getRepository(Paypal::class)
-                        ->find($id);
+            ->getRepository(Paypal::class)
+            ->find($id);
 
         if (is_null($paypal)) {
             throw new \RuntimeException('No paiement found');
         }
+        $this->session->remove('pay');
+
         return $paypal;
     }
 
