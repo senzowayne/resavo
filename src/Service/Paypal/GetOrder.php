@@ -34,10 +34,9 @@ class GetOrder
         // 4. Save the transaction in your database. Implement logic to save transaction to your database for future reference.
         print "Gross Amount: {$response->result->purchase_units[0]->amount->currency_code} {$response->result->purchase_units[0]->amount->value}\n";
 
-        $retour = ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id, 'value' => $response->result->purchase_units[0]->amount->value, 'currency' => $response->result->purchase_units[0]->amount->currency_code, 'mail' => $response->result->payer->email_address ];
         // To print the whole response body, uncomment the following line
         // print json_encode($response->result, JSON_PRETTY_PRINT);
-        return $retour;
+        return ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id, 'value' => $response->result->purchase_units[0]->amount->value, 'currency' => $response->result->purchase_units[0]->amount->currency_code, 'mail' => $response->result->payer->email_address ];
     }
 }
 

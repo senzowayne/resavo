@@ -51,4 +51,10 @@ class BookingManager
             ->setNbPerson($data['nbPerson'])
             ->setTotal($data['total']);
     }
+
+    public function save(Booking $booking): void
+    {
+        $this->manager->persist($booking);
+        $this->manager->flush();
+    }
 }
