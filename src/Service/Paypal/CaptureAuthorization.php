@@ -33,9 +33,10 @@ class CaptureAuthorization
       }
       // To toggle printing the whole response body comment/uncomment
       // the follwowing line
-      echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
+
+        echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
     }
-    return $response;
+      return ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id];
   }
 
    /**
