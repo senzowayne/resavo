@@ -65,14 +65,14 @@ class PaypalManager extends AbstractManager
 
     public function findOnePaiement(int $id): Paypal
     {
+        /** @var Paypal $paypal */
         $paypal = $this->em
-            ->getRepository(Paypal::class)
-            ->find($id);
+                       ->getRepository(Paypal::class)
+                       ->find($id);
 
         if (is_null($paypal)) {
             throw new \RuntimeException('No paiement found');
         }
-        $this->session->remove('pay');
 
         return $paypal;
     }

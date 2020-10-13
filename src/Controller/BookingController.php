@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Booking;
 use App\Entity\ConfigMerchant;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
@@ -98,15 +99,13 @@ class BookingController extends AbstractController
         }
 
         if (!$configMerchant->getMaintenance()) {
-
             $payment = $this->paypalManager
                             ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
-            $booking->setUser($this->getUser());
             $this->bookingManager->save($booking);
 
-            $this->session->set('booking', $booking);
+            $this->session->set('bookingId', $booking->getId());
 
             if ($this->paypalManager->capturePayment($booking, $payment)) {
                 //  $this->notification->mailConfirmation($booking);
@@ -154,6 +153,13 @@ class BookingController extends AbstractController
      */
     public function resume(): Response
     {
-        return $this->render('reservation/resume.html.twig');
+        if (is_null($this->session->get('bookingId'))) {
+           return $this->redirectToRoute('new_reservation');
+        }
+
+        $booking = $this->manager->getRepository(Booking::class)
+                    ->find($this->session->get('bookingId'));
+
+        return $this->render('reservation/resume.html.twig', compact('booking'));
     }
 }
