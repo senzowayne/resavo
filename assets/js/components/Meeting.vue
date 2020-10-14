@@ -80,6 +80,10 @@
                 this.meetingSelected = null
                 this.getMeeting();
             },
+            date: function () {
+              this.meetingSelected = null
+              this.getMeeting();
+            },
             meetingSelected: function (newVal, oldVal) {
                 store.commit('CHANGE_MEETING', newVal)
                 store.commit('CHANGE_MEETING_TEXT', this.$refs.reservation_seance.options[document.getElementById('reservation_seance').selectedIndex].text)
