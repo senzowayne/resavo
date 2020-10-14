@@ -21,6 +21,7 @@ easy_admin:
           fields:
             - { type: 'group', columns: 4, label: 'Basic information' }
             - {property: 'name', label: 'Nom de la reservation', type_options: { disabled: true }}
+            - {property: 'user', label: 'Client'}
             #- {property: 'paiement'}
             - {property: 'total', label: 'Total (€)'}
             - {property: 'notices'}
