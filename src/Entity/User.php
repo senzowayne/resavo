@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Ausi\SlugGenerator\SlugGenerator;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields="email",
  *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
@@ -73,12 +71,6 @@ class User implements UserInterface
      */
     public $confirm_hash;
 
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $slug;
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
@@ -120,7 +112,6 @@ class User implements UserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
-        $this->setSlug();
 
         return $this;
     }
@@ -171,17 +162,6 @@ class User implements UserInterface
         $this->hash = $hash;
 
         return $this;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(): void
-    {
-        $generator = new SlugGenerator();
-        $this->slug = $generator->generate($this->name);
     }
 
     /**

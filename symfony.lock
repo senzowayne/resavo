@@ -16,9 +16,6 @@
             "src/Entity/.gitignore"
         ]
     },
-    "ausi/slug-generator": {
-        "version": "v1.1.0"
-    },
     "braintree/braintreehttp": {
         "version": "0.3.0"
     },
