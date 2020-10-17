@@ -56,16 +56,16 @@ Exécutez d'abord ces commandes :
 ```
 $ git clone git@github.com:USERNAME/resavo.git
 $ cd resavo/
-$ composer install
-$ npm install
-$ npm run-script build
-$ php bin/console doctrine:database:create
-$ php bin/console doctrine:schema:update -f
-$ php bin/console doctrine:fixtures:load
-$ php bin/console server:run
+$ make start
 ```
 
-Lien : http://127.0.0.1:8000/
+Vous pouvez executer la commande suivante pour voir la liste des commandes disponibles
+```
+$ make
+```
+Le temps que le projet s'initialise tu peux aller boire un café ☕️  
+
+Lien : http://127.0.0.1 ou http://localhost
 
 Vous devriez à present voir la page d'accueil du projet, avec la possibilité de vous inscrire et de vous connecter.
 Le chargement des fixtures nous aura créé quelques éléments pour commencer.
