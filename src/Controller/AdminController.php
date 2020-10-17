@@ -1,25 +1,19 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: senzowayne
- * Date: 2019-05-29
- * Time: 00:16
- */
 
 namespace App\Controller;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
-use App\Entity\User;
 
+use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 
 class AdminController extends EasyAdminController
 {
-    protected function prePersistUserEntity(User $user)
+    protected function prePersistUserEntity(User $user): void
     {
         $encodedPassword = $this->encodePassword($user, $user->getHash());
         $user->setPassword($encodedPassword);
     }
 
-    protected function preUpdateUserEntity(User $user)
+    protected function preUpdateUserEntity(User $user): void
     {
         if (!$user->getHash()) {
             return;

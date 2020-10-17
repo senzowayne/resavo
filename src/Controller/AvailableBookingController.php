@@ -7,7 +7,6 @@ use App\Repository\MeetingRepository;
 use App\Repository\RoomRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class AvailableBookingController
 {
     private $bookingRepository;
@@ -15,7 +14,6 @@ class AvailableBookingController
     private $meetingRepository;
 
     /**
-     * AvailableBookingController constructor.
      * @param $bookingRepository
      * @param $roomRepository
      * @param $meetingRepository
@@ -33,11 +31,14 @@ class AvailableBookingController
 
         $date = new \DateTime($posts['bookingDate']);
         $room = $this->roomRepository->find($posts['room']);
-        $meeting = $this->meetingRepository->findOneBy(['room' => $room, 'id' => $posts['meeting']]);
 
-        $data = $this->bookingRepository->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
+        $meeting = $this->meetingRepository
+                        ->findOneBy(['room' => $room, 'id' => $posts['meeting']]);
 
-        return $data !== null ? false : true;
+        $data = $this->bookingRepository
+                     ->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
+
+        return $data === null;
     }
 
 }

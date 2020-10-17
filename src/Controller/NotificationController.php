@@ -11,14 +11,12 @@ use Symfony\Component\Mime\Address;
 
 class NotificationController extends AbstractController
 {
-    /**
-     * @var MailerInterface
-     */
+    private const SVC_NAME = '[NOTIFICATION_CONTROLLER] :: ';
+
+    /** @var MailerInterface */
     private $mailer;
 
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
 
     public function __construct(MailerInterface $mailer, LoggerInterface $logger)
@@ -30,17 +28,18 @@ class NotificationController extends AbstractController
     final public function mailConfirmation(Booking $booking): TemplatedEmail
     {
         $user = $booking->getUser();
+        $userMail = $user->getEmail();
 
         $email = (new TemplatedEmail())
             ->from('resa@resavo.fr')
-            ->to(new Address($user->getEmail(), $user->getName().' '.$user->getFirstName()))
+            ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
             ->subject('Votre réservation')
             ->htmlTemplate('reservation/_confirmation.html.twig')
             ->context(['resa' => $booking]);
 
-        $this->logger->info(' SEND MAIL ' . $this->getUser()->getEmail());
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
         $this->mailer->send($email);
-        $this->logger->info(' SEND MAIL OK' . $this->getUser()->getEmail());
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
 
 
         return $email;

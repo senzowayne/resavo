@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use App\Repository\RoomRepository;
 use App\Repository\BookingRepository;
@@ -112,6 +113,11 @@ class BookingManager extends AbstractManager
             'meeting3' => $meeting3,
             'date' => $date
         ];
+    }
+
+    public function getLatestBooking(User $user, int $limit = 10): array
+    {
+       return $this->bookingRepo->findBy(['user' => $user], ['bookingDate' => 'DESC'], $limit);
     }
 
     public function save(Booking $booking): void
