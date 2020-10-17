@@ -16,17 +16,8 @@
             "src/Entity/.gitignore"
         ]
     },
-    "ausi/slug-generator": {
-        "version": "v1.1.0"
-    },
     "braintree/braintreehttp": {
         "version": "0.3.0"
-    },
-    "deployer/deployer": {
-        "version": "v6.6.0"
-    },
-    "deployer/phar-update": {
-        "version": "v2.1.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -197,9 +188,6 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
-    },
-    "pimple/pimple": {
-        "version": "v3.2.3"
     },
     "psr/cache": {
         "version": "1.0.1"
