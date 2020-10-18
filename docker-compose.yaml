@@ -1,54 +1,42 @@
-version: '3.3'
+version: '3.8'
 services:
   php:
-    image: christopherlafay/php:latest
+    build: docker/php-fpm
+    volumes:
+      - ./:/var/www/symfony:cached
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on:
       - db
-    environment:
-      - PHP_DATE_TIMEZONE=Europe/Paris
-    volumes:
-      - .:/srv/symfony:rw,cached
-      - ./var:/srv/symfony/var:rw
-      - ./public:/srv/symfony/public:rw,delegated
   nginx:
-    image: christopherlafay/nginx:latest
+    image: nginx:latest
+    volumes:
+      - ./:/var/www/symfony:cached
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
-    volumes:
-      - ./public:/srv/symfony/public:ro
     ports:
-      - "80:80"
+      - 80:80
 
   phpmyadmin:
-    image: christopherlafay/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin
     depends_on:
       - db
     environment:
-      - PMA_USER=root
-      - PMA_PASSWORD=root
+      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: db
     ports:
-      - "8080:80"
+      - 8080:80
   db:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
-      MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'sf4'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'root'
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'root'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where our data will be persisted
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
     volumes:
-      - db-resavo:/var/lib/mysql
+      - ./docker/mysql:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
   mercure:
-    container_name: mercure
     image: dunglas/mercure
     environment:
       - JWT_KEY=!ChangeMe!
@@ -58,7 +46,14 @@ services:
       - DEBUG=1
       - CORS_ALLOWED_ORIGINS=*
     ports:
-      - "3000:80"
-# Names our volume
-volumes:
-  db-resavo:
+      - 3000:80
+  composer:
+    image: composer:latest
+    command: install
+    volumes:
+      - .:/app
+  node:
+    build: docker/node-alpine
+    volumes:
+      - .:/app:cached
+    working_dir: /app
