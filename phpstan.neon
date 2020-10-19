@@ -1,0 +1,9 @@
+parameters:
+	level: 6
+	paths:
+		- src
+		- tests
+	excludes_analyse:
+		- %rootDir%/../../../src/Migrations/*.php
+	checkMissingIterableValueType: false
+	checkGenericClassInNonGenericObjectType: false
