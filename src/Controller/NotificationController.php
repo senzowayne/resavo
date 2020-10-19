@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,11 +14,9 @@ class NotificationController extends AbstractController
 {
     private const SVC_NAME = '[NOTIFICATION_CONTROLLER] :: ';
 
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(MailerInterface $mailer, LoggerInterface $logger)
     {
@@ -27,6 +26,7 @@ class NotificationController extends AbstractController
 
     final public function mailConfirmation(Booking $booking): TemplatedEmail
     {
+        /** @var User $user */
         $user = $booking->getUser();
         $userMail = $user->getEmail();
 

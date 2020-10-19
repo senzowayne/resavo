@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Booking;
+use App\Entity\Meeting;
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use App\Repository\RoomRepository;
@@ -16,19 +17,12 @@ class BookingManager extends AbstractManager
 {
     private const SVC_NAME = '[BookingManager] ::';
 
-    private $manager;
-    private $logger;
-    private $roomRepo;
-    private $meetingRepo;
-    private $bookingRepo;
+    private EntityManagerInterface $manager;
+    private LoggerInterface $logger;
+    private RoomRepository $roomRepo;
+    private MeetingRepository $meetingRepo;
+    private BookingRepository $bookingRepo;
 
-    /**
-     * @param EntityManagerInterface $manager
-     * @param LoggerInterface $logger
-     * @param RoomRepository $roomRepo
-     * @param MeetingRepository $meetingRepo
-     * @param BookingRepository $bookingRepo
-     */
     public function __construct(
         EntityManagerInterface $manager,
         LoggerInterface $logger,
@@ -46,24 +40,19 @@ class BookingManager extends AbstractManager
 
     public function createBooking(Request $request): Booking
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $this->logger->info(
-            sprintf('%s Création de la réservation -- %s', self::SVC_NAME, $this->getUser()->getEmail())
-        );
-        $this->logger->info(
-            sprintf('%s Détails: [date: %s - salle: %s - séance: %s',
-                self::SVC_NAME,
-                $request->request->get('date'),
-                $request->request->get('room'),
-                $request->request->get('meeting'))
+            sprintf('%s Création de la réservation -- %s', self::SVC_NAME, $user->getEmail())
         );
 
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $date = new \DateTime($data['date']);
-        $date->format('dd-mm-yyyy');
         $roomId = $data['room'];
         $meetingId = $data['meeting'];
 
+        /** @var ?Meeting $meeting */
         $meeting = $this->meetingRepo->find($meetingId);
         $room = $this->roomRepo->find($roomId);
 
@@ -73,6 +62,13 @@ class BookingManager extends AbstractManager
         if (null === $room) {
             throw new NotFoundHttpException('The room does not exist');
         }
+        $this->logger->info(
+            sprintf('%s Détails: [date: %s - salle: %s - séance: %s',
+                self::SVC_NAME,
+                $date->format('d-m-Y'),
+                $room->getName(),
+                $meeting->getLabel())
+        );
 
         return (new Booking())
             ->setNotices($data['notices'])
@@ -83,10 +79,10 @@ class BookingManager extends AbstractManager
             ->setTotal($data['total']);
     }
 
-    public function getAllMeetingPerRoom($date): array
+    public function getAllMeetingPerRoom(?string $stringDate): array
     {
         try {
-            $date = new \DateTime($date);
+            $date = new \DateTime($stringDate);
         } catch (\Exception $e) {
             $date = new \DateTime();
         }
@@ -122,8 +118,10 @@ class BookingManager extends AbstractManager
 
     public function save(Booking $booking): void
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $this->logger->info(
-            sprintf('%s Enregistrement de la réservation -- %s', self::SVC_NAME, $this->getUser()->getEmail())
+            sprintf('%s Enregistrement de la réservation -- %s', self::SVC_NAME, $user->getEmail())
         );
         $this->manager->persist($booking);
         $this->manager->flush();

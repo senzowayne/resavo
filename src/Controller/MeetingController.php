@@ -7,7 +7,6 @@ use App\Entity\Meeting;
 use App\Entity\DateBlocked;
 use App\Entity\Booking;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;

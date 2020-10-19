@@ -3,26 +3,23 @@
 namespace App\Events;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Doctrine\ORM\Events;
 use Psr\Log\LoggerInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ResolveBookingSubscriber implements EventSubscriber
 {
     protected const SVC_NAME = '[ResolveBookingSubscriber] :: ';
 
-    private $logger;
-    private $tokenStorage;
-    private $requestStack;
+    private LoggerInterface $logger;
+    private TokenStorageInterface $tokenStorage;
+    private RequestStack $requestStack;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param TokenStorageInterface $tokenStorage
-     * @param RequestStack $requestStack
-     */
     public function __construct(
         LoggerInterface $logger,
         TokenStorageInterface $tokenStorage,
@@ -64,11 +61,12 @@ class ResolveBookingSubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
         if ($entity instanceof Booking) {
+            /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
             $entity->setUser($user);
 
             $this->logger->debug(
-                sprintf('%s setCurrentUser %s', self::SVC_NAME, $entity->getUser()->getName())
+                sprintf('%s setCurrentUser %s', self::SVC_NAME, $user->getName())
             );
         }
     }
@@ -78,11 +76,13 @@ class ResolveBookingSubscriber implements EventSubscriber
         $entity = $args->getObject();
 
         if ($entity instanceof Booking) {
+            /** @var User $user */
+            $user = $entity->getUser();
             $entity->setName(sprintf('b%d-%s&%d#%d',
                 $entity->getId(),
-                substr($entity->getUser(), 0, 3),
+                substr($user, 0, 3),
                 (new \DateTime('now'))->format('dmY'),
-                $entity->getUser()->getId()
+                $user->getId()
             ));
             $this->logger->debug(
                 sprintf('%s resolveBookingName %s', self::SVC_NAME, $entity->getName())

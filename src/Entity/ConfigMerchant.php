@@ -20,40 +20,40 @@ class ConfigMerchant
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @Groups("config:read")
      * @ORM\Column(type="string", length=255)
      */
-    private $nameMerchant;
+    private ?string $nameMerchant;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $paymentService;
+    private ?string $paymentService;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $patternColor;
+    private ?string $patternColor;
 
     /**
      * @Groups("config:read")
-     * @ORM\Column(type="boolean", options={"default"="1"})
+     * @ORM\Column(type="boolean", options={"default"="0"})
      */
-    private $maintenance;
+    private bool $maintenance = false;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private \DateTimeInterface $createdAt;
 
     /**
      * @Groups("config:read")
      * @ORM\Column(type="text", length=755, nullable=true)
      */
-    private $description;
+    private ?string $description;
 
     public function __construct()
     {

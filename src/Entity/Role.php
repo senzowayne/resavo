@@ -16,17 +16,17 @@ class Role
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="userRoles")
      */
-    private $users;
+    private Collection $users;
 
     public function __construct()
     {

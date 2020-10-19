@@ -6,12 +6,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Booking;
+use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -30,7 +32,10 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Booking::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
+        /** @var ?User $user */
+        $user = $this->security->getUser();
+
+        if (Booking::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user) {
             return;
         }
 

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -25,33 +26,33 @@ class Room
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read", "room:read"})
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"room:read"})
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $price;
+    private ?int $price;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
-    private $bookings;
+    private Collection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */
-    private $meetings;
+    private Collection $meetings;
 
     public function __construct()
     {

@@ -6,7 +6,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -47,68 +46,68 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?UserInterface $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
-    private $room;
+    private ?Room $room;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createAt;
+    private ?DateTimeInterface $createAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
-    private $meeting;
+    private ?Meeting $meeting;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
-    private $bookingDate;
+    private ?DateTimeInterface $bookingDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      */
-    private $nbPerson;
+    private ?int $nbPerson;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $payment;
+    private ?Paypal $payment;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      */
-    private $notices;
+    private ?string $notices;
 
 
     /**
      * @ORM\Column(type="string")
      */
-    private $total;
+    private ?string $total;
 
 
     public function getId(): ?int
@@ -116,12 +115,12 @@ class Booking
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user)
+    public function setUser(?UserInterface $user): Booking
     {
         $this->user = $user;
 
@@ -147,13 +146,11 @@ class Booking
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
      * @ORM\PrePersist
-     *
-     * @throws Exception
      */
     public function setCreateAt(): self
     {
@@ -203,7 +200,7 @@ class Booking
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(?string $name): Booking
     {
         $this->name = $name;
 
@@ -234,12 +231,12 @@ class Booking
         return $this;
     }
 
-    public function getTotal()
+    public function getTotal(): ?string
     {
         return $this->total;
     }
 
-    public function setTotal($total): self
+    public function setTotal(string $total): self
     {
         $this->total = $total;
 

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class DateBlockedDateProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $dateBlockedRepo;
+    private DateBlockedRepository $dateBlockedRepo;
 
     public function __construct(DateBlockedRepository $dateBlockedRepo)
     {
@@ -31,11 +31,13 @@ final class DateBlockedDateProvider implements CollectionDataProviderInterface, 
 
         foreach ($allDays as $date) {
             $begin = $date->getStart();
+
+            /** @var \DateTime $end */
             $end = $date->getEnd();
             $end = $end->modify( '+1 day' );
 
             $interval = new \DateInterval('P1D');
-            $daterange = new \DatePeriod($begin, $interval ,$end);
+            $daterange = new \DatePeriod($begin, $interval, $end);
 
             foreach($daterange as $d){
                 $dates[] = $d->format("Y-m-d");

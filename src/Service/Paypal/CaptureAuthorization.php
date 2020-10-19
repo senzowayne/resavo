@@ -9,11 +9,15 @@ class CaptureAuthorization
 {
 
   // 2. Set up your server to receive a call from the client
-  /**
-   *Use the following function to capture Authorization.
-   *Pass a valid authorization ID as an argument.
-   */
-  public static function captureAuth($authorizationId, $debug=false)
+    /**
+     *Use the following function to capture Authorization.
+     *Pass a valid authorization ID as an argument.
+     * @param string $authorizationId
+     * @param bool $debug
+     * @return array
+     * @throws \JsonException
+     */
+  public static function captureAuth(string $authorizationId, bool $debug=false): array
   {
     $request = new AuthorizationsCaptureRequest($authorizationId);
     $request->body = self::buildRequestBody();
@@ -34,7 +38,7 @@ class CaptureAuthorization
       // To toggle printing the whole response body comment/uncomment
       // the follwowing line
 
-        echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
+        echo json_encode($response->result, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT), "\n";
     }
       return ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id];
   }
@@ -43,7 +47,7 @@ class CaptureAuthorization
    *You can use the following method to build the capture request body.
    *Refer to the Payments API reference for more information.
    */
-  public static function buildRequestBody()
+  public static function buildRequestBody(): string
   {
     return "{}";
   }

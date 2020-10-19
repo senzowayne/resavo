@@ -17,13 +17,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
-    private $userManager;
-    private $bookingManager;
+    private UserManager $userManager;
+    private BookingManager $bookingManager;
 
-    /**
-     * @param UserManager $userManager
-     * @param BookingManager $bookingManager
-     */
     public function __construct(UserManager $userManager, BookingManager $bookingManager)
     {
         $this->userManager = $userManager;
@@ -68,9 +64,10 @@ class UserController extends AbstractController
      */
     public function history(): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
-        $data = ($user) ? $this->bookingManager->getLatestBooking($user) : [];
+        $data = $this->bookingManager->getLatestBooking($user);
 
-        return $this->render('user/historique.html.twig', ['data' => $data ?? []]);
+        return $this->render('user/historique.html.twig', compact('data'));
     }
 }

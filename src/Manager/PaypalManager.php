@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Paypal;
 use App\Entity\Booking;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use App\Service\Paypal\GetOrder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,22 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class PaypalManager extends AbstractManager
 {
     private const SVC_NAME = '[PaypalManager] ::';
 
-    private $em;
-    private $logger;
-    private $session;
-    private $security;
+    private EntityManagerInterface $em;
+    private LoggerInterface $logger;
+    private SessionInterface $session;
+    private Security $security;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param LoggerInterface $logger
-     * @param SessionInterface $session
-     * @param Security $security
-     */
     public function __construct(
         EntityManagerInterface $em,
         LoggerInterface $logger,
@@ -56,7 +52,7 @@ class PaypalManager extends AbstractManager
             ->setPaymentStatus($data['status'])
             ->setPayerEmail($data['mail'])
             ->setUser($this->security->getUser())
-            ->setCapture(0);
+            ->setCapture(false);
 
         $this->em->persist($payment);
         $this->em->flush();
@@ -70,25 +66,29 @@ class PaypalManager extends AbstractManager
                        ->getRepository(Paypal::class)
                        ->find($id);
 
-        if (is_null($paypal)) {
-            throw new \RuntimeException('No paiement found');
-        }
-
         return $paypal;
     }
 
     public function requestAutorize(Request $request): array
     {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
         $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (!array_key_exists('authorizationID', $data)) {
+            throw new \RuntimeException('Paypal authorizationID is missing');
+        }
+
         $this->session->set('authorizationID', $data['authorizationID']);
 
         $this->logger->info(
             sprintf('%s authorizationID : %s - User e-mail : %s',
                 self::SVC_NAME,
                 $data['id'],
-                $this->security->getUser()->getEmail())
+                $user->getEmail())
         );
 
         return GetOrder::getOrder($data['id']);
@@ -102,21 +102,25 @@ class PaypalManager extends AbstractManager
     public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
+            /** @var User $user */
+            $user = $this->security->getUser();
+
             $this->logger->info(
                 sprintf('%s Capture du paiement -- User e-mail : %s',
                     self::SVC_NAME,
-                    $this->security->getUser()->getEmail())
+                    $user->getEmail())
             );
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $this->logger->info(self::SVC_NAME . $response['orderID'] . ' -- ' . $response['status']);
 
             $captureId = $response['orderID'];
 
+
             if ('COMPLETED' !== $response['status'] && 'PENDING' !== $response['status']) {
                 $this->logger->error(
                     sprintf('%s Paiement non capturé -- suppression de la réservation User e-mail : %s',
                         self::SVC_NAME,
-                        $this->security->getUser()->getEmail())
+                        $user->getEmail())
                 );
                 $this->em->remove($payment);
                 $this->em->remove($booking);
@@ -142,7 +146,7 @@ class PaypalManager extends AbstractManager
 
     public function setCapturePaiement(Paypal $payment, string $captureId): void
     {
-        $payment->setCapture(1);
+        $payment->setCapture(true);
         $payment->setCaptureId($captureId);
 
         $this->em->persist($payment);

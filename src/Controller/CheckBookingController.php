@@ -14,15 +14,22 @@ class CheckBookingController
      */
     public function verifyDate(\DateTime $date): bool
     {
+
         $date = $date->format('Y-m-d');
         $today = (new \DateTime('now'))->format('Y-m-d');
 
         return $date > $today;
     }
 
-    private function checkIsWeekEnd(string $date): bool {
-        $indexDay = date('w', strtotime($date));
-        return $indexDay == 0 || $indexDay == 5 || $indexDay == 6;
+    private function checkIsWeekEnd(string $date): bool
+    {
+        $timestamp = strtotime($date);
+        if (!$timestamp) {
+            throw new \RuntimeException('The date given is wrong');
+        }
+
+        $indexDay = date('w', $timestamp);
+        return ($indexDay == 0 || $indexDay == 6);
     }
 
     /**

@@ -25,7 +25,7 @@ class Meeting
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read"})
      */
-    private $id;
+    private ?int $id = null;
 
     public function __toString(): string
     {
@@ -36,19 +36,19 @@ class Meeting
      * @ORM\Column(type="string", length=255)
      * @Groups({"meeting:read"})
      */
-    private $label;
+    private ?string $label;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"meeting:read"})
      */
-    private $room;
+    private ?Room $room;
 
     /**
      * @ORM\Column(type="boolean", options={"default" = 1})
      */
-    private $isActive;
+    private ?bool $isActive;
 
     /**
      * @return mixed
