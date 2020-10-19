@@ -121,7 +121,7 @@ class Booking
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user)
+    public function setUser(?User $user): Booking
     {
         $this->user = $user;
 
@@ -147,7 +147,7 @@ class Booking
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
@@ -203,7 +203,7 @@ class Booking
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName($name): Booking
     {
         $this->name = $name;
 
@@ -234,7 +234,7 @@ class Booking
         return $this;
     }
 
-    public function getTotal()
+    public function getTotal(): ?string
     {
         return $this->total;
     }

@@ -9,16 +9,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AvailableBookingController
 {
-    private $bookingRepository;
-    private $roomRepository;
-    private $meetingRepository;
+    private BookingRepository $bookingRepository;
+    private RoomRepository $roomRepository;
+    private MeetingRepository $meetingRepository;
 
-    /**
-     * @param $bookingRepository
-     * @param $roomRepository
-     * @param $meetingRepository
-     */
-    public function __construct(BookingRepository $bookingRepository, RoomRepository $roomRepository, MeetingRepository $meetingRepository)
+    public function __construct(
+        BookingRepository $bookingRepository,
+        RoomRepository $roomRepository,
+        MeetingRepository $meetingRepository
+    )
     {
         $this->bookingRepository = $bookingRepository;
         $this->roomRepository = $roomRepository;

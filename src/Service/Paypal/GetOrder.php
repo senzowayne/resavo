@@ -11,8 +11,10 @@ class GetOrder
     // 2. Set up your server to receive a call from the client
     /**
      *You can use this function to retrieve an order by passing order ID as an argument.
+     * @param string $orderId
+     * @return array
      */
-    public static function getOrder($orderId)
+    public static function getOrder(string $orderId): array
     {
 
 
@@ -36,7 +38,7 @@ class GetOrder
 
         // To print the whole response body, uncomment the following line
         // print json_encode($response->result, JSON_PRETTY_PRINT);
-        return ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id, 'value' => $response->result->purchase_units[0]->amount->value, 'currency' => $response->result->purchase_units[0]->amount->currency_code, 'mail' => $response->result->payer->email_address ];
+        return ['status' => $response->result->status, 'statusCode' => $response->statusCode, 'orderID' => $response->result->id, 'value' => $response->result->purchase_units[0]->amount->value, 'currency' => $response->result->purchase_units[0]->amount->currency_code, 'mail' => $response->result->payer->email_address];
     }
 }
 
@@ -48,5 +50,5 @@ class GetOrder
  *and then uses the newly-created order ID with GetOrder.
  */
 if (!count(debug_backtrace())) {
-    GetOrder::getOrder('REPLACE-WITH-ORDER-ID', true);
+    GetOrder::getOrder('REPLACE-WITH-ORDER-ID');
 }

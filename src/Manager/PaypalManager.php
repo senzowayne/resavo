@@ -56,7 +56,7 @@ class PaypalManager extends AbstractManager
             ->setPaymentStatus($data['status'])
             ->setPayerEmail($data['mail'])
             ->setUser($this->security->getUser())
-            ->setCapture(0);
+            ->setCapture(false);
 
         $this->em->persist($payment);
         $this->em->flush();
@@ -142,7 +142,7 @@ class PaypalManager extends AbstractManager
 
     public function setCapturePaiement(Paypal $payment, string $captureId): void
     {
-        $payment->setCapture(1);
+        $payment->setCapture(true);
         $payment->setCaptureId($captureId);
 
         $this->em->persist($payment);

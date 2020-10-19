@@ -87,7 +87,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
 
          return new RedirectResponse($this->urlGenerator->generate('new_reservation'));
-        throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

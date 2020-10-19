@@ -10,7 +10,7 @@ class AdminController extends EasyAdminController
     protected function prePersistUserEntity(User $user): void
     {
         $encodedPassword = $this->encodePassword($user, $user->getHash());
-        $user->setPassword($encodedPassword);
+        $user->setHash($encodedPassword);
     }
 
     protected function preUpdateUserEntity(User $user): void

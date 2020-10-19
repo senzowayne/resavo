@@ -60,7 +60,6 @@ class BookingManager extends AbstractManager
         $data = json_decode($request->getContent(), true);
 
         $date = new \DateTime($data['date']);
-        $date->format('dd-mm-yyyy');
         $roomId = $data['room'];
         $meetingId = $data['meeting'];
 

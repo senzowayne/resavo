@@ -178,7 +178,7 @@
         "version": "1.0.0"
     },
     "php": {
-        "version": "7.2"
+        "version": "7.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -188,6 +188,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.50"
     },
     "psr/cache": {
         "version": "1.0.1"
