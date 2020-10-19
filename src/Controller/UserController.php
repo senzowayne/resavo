@@ -64,6 +64,7 @@ class UserController extends AbstractController
      */
     public function history(): Response
     {
+        /** @var ?User $user */
         $user = $this->getUser();
         $data = ($user) ? $this->bookingManager->getLatestBooking($user) : [];
 

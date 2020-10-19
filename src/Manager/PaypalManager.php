@@ -76,7 +76,12 @@ class PaypalManager extends AbstractManager
 
         $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (!array_key_exists('authorizationID', $data)) {
+            throw new \RuntimeException('Paypal authorizationID is missing');
+        }
+
         $this->session->set('authorizationID', $data['authorizationID']);
 
         $this->logger->info(

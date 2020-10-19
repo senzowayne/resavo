@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Booking;
+use App\Entity\Meeting;
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use App\Repository\RoomRepository;
@@ -39,8 +40,10 @@ class BookingManager extends AbstractManager
 
     public function createBooking(Request $request): Booking
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $this->logger->info(
-            sprintf('%s Création de la réservation -- %s', self::SVC_NAME, $this->getUser()->getEmail())
+            sprintf('%s Création de la réservation -- %s', self::SVC_NAME, $user->getEmail())
         );
         $this->logger->info(
             sprintf('%s Détails: [date: %s - salle: %s - séance: %s',
@@ -50,12 +53,13 @@ class BookingManager extends AbstractManager
                 $request->request->get('meeting'))
         );
 
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $date = new \DateTime($data['date']);
         $roomId = $data['room'];
         $meetingId = $data['meeting'];
 
+        /** @var ?Meeting $meeting */
         $meeting = $this->meetingRepo->find($meetingId);
         $room = $this->roomRepo->find($roomId);
 
@@ -114,8 +118,10 @@ class BookingManager extends AbstractManager
 
     public function save(Booking $booking): void
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $this->logger->info(
-            sprintf('%s Enregistrement de la réservation -- %s', self::SVC_NAME, $this->getUser()->getEmail())
+            sprintf('%s Enregistrement de la réservation -- %s', self::SVC_NAME, $user->getEmail())
         );
         $this->manager->persist($booking);
         $this->manager->flush();

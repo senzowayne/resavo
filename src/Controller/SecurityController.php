@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Manager\UserManager;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
@@ -52,6 +53,8 @@ class SecurityController extends AbstractController
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $newPassword = new PasswordUpdate();
+
+        /** @var User $user */
         $user = $this->getUser();
 
         $form = $this->createForm(PasswordUpdateType::class, $newPassword);

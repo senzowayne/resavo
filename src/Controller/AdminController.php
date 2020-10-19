@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class AdminController extends EasyAdminController
 {
@@ -24,7 +25,9 @@ class AdminController extends EasyAdminController
 
     private function encodePassword(User $user, string $hash): string
     {
+        /** @var EncoderFactoryInterface $passwordEncoderFactory **/
         $passwordEncoderFactory = $this->get('security.encoder_factory');
+
         $encoder = $passwordEncoderFactory->getEncoder($user);
         return $encoder->encodePassword($hash, $user->getSalt());
     }

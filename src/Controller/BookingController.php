@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\ConfigMerchant;
+use App\Entity\User;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/reservation")
@@ -84,11 +86,12 @@ class BookingController extends AbstractController
      * @Route("/api-reserve", name="reserve", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function reserve(Request $request): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
-
+        /** @var ?ConfigMerchant $configMerchant */
         $configMerchant = $this->manager
                                ->getRepository(ConfigMerchant::class)
                                ->findOneBy([]);
@@ -108,10 +111,13 @@ class BookingController extends AbstractController
 
             if ($this->paypalManager->capturePayment($booking, $payment)) {
                 //  $this->notification->mailConfirmation($booking);
+
+                /** @var User $user */
+                $user = $this->getUser();
                 $this->addFlash(
                     'success',
                     sprintf('Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
-                                    $this->getUser()->getEmail()
+                        $user->getEmail()
                     )
                 );
             }
