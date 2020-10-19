@@ -7,7 +7,7 @@ easy_admin:
           actions: ['show', 'edit', 'delete']
           fields:
             - {property: 'name', label: 'ID'}
-            - {property: 'createAt', label: 'Crée le', format: 'd/m/y h:m:s'}
+            - {property: 'createAt', label: 'Crée le', format: 'd/m/y H:m:s'}
             - {property: 'bookingDate', label: 'Date'}
             - {property: 'user', label: 'Client'}
             - {property: 'room', label: 'Salle'}
@@ -20,10 +20,10 @@ easy_admin:
         form:
           fields:
             - { type: 'group', columns: 4, label: 'Basic information' }
-            - {label: 'Client' ,property: 'user'}
+            - {property: 'name', label: 'Nom de la reservation', type_options: { disabled: true }}
+            - {property: 'user', label: 'Client'}
             #- {property: 'paiement'}
             - {property: 'total', label: 'Total (€)'}
-            - {property: 'name', label: 'Nom de la reservation'}
             - {property: 'notices'}
             - { type: 'group', columns: 8, label: 'Information réservation' }
             - {label: 'Date de la réservation' , property: 'bookingDate', type_options: { widget: 'single_text' }}
