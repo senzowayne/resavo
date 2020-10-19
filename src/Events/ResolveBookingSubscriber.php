@@ -14,15 +14,10 @@ class ResolveBookingSubscriber implements EventSubscriber
 {
     protected const SVC_NAME = '[ResolveBookingSubscriber] :: ';
 
-    private $logger;
-    private $tokenStorage;
-    private $requestStack;
+    private LoggerInterface $logger;
+    private TokenStorageInterface $tokenStorage;
+    private RequestStack $requestStack;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param TokenStorageInterface $tokenStorage
-     * @param RequestStack $requestStack
-     */
     public function __construct(
         LoggerInterface $logger,
         TokenStorageInterface $tokenStorage,

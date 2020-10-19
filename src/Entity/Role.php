@@ -26,7 +26,7 @@ class Role
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="userRoles")
      */
-    private ArrayCollection $users;
+    private Collection $users;
 
     public function __construct()
     {

@@ -19,7 +19,7 @@ class Paypal
       * @ORM\GeneratedValue()
       * @ORM\Column(type="integer")
       */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -55,7 +55,7 @@ class Paypal
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private ?UserInterface $user;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment")
@@ -161,7 +161,7 @@ class Paypal
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }

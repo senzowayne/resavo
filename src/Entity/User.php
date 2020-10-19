@@ -24,7 +24,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -74,17 +74,17 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
-    private ArrayCollection $bookings;
+    private Collection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
-    private ArrayCollection $payments;
+    private Collection $payments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
      */
-    private ArrayCollection $userRoles;
+    private Collection $userRoles;
 
     /**
      * @ORM\Column(type="string", nullable=true)

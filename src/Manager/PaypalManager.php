@@ -17,17 +17,11 @@ class PaypalManager extends AbstractManager
 {
     private const SVC_NAME = '[PaypalManager] ::';
 
-    private $em;
-    private $logger;
-    private $session;
-    private $security;
+    private EntityManagerInterface $em;
+    private LoggerInterface $logger;
+    private SessionInterface $session;
+    private Security $security;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param LoggerInterface $logger
-     * @param SessionInterface $session
-     * @param Security $security
-     */
     public function __construct(
         EntityManagerInterface $em,
         LoggerInterface $logger,
@@ -69,10 +63,6 @@ class PaypalManager extends AbstractManager
         $paypal = $this->em
                        ->getRepository(Paypal::class)
                        ->find($id);
-
-        if (is_null($paypal)) {
-            throw new \RuntimeException('No paiement found');
-        }
 
         return $paypal;
     }

@@ -20,7 +20,7 @@ class ConfigMerchant
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @Groups("config:read")
@@ -47,7 +47,7 @@ class ConfigMerchant
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $createdAt;
+    private \DateTimeInterface $createdAt;
 
     /**
      * @Groups("config:read")

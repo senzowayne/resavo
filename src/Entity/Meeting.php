@@ -25,7 +25,7 @@ class Meeting
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read"})
      */
-    private ?int $id;
+    private ?int $id = null;
 
     public function __toString(): string
     {

@@ -16,19 +16,12 @@ class BookingManager extends AbstractManager
 {
     private const SVC_NAME = '[BookingManager] ::';
 
-    private $manager;
-    private $logger;
-    private $roomRepo;
-    private $meetingRepo;
-    private $bookingRepo;
+    private EntityManagerInterface $manager;
+    private LoggerInterface $logger;
+    private RoomRepository $roomRepo;
+    private MeetingRepository $meetingRepo;
+    private BookingRepository $bookingRepo;
 
-    /**
-     * @param EntityManagerInterface $manager
-     * @param LoggerInterface $logger
-     * @param RoomRepository $roomRepo
-     * @param MeetingRepository $meetingRepo
-     * @param BookingRepository $bookingRepo
-     */
     public function __construct(
         EntityManagerInterface $manager,
         LoggerInterface $logger,
@@ -82,10 +75,10 @@ class BookingManager extends AbstractManager
             ->setTotal($data['total']);
     }
 
-    public function getAllMeetingPerRoom($date): array
+    public function getAllMeetingPerRoom(string $stringDate): array
     {
         try {
-            $date = new \DateTime($date);
+            $date = new \DateTime($stringDate);
         } catch (\Exception $e) {
             $date = new \DateTime();
         }

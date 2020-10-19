@@ -22,7 +22,7 @@ class AdminController extends EasyAdminController
         $user->setHash($encodedPassword);
     }
 
-    private function encodePassword($user, $hash)
+    private function encodePassword(User $user, string $hash): string
     {
         $passwordEncoderFactory = $this->get('security.encoder_factory');
         $encoder = $passwordEncoderFactory->getEncoder($user);

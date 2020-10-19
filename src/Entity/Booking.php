@@ -6,7 +6,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -47,13 +46,13 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private ?UserInterface $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
@@ -116,12 +115,12 @@ class Booking
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): Booking
+    public function setUser(?UserInterface $user): Booking
     {
         $this->user = $user;
 
@@ -152,8 +151,6 @@ class Booking
 
     /**
      * @ORM\PrePersist
-     *
-     * @throws Exception
      */
     public function setCreateAt(): self
     {
@@ -203,7 +200,7 @@ class Booking
         return $this->name;
     }
 
-    public function setName($name): Booking
+    public function setName(?string $name): Booking
     {
         $this->name = $name;
 
@@ -239,7 +236,7 @@ class Booking
         return $this->total;
     }
 
-    public function setTotal($total): self
+    public function setTotal(string $total): self
     {
         $this->total = $total;
 
