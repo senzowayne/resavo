@@ -13,7 +13,7 @@
         <strong>Nom:</strong> {{ booking.user.name }} <br>
         <strong>Prénom:</strong> {{ booking.user.firstname }} <br>
         <strong>ID reservation:</strong> {{ booking.name }} <br>
-        <strong>Date:</strong> {{ booking.bookingDate | localizeddate('full', 'none') }}<br>
+        <strong>Date:</strong> {{ booking.bookingDate | date('d-m-Y') }}<br>
         <strong>Séance: {{ booking.meeting.label }}<br></strong>
         <strong>Salle: {{ booking.room.name }}<br></strong>
         <strong>Nombre de personnes:</strong> {{ booking.nbPerson }}<br>
