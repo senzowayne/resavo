@@ -45,13 +45,6 @@ class BookingManager extends AbstractManager
         $this->logger->info(
             sprintf('%s Création de la réservation -- %s', self::SVC_NAME, $user->getEmail())
         );
-        $this->logger->info(
-            sprintf('%s Détails: [date: %s - salle: %s - séance: %s',
-                self::SVC_NAME,
-                $request->request->get('date'),
-                $request->request->get('room'),
-                $request->request->get('meeting'))
-        );
 
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -69,6 +62,13 @@ class BookingManager extends AbstractManager
         if (null === $room) {
             throw new NotFoundHttpException('The room does not exist');
         }
+        $this->logger->info(
+            sprintf('%s Détails: [date: %s - salle: %s - séance: %s',
+                self::SVC_NAME,
+                $date->format('d-m-Y'),
+                $room->getName(),
+                $meeting->getLabel())
+        );
 
         return (new Booking())
             ->setNotices($data['notices'])

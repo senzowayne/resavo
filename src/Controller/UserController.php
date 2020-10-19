@@ -64,10 +64,10 @@ class UserController extends AbstractController
      */
     public function history(): Response
     {
-        /** @var ?User $user */
+        /** @var User $user */
         $user = $this->getUser();
-        $data = ($user) ? $this->bookingManager->getLatestBooking($user) : [];
+        $data = $this->bookingManager->getLatestBooking($user);
 
-        return $this->render('user/historique.html.twig', ['data' => $data ?? []]);
+        return $this->render('user/historique.html.twig', compact('data'));
     }
 }
