@@ -25,6 +25,8 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
     App\Service\Paypal\:
         resource: '../src/Service/Paypal'
 
@@ -37,10 +39,3 @@ services:
     App\Events\ResolveBookingSubscriber:
         tags:
             - { name: 'doctrine.event_subscriber' }
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    twig.extension.intl:
-        class: Twig_Extensions_Extension_Intl
-        tags:
-            - { name: twig.extension }
