@@ -26,7 +26,11 @@ class AvailableBookingController
 
     public function __invoke(Request $request): bool
     {
-        $posts = json_decode($request->getContent(), true);
+        try {
+            $posts = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return $e->getMessage();
+        }
 
         $date = new \DateTime($posts['bookingDate']);
         $room = $this->roomRepository->find($posts['room']);

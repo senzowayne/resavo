@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
-    private $userManager;
+    private UserManager $userManager;
 
     public function __construct(UserManager $userManager)
     {
@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/deconnexion", name="logout")
      */
-    public function logout()
+    public function logout(): void
     {
     }
 
@@ -59,7 +59,12 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (!password_verify($newPassword->getOldPassword(), $user->getHash())) {
-                $form->get('oldPassword')->addError(new FormError('Le mot de passe que vous avez tapé n\'est pas votre mot de passe actuel'));
+                $form->get('oldPassword')
+                    ->addError(
+                        new FormError(
+                            'Le mot de passe que vous avez tapé n\'est pas votre mot de passe actuel'
+                        )
+                    );
             } else {
                 $new = $newPassword->getNewPasswordUpdate();
                 $hash = $encoder->encodePassword($user, $new);

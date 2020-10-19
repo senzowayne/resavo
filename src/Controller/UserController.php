@@ -17,13 +17,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
-    private $userManager;
-    private $bookingManager;
-
-    /**
-     * @param UserManager $userManager
-     * @param BookingManager $bookingManager
-     */
+    private UserManager $userManager;
+    private BookingManager $bookingManager;
+    
     public function __construct(UserManager $userManager, BookingManager $bookingManager)
     {
         $this->userManager = $userManager;

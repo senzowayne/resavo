@@ -13,11 +13,9 @@ class NotificationController extends AbstractController
 {
     private const SVC_NAME = '[NOTIFICATION_CONTROLLER] :: ';
 
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(MailerInterface $mailer, LoggerInterface $logger)
     {

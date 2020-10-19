@@ -21,11 +21,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class BookingController extends AbstractController
 {
-    private $notification;
-    private $manager;
-    private $bookingManager;
-    private $paypalManager;
-    private $session;
+    private NotificationController $notification;
+    private EntityManagerInterface $manager;
+    private BookingManager $bookingManager;
+    private PaypalManager $paypalManager;
+    private SessionInterface $session;
 
     public function __construct(
         EntityManagerInterface $manager,
@@ -67,7 +67,6 @@ class BookingController extends AbstractController
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
-     * @throws \Exception
      */
     public function authorizePayment(Request $request): JsonResponse
     {
