@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Paypal;
 use App\Entity\Booking;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use App\Service\Paypal\GetOrder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class PaypalManager extends AbstractManager
 {
@@ -69,6 +71,9 @@ class PaypalManager extends AbstractManager
 
     public function requestAutorize(Request $request): array
     {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
         $this->logger->info('======== Procédure de paiement ========');
         $this->session->remove('pay');
         $data = json_decode($request->getContent(), true);
@@ -78,7 +83,7 @@ class PaypalManager extends AbstractManager
             sprintf('%s authorizationID : %s - User e-mail : %s',
                 self::SVC_NAME,
                 $data['id'],
-                $this->security->getUser()->getEmail())
+                $user->getEmail())
         );
 
         return GetOrder::getOrder($data['id']);
@@ -92,21 +97,25 @@ class PaypalManager extends AbstractManager
     public function capturePayment(Booking $booking, Paypal $payment)
     {
         try {
+            /** @var User $user */
+            $user = $this->security->getUser();
+
             $this->logger->info(
                 sprintf('%s Capture du paiement -- User e-mail : %s',
                     self::SVC_NAME,
-                    $this->security->getUser()->getEmail())
+                    $user->getEmail())
             );
             $response = CaptureAuthorization::captureAuth($this->session->get('authorizationID'));
             $this->logger->info(self::SVC_NAME . $response['orderID'] . ' -- ' . $response['status']);
 
             $captureId = $response['orderID'];
 
+
             if ('COMPLETED' !== $response['status'] && 'PENDING' !== $response['status']) {
                 $this->logger->error(
                     sprintf('%s Paiement non capturé -- suppression de la réservation User e-mail : %s',
                         self::SVC_NAME,
-                        $this->security->getUser()->getEmail())
+                        $user->getEmail())
                 );
                 $this->em->remove($payment);
                 $this->em->remove($booking);

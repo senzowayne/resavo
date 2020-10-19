@@ -75,7 +75,7 @@ class BookingManager extends AbstractManager
             ->setTotal($data['total']);
     }
 
-    public function getAllMeetingPerRoom(string $stringDate): array
+    public function getAllMeetingPerRoom(?string $stringDate): array
     {
         try {
             $date = new \DateTime($stringDate);
