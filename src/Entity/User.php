@@ -24,21 +24,21 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
-    private $firstName;
+    private ?string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255, unique = true)
@@ -47,50 +47,50 @@ class User implements UserInterface
      * @Assert\Email()
      * @Groups({"resa:read"})
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      */
-    public $confirm_email;
+    public ?string $confirm_email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $avatar;
+    private ?string $avatar;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
-    private $hash;
+    private ?string $hash;
 
     /**
      * @Assert\EqualTo(propertyPath="hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
-    public $confirm_hash;
+    public ?string $confirm_hash;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
-    private $bookings;
+    private ArrayCollection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
-    private $payments;
+    private ArrayCollection $payments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
      */
-    private $userRoles;
+    private ArrayCollection $userRoles;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
-    private $number;
+    private ?string $number;
 
     public function __construct()
     {

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class DateBlockedDateProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $dateBlockedRepo;
+    private DateBlockedRepository $dateBlockedRepo;
 
     public function __construct(DateBlockedRepository $dateBlockedRepo)
     {

@@ -19,58 +19,58 @@ class Paypal
       * @ORM\GeneratedValue()
       * @ORM\Column(type="integer")
       */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $payment_id;
+    protected ?string $payment_id;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $payment_status;
+    protected ?string $payment_status;
 
     /**
      * @ORM\Column(type="float")
      */
-    protected $payment_amount;
+    protected ?float $payment_amount;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $payment_currency;
+    protected ?string $payment_currency;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $payment_date;
+    protected ?DateTime $payment_date;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $payer_email;
+    protected ?string $payer_email;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment")
      */
-    private $booking;
+    private ?Booking $booking;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $capture;
+    private ?bool $capture;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $captureId;
+    private ?string $captureId;
 
     public function __toString()
     {

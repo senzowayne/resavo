@@ -19,7 +19,7 @@ class UserController extends AbstractController
 {
     private UserManager $userManager;
     private BookingManager $bookingManager;
-    
+
     public function __construct(UserManager $userManager, BookingManager $bookingManager)
     {
         $this->userManager = $userManager;

@@ -25,33 +25,33 @@ class Room
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read", "room:read"})
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"room:read"})
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $price;
+    private ?int $price;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
-    private $bookings;
+    private ArrayCollection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */
-    private $meetings;
+    private ArrayCollection $meetings;
 
     public function __construct()
     {

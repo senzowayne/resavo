@@ -20,22 +20,22 @@ class DateBlocked
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $cause;
+    private ?string $cause;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $start;
+    private ?DateTimeInterface $start;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $end;
+    private ?DateTimeInterface $end;
 
     public function getId(): ?int
     {

@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class MeetingDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $requestStack;
-    private $meetingRepository;
+    private RequestStack $requestStack;
+    private MeetingRepository $meetingRepository;
 
     public function __construct(RequestStack $requestStack, MeetingRepository $meetingRepository)
     {

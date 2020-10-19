@@ -47,68 +47,68 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
-    private $room;
+    private ?Room $room;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createAt;
+    private ?DateTimeInterface $createAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
-    private $meeting;
+    private ?Meeting $meeting;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
-    private $bookingDate;
+    private ?DateTimeInterface $bookingDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      */
-    private $nbPerson;
+    private ?int $nbPerson;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $payment;
+    private ?Paypal $payment;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      */
-    private $notices;
+    private ?string $notices;
 
 
     /**
      * @ORM\Column(type="string")
      */
-    private $total;
+    private ?string $total;
 
 
     public function getId(): ?int

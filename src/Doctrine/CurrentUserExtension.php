@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
