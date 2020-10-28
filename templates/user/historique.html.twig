@@ -10,7 +10,7 @@ Vous n'avez encore de reservation.
 
             <div class="card mt-5">
                 <div class="card-header">
-                    Reservation du {{ resa.bookingDate | localizeddate('full', 'none') }}
+                    Reservation du {{ resa.bookingDate | date('d-m-Y') }}
 
                    {% if  'now' | date('Y-m-d')  <= resa.bookingDate | date('Y-m-d') %}
                         <span class="badge badge-success">En cour</span>
