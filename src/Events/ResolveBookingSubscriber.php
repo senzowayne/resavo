@@ -42,7 +42,7 @@ class ResolveBookingSubscriber implements EventSubscriber
     public function prePersist(LifecycleEventArgs $args): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ('easyadmin' !== $request->get('_route')) {
+        if ((null !== $request) && 'easyadmin' !== $request->get('_route')) {
             $this->setCurrentUser($args);
         }
         $this->resolveBookingName($args);
@@ -51,7 +51,7 @@ class ResolveBookingSubscriber implements EventSubscriber
     public function preUpdate(LifecycleEventArgs $args): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ('easyadmin' !== $request->get('_route')) {
+        if ((null !== $request) && 'easyadmin' !== $request->get('_route')) {
             $this->setCurrentUser($args);
         }
         $this->resolveBookingName($args);
