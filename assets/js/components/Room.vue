@@ -21,8 +21,8 @@
 </template>
 
 <script>
-    import Meeting from "./Meeting";
-    import store from "../resavoStore";
+    import Meeting from "Components/Meeting";
+    import store from "App/resavoStore";
 
     export default {
         name: "Room",

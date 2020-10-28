@@ -7,11 +7,11 @@
 </template>
 
 <script>
-    import DatePicker from "../components/DatePicker";
-    import Payment from "../components/Payment";
+    import DatePicker from "Components/DatePicker";
+    import Payment from "Components/Payment";
     import axios from "axios";
-    import store from "../resavoStore";
-    import Top from "../components/TopReservation";
+    import store from "App/resavoStore";
+    import Top from "Components/TopReservation";
 
     export default {
         name: "Reservation",
