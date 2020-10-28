@@ -8,6 +8,7 @@
         "ext-json": "*",
         "api-platform/api-pack": "^1.2",
         "easycorp/easyadmin-bundle": "^2.1",
+        "knpuniversity/oauth2-client-bundle": "^2.5",
         "paypal/paypal-checkout-sdk": "^1.0",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/apache-pack": "^1.0",
