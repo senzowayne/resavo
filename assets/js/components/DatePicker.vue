@@ -25,9 +25,9 @@
 </template>
 
 <script>
-    import Room from "./Room";
-    import Meeting from "./Meeting";
-    import store from "../resavoStore";
+    import Room from "Components/Room";
+    import Meeting from "Components/Meeting";
+    import store from "App/resavoStore";
     import axios from "axios";
 
     export default {

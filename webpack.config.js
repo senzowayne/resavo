@@ -14,6 +14,13 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
+    .addAliases({
+        'App': `${__dirname}/assets/js`,
+        'Components': `${__dirname}/assets/js/components`,
+        'Style': `${__dirname}/assets/styles`,
+        'Pages': `${__dirname}/assets/js/pages`
+    })
+
     /*
      * ENTRY CONFIG
      *

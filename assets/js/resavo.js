@@ -5,8 +5,8 @@ import 'es6-promise/auto'
 
 window.axios = axios;
 window.Vue = Vue;
-import Reservation from './pages/reservation'
-import Notification from "./components/Notification";
+import Reservation from 'Pages/reservation'
+import Notification from "Components/Notification";
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);

@@ -34,8 +34,8 @@
 </template>
 
 <script>
-    import Available from "./Available";
-    import store from "../resavoStore";
+    import Available from "Components/Available";
+    import store from "App/resavoStore";
 
     export default {
         name: "Meeting",

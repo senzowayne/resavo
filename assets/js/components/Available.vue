@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    import store from "../resavoStore";
+    import store from "App/resavoStore";
 
     export default {
         name: "available",
