@@ -8,7 +8,7 @@
     {% endif %}
     <div class="container p-4 mt-4">
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6">
                 <h1 class="font-weight-bold deep-orange-lighter-hover">
                     Connexion
                 </h1>
@@ -27,7 +27,7 @@
                     </div>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                     <div class="text-center">
-                        <button type="submit" style="width: 98%" class="btn purple-gradient">Connexion</button>
+                        <button type="submit" style="width: 98%" class="btn blue">Connexion</button>
                     </div>
                 </form>
                 <hr>

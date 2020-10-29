@@ -10,6 +10,7 @@ use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class GoogleAuthenticator extends SocialAuthenticator
@@ -32,7 +34,7 @@ class GoogleAuthenticator extends SocialAuthenticator
         $this->router = $router;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
     {
         return new RedirectResponse($this->router->generate('app_login'), Response::HTTP_TEMPORARY_REDIRECT);
     }
@@ -53,7 +55,7 @@ class GoogleAuthenticator extends SocialAuthenticator
         return $this->fetchAccessToken($this->getGoogleClient());
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider): User
     {
         /** @var GoogleUser $googleUser */
         $googleUser = $this->getGoogleClient()
@@ -61,6 +63,7 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         $email = $googleUser->getEmail();
 
+        /** @var User $existingUser */
         $existingUser = $this->em->getRepository(User::class)
                                  ->findOneBy(['googleId' => $googleUser->getId()]);
 
@@ -102,7 +105,7 @@ class GoogleAuthenticator extends SocialAuthenticator
         return new RedirectResponse($this->router->generate('app_login'));
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
         $targetUrl = $this->router->generate('new_reservation');
 
