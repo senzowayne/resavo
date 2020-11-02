@@ -21,7 +21,9 @@ security:
                 path: logout
                 target: app_login
             guard:
+                entry_point: App\Security\LoginFormAuthenticator
                 authenticators:
+                    - App\Security\GoogleAuthenticator
                     - App\Security\LoginFormAuthenticator
             # activate different ways to authenticate
 

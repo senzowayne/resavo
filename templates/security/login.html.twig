@@ -1,45 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Résavo - Login{% endblock %}
 
 {% block body %}
-<form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-    <div class="container p-4 mt4">
-        <h1>Connexion !</h1>
-            <div class="form-group">
-                <label for="email">Adresse e-mail</label>
-                <input value="{{ last_username }}" required name="email" type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Entrez votre adresse e-mail">
+    <div class="container p-4 mt-4">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-6">
+                <h1 class="font-weight-bold deep-orange-lighter-hover">
+                    Connexion
+                </h1>
+                <hr>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="email">Adresse e-mail</label>
+                        <input value="{{ last_username }}" required name="email" type="text" class="form-control"
+                               id="email"
+                               aria-describedby="emailHelp" placeholder="Entrez votre adresse e-mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input name="password" type="password" class="form-control" id="password"
+                               placeholder="Entrez votre mot de passe">
+                    </div>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="text-center">
+                        <button type="submit" style="width: 98%" class="btn blue">Connexion</button>
+                    </div>
+                </form>
+                <hr>
+                <div class="text-center">
+
+                    <a href="{{ path('user_new') }}" style="width: 98%" class="btn peach-gradient">
+                        S'inscrire
+                    </a>
+                    <br>
+                    <a href="{{ path('connect_social') }}" style="width: 98%" class="btn btn-danger">
+                        connect with google
+                    </a>
+
+                </div>
             </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input name="password" type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
-            </div>
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-        <small id="emailHelp" class="form-text text-muted">
-        <a href="{{ path('user_new') }}">
-        Si vous n'avez pas encore créer de compte, cliquez ici pour en créer un
-        </a></small>
-        <br>
-            <button type="submit" class="btn red accent-4">Connexion</button>
-    </div>
-        </form>
-
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
         </div>
-    #}
+    </div>
+    {#
+    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+    See https://symfony.com/doc/current/security/remember_me.html
 
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="_remember_me"> Remember me
+        </label>
+    </div>
+    #}
 
 {% endblock %}

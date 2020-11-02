@@ -34,7 +34,7 @@ class User implements UserInterface
     private ?string $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
@@ -60,11 +60,11 @@ class User implements UserInterface
     private ?string $avatar;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
-    private ?string $hash;
+    private ?string $hash = null;
 
     /**
      * @Assert\EqualTo(propertyPath="hash", message="Vous n'avez pas tapé le meme mot de passe")
@@ -91,6 +91,11 @@ class User implements UserInterface
      * @Groups({"resa:read"})
      */
     private ?string $number;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $googleId;
 
     public function __construct()
     {
@@ -223,7 +228,7 @@ class User implements UserInterface
      * This should be the encoded password. On authentication, a plain-text
      * password will be salted, encoded, and then compared to this value.
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->hash;
     }
@@ -331,6 +336,17 @@ class User implements UserInterface
     {
         $this->number = $number;
 
+        return $this;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): User
+    {
+        $this->googleId = $googleId;
         return $this;
     }
 }

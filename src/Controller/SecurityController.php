@@ -6,7 +6,10 @@ use App\Entity\User;
 use App\Manager\UserManager;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,5 +84,26 @@ class SecurityController extends AbstractController
 
         }
         return $this->render('user/update_password.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/user/connect/", name="connect_social")
+     * @param ClientRegistry $clientRegistry
+     * @return RedirectResponse
+     */
+    public function connect(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        /** @var GoogleClient $client */
+        $client = $clientRegistry->getClient('google');
+
+        return $client->redirect(['profile', 'email']);
+    }
+
+    /**
+     * @Route("/user/connect/google/check", name="connect_google_check")
+     */
+    public function connectCheckAction(): RedirectResponse
+    {
+        return $this->redirectToRoute('your_homepage_route');
     }
 }
