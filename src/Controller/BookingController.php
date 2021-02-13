@@ -7,16 +7,17 @@ use App\Entity\ConfigMerchant;
 use App\Entity\User;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
+use App\Message\NotificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/reservation")
@@ -84,11 +85,8 @@ class BookingController extends AbstractController
 
     /**
      * @Route("/api-reserve", name="reserve", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     * @throws \JsonException
      */
-    public function reserve(Request $request): JsonResponse
+    public function reserve(Request $request, MessageBusInterface $bus): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
         /** @var ?ConfigMerchant $configMerchant */
@@ -110,7 +108,7 @@ class BookingController extends AbstractController
             $this->session->set('bookingId', $booking->getId());
 
             if ($this->paypalManager->capturePayment($booking, $payment)) {
-                //  $this->notification->mailConfirmation($booking);
+                $bus->dispatch(new NotificationMessage($booking->getId()));
 
                 /** @var User $user */
                 $user = $this->getUser();

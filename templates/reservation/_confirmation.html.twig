@@ -8,7 +8,7 @@
         <strong>Nom:</strong> {{ resa.user.name }} <br>
         <strong>Prénom:</strong> {{ resa.user.firstName }} <br>
         <strong>ID reservation:</strong> {{ resa.name }} <br>
-        <strong>Date:</strong> {{ resa.bookingDate | localizeddate('full', 'none') }}<br>
+        <strong>Date:</strong> {{ resa.bookingDate | date('d-m-Y') }}<br>
         <strong>Séance: {{ resa.meeting.label }}<br></strong>
         <strong>Salle: {{ resa.room.name }}<br></strong>
         <strong>Nombre de personnes:</strong> {{ resa.nbPerson }}<br>
