@@ -11,7 +11,7 @@ namespace App\Repository;
 
 use App\Entity\Paypal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Paypal|null find($id, $lockMode = null, $lockVersion = null)
