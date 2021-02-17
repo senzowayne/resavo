@@ -2,8 +2,8 @@
 
 namespace App\Service\Paypal;
 
-use Sample\PayPalClient;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
+use App\Service\Paypal\PaypalClient;
 
 class GetOrder
 {
@@ -19,7 +19,7 @@ class GetOrder
 
 
         // 3. Call PayPal to get the transaction details
-        $client = PayPalClient::client();
+        $client = PaypalClient::client();
         $response = $client->execute(new OrdersGetRequest($orderId));
         /**
          *Enable the following line to print complete response as JSON.

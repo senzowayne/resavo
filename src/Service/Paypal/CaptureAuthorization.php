@@ -2,7 +2,7 @@
 
 namespace App\Service\Paypal;
 
-use Sample\PayPalClient;
+use App\Service\Paypal\PaypalClient;
 use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
 
 class CaptureAuthorization
@@ -22,7 +22,7 @@ class CaptureAuthorization
     $request = new AuthorizationsCaptureRequest($authorizationId);
     $request->body = self::buildRequestBody();
     // 3. Call PayPal to capture an authorization.
-    $client = PayPalClient::client();
+    $client = PaypalClient::client();
     $response = $client->execute($request);
     // 4. Save the capture ID to your database for future reference.
     if ($debug)

@@ -17,6 +17,7 @@
         "league/oauth2-google": "^3.0",
         "nelmio/cors-bundle": "^2.1",
         "paypal/paypal-checkout-sdk": "^1.0",
+        "paypal/paypalhttp": "^1.0",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/apache-pack": "^1.0",
