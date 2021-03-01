@@ -20,9 +20,8 @@ final class Version20201029031016 extends AbstractMigration
         $this->addSql('ALTER TABLE user ADD google_id VARCHAR(255) DEFAULT NULL, CHANGE hash hash VARCHAR(255) DEFAULT NULL, CHANGE first_name first_name VARCHAR(255) DEFAULT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function isTransactional(): bool
     {
-        $this->addSql('ALTER TABLE config_merchant CHANGE maintenance maintenance TINYINT(1) DEFAULT \'1\' NOT NULL');
-        $this->addSql('ALTER TABLE user DROP google_id, CHANGE first_name first_name VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE hash hash VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`');
+        return false;
     }
 }
