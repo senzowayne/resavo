@@ -11,6 +11,7 @@ Nous essayerons de rendre ce projet le plus générique possible et personnalisa
 Le projet sous sa forme actuelle a été fait avec une personnalisation spécifique. Vous trouverez sûrement du code à jeter/modifier.
 
 ![Screenshot](screenshots/resa.png)
+__(Ancien design)__
 
 ## COMMENT CONTRIBUER ?
 
@@ -50,6 +51,7 @@ Vous pourrez ensuite retourner sur votre branche "master" en local et effectuer 
 Pensez à supprimer vos branches au fur et à mesure pour ne pas finir avec d'innombrables branches inutiles.
 
 ## INSTALLATION
+(__pré-requis docker__)
 
 Exécutez d'abord ces commandes :
 
@@ -92,8 +94,9 @@ Vous pouvez dès à présent vous connecter avec un compte admin:
 
 ## Technologies
 
-* Symfony 4.4
-* Api Platform
+* Symfony 5.2
+* Api Platform Core
+* Mercure
 * Twig
 * Vue Js
 * ~~Jquery~~
