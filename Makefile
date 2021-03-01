@@ -4,7 +4,7 @@
 DOCKER_COMP = docker-compose
 EXEC_PHP    = $(DOCKER_COMP) exec -T php
 EXEC_NODE   = $(DOCKER_COMP) run --rm node
-BASH_PHP	= $(DOCKER_COMP) exec php bash
+BASH_PHP	= $(DOCKER_COMP) exec php sh
 BASH_NODE 	= $(EXEC_NODE) sh
 SYMFONY     = $(EXEC_PHP) bin/console
 COMPOSER    = $(DOCKER_COMP) run --rm composer

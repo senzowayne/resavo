@@ -100,8 +100,7 @@
 
       "config": {
           "platform": {
-              "php": "8.0",
-              "ext-intl": "0"
+              "php": "8.0"
           },
           "preferred-install": {
               "*": "dist"
