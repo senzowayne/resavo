@@ -9,7 +9,6 @@ use App\Entity\Meeting;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
@@ -41,14 +40,12 @@ class AppFixtures extends Fixture
             $manager->persist($room[$i]);
         }
 
-        $faker = Factory::create('fr-FR');
         $hash = '$2y$13$Li.rLne01AHwc.ituzQ/jejHxxKO.BU4A9Fc9hmCc3.PprUhaJbRa'; // "password"
 
         $admin = (new User())
             ->setName('resavo')
             ->setFirstName('Admin')
             ->setEmail('admin@resavo.fr')
-            ->setAvatar($faker->imageUrl($width = 50, $height = 50))
             ->setHash($hash);
 
         $adminRole = (new Role())

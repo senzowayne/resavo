@@ -24,7 +24,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class BookingController extends AbstractController
 {
-    private NotificationController $notification;
     private EntityManagerInterface $manager;
     private BookingManager $bookingManager;
     private PaypalManager $paypalManager;
@@ -32,13 +31,11 @@ class BookingController extends AbstractController
 
     public function __construct(
         EntityManagerInterface $manager,
-        NotificationController $notification,
         BookingManager $bookingManager,
         PaypalManager $paypalManager,
         SessionInterface $session
     )
     {
-        $this->notification = $notification;
         $this->manager = $manager;
         $this->bookingManager = $bookingManager;
         $this->paypalManager = $paypalManager;

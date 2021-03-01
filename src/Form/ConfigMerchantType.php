@@ -35,7 +35,7 @@ class ConfigMerchantType extends AbstractType
                 )
             )
             ->add('maintenance')
-            ->add('Validé', SubmitType::class);
+            ->add('Valider', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
