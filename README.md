@@ -81,6 +81,28 @@ CLIENT_SECRET=
 
 Ces variables contiendront les identifiants de vos systèmes de paiement.
 
+## INSTALLER LE PROJET AVEC COMPOSER (_SANS DOCKER_)
+
+pré-requis  environnement :
+
+la version doit être PHP 8 minimum
+Installer Composer 
+
+recuperation du projet :
+
+vous devez "fork" le repository "resavo" en cliquant sur le bouton `Fork` sur Github.
+```
+$ git clone git@github.com:USERNAME/resavo.git
+$ cd resavo/
+$ composer install
+```
+Le projet est installé  ajoutez le référent, une fois dans le dossier "resavo" :
+
+```
+cd resavo
+git remote add upstream git://github.com/senzowayne/resavo.git
+```
+
 ### Paypal SANDBOX TEST
 
 Créez votre SANDBOX (celle-ci vous permettra d'effectuer des faux paiements et avoir le réel comportement de l'application) :
