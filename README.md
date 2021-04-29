@@ -97,10 +97,10 @@ $ composer -v
 $ php -v
 ```
 
-Sans docker, il nous faut installer le projet avec composer. Vous pouvez executer cette commande afin de pouvoir exploiter le projet en ligne de commande :
+Sans docker, il nous faut installer le projet avec composer. Vous pouvez exécuter cette commande afin de pouvoir exploiter le projet en ligne de commande :
 
 ```
-$ composer require php
+$ composer
 ```
 
 Vous pouvez enfin exécuter la commande suivante pour voir la liste des commandes disponibles :
@@ -125,42 +125,28 @@ DATABASE_PASSWORD=
 
 DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DBNAME?serverVersion=8.0"
 ```
-Il serait utile de modifier le fichier 'doctrine.yaml' pour changer le driver et l'écriture de la base.
-Ouvrez le fichier doctrine.yaml, en dessous de la ligne 3 "url", ajoutez:
-
-```
-charset: 'UTF8'
-driver: 'pdo_mysql'
-```
-
 
 Une fois les variables initialisées, vous pouvez commencer à créer la base de données : 
 
 ```
 $ php bin/console doctrine:database:create
 $ php bin/console doctrine:migration:migrate
-$ php bin/console doctrine:schema:update -f 
-```
--f force l'update de doctrine. Vous pouvez effectuer l'update sans forcer si tout s'est bien passé lors du migrate.
-
-Nous allons maintenant générer les fixtures, pour cela nous aurons malheureusement besoin de retirer mercure du projet.
-Petit rappel, toutes ces tâches sont à effectuer sur le projet cloné de votre fork. 
-
-```
-$ composer remove symfony/mercure-bundle
 ```
 
-Vous pouvez maintenant générer les fixtures :
+Nous allons maintenant générer les fixtures :  
 
 ```
 $ php bin/console doctrine:fixtures:load
 $ yes
 ```
+
+Petit rappel, toutes ces tâches sont à effectuer sur le projet cloné de votre fork. 
+
 Nous allons maintenant intégrer le gestionnaire de paquet qui n'est pas intégré automatiquement avec composer.
 
 ```
 $ npm install
-$ npm install --global yarn
+$ npm install yarn
 $ yarn install
 $ yarn encore dev
 $ yarn build
