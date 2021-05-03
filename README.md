@@ -149,7 +149,6 @@ $ npm install
 $ npm install yarn
 $ yarn install
 $ yarn encore dev
-$ yarn build
 ```
 Et voilà ! Vous pouvez enfin lancer le projet et commencer à travailler sur les ISSUES ! 
 
