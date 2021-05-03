@@ -97,10 +97,10 @@ $ composer -v
 $ php -v
 ```
 
-Sans docker, il nous faut installer le projet avec composer. Vous pouvez exécuter cette commande afin de pouvoir exploiter le projet en ligne de commande :
+Il nous faut installer le projet avec composer. Vous pouvez exécuter cette commande afin de pouvoir exploiter le projet en ligne de commande :
 
 ```
-$ composer
+$ composer install
 ```
 
 Vous pouvez enfin exécuter la commande suivante pour voir la liste des commandes disponibles :
@@ -108,20 +108,23 @@ Vous pouvez enfin exécuter la commande suivante pour voir la liste des commande
 ```
 $ php bin/console
 ``` 
+Pour lancer le serveur de wamp, exécuter la commande suivante :
 
-Une fois composer et php bien installés, vous pouvez lancer le projet.
+```
+php bin/console server:dump
+```
+Lancez enfin votre projet.
 
 Lien : http://127.0.0.1 ou http://localhost
 
-Sans docker, votre base de données ne sera pas automatiquement générer dans votre localhost. 
-Créez une fichier .env.local avec comme variable d'environnement : 
+Pour mettre en place votre base de données, créez une fichier .env.local avec comme variable d'environnement : 
 
 ```
-DATABASE_NAME=resa
-DATABASE_HOST=
+DATABASE_NAME=resavo
+DATABASE_HOST=localhost
 DATABASE_PORT=3306
-DATABASE_USER=
-DATABASE_PASSWORD=
+DATABASE_USER=!ChangeMe!
+DATABASE_PASSWORD=!ChangeMe!
 
 DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DBNAME?serverVersion=8.0"
 ```
