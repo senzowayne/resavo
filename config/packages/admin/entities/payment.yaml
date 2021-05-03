@@ -1,5 +1,0 @@
-easy_admin:
-      entities:
-        Paypal:
-          class: App\Entity\Paypal
-          label: 'Paiement'
