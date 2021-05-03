@@ -114,17 +114,13 @@
         "version": "1.1.1"
     },
     "easycorp/easyadmin-bundle": {
-        "version": "2.0",
+        "version": "3.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "2.0",
-            "ref": "0a51040a43c6f2172a3a0135cd15daf2043905d7"
-        },
-        "files": [
-            "config/packages/easy_admin.yaml",
-            "config/routes/easy_admin.yaml"
-        ]
+            "version": "3.0",
+            "ref": "b131e6cbfe1b898a508987851963fff485986285"
+        }
     },
     "egulias/email-validator": {
         "version": "2.1.25"
@@ -191,9 +187,6 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.7.1"
-    },
-    "pagerfanta/pagerfanta": {
-        "version": "v2.6.0"
     },
     "paypal/paypal-checkout-sdk": {
         "version": "1.0.1"
@@ -392,9 +385,6 @@
             "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
         }
     },
-    "symfony/http-client": {
-        "version": "v5.2.3"
-    },
     "symfony/http-client-contracts": {
         "version": "v2.3.1"
     },
@@ -427,21 +417,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/mercure": {
-        "version": "v0.4.1"
-    },
-    "symfony/mercure-bundle": {
-        "version": "0.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "0.2",
-            "ref": "a37d3438e4bd4f9f924c516996bc29e25f66b07e"
-        },
-        "files": [
-            "config/packages/mercure.yaml"
-        ]
     },
     "symfony/messenger": {
         "version": "4.3",
@@ -517,6 +492,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.22.0"
+    },
+    "symfony/polyfill-uuid": {
+        "version": "v1.22.1"
     },
     "symfony/process": {
         "version": "v5.2.3"
@@ -621,6 +599,9 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
+    },
+    "symfony/uid": {
+        "version": "v5.2.6"
     },
     "symfony/validator": {
         "version": "4.3",
