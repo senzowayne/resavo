@@ -96,14 +96,13 @@
             "require": "5.2.*"
         }
     },
-
-      "config": {
-          "platform": {
-              "php": "8.0"
-          },
-          "preferred-install": {
-              "*": "dist"
-          },
-          "sort-packages": true
+    "config": {
+        "platform": {
+            "php": "8.0"
+        },
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     }
 }
