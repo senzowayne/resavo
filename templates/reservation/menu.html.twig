@@ -13,7 +13,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% if is_granted('ROLE_ADMIN') %}
-                        <a class="nav-link" href="{{ path('easyadmin') }}">Administration</a>
+                        <a class="nav-link" href="{{ path('admin') }}">Administration</a>
                         <a class="nav-link" href="{{ path('config_merchant') }}">Paramètres</a>
                     {% endif %}
                     <a class="nav-link" href="{{ path('new_reservation') }}">Nouvelle réservation</a>
