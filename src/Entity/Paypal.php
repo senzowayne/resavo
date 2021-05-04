@@ -15,10 +15,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Paypal
 {
     /**
-      * @ORM\Id()
-      * @ORM\GeneratedValue()
-      * @ORM\Column(type="integer")
-      */
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
     /**
@@ -133,7 +133,7 @@ class Paypal
         return $this;
     }
 
-    public function getPaymentDate(): ?DateTime
+    public function getPaymentDate()
     {
         return $this->payment_date;
     }
