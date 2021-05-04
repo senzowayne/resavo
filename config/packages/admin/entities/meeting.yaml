@@ -1,5 +1,0 @@
-easy_admin:
-      entities:
-        Meeting:
-          class: App\Entity\Meeting
-          label: 'Horaires'
