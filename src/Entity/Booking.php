@@ -46,6 +46,7 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    <<ORM\Column("integer")>>
     private ?int $id = null;
 
     /**
@@ -71,24 +72,28 @@ class Booking
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
+  
     private ?Meeting $meeting;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
+    <<ORM\Column("date")>>
     private ?DateTimeInterface $bookingDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      */
+    <<ORM\Column("integer", true)>>
     private ?int $nbPerson;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
+    <<ORM\Column("string", 255, true)>>
     private ?string $name;
 
     /**
@@ -101,12 +106,14 @@ class Booking
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      */
+    <<ORM\Column("string", 255, true)>>
     private ?string $notices;
 
 
     /**
      * @ORM\Column(type="string")
      */
+    <<ORM\Column("string")>>
     private ?string $total;
 
 

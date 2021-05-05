@@ -25,6 +25,7 @@ class Meeting
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read"})
      */
+    <<ORM\Column("integer")>>
     private ?int $id = null;
 
     public function __toString(): string
@@ -36,6 +37,7 @@ class Meeting
      * @ORM\Column(type="string", length=255)
      * @Groups({"meeting:read"})
      */
+    <<ORM\Column("string", 255)>>
     private ?string $label;
 
     /**
@@ -43,11 +45,13 @@ class Meeting
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"meeting:read"})
      */
+   
     private ?Room $room;
 
     /**
      * @ORM\Column(type="boolean", options={"default" = 1})
      */
+    <<ORM\Column("boolean")>>
     private ?bool $isActive;
 
     /**
