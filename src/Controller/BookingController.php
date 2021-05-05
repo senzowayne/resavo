@@ -19,6 +19,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+use App\Controller\NotificationController;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
+use Psr\Log\LoggerInterface;
+
 /**
  * @Route("/reservation")
  */
@@ -29,13 +35,14 @@ class BookingController extends AbstractController
     private PaypalManager $paypalManager;
     private SessionInterface $session;
 
+    private const SVC_NAME = '[NOTIFICATION_CONTROLLER] :: ';
+
     public function __construct(
         EntityManagerInterface $manager,
         BookingManager $bookingManager,
         PaypalManager $paypalManager,
         SessionInterface $session
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->bookingManager = $bookingManager;
         $this->paypalManager = $paypalManager;
@@ -88,8 +95,8 @@ class BookingController extends AbstractController
         $booking = $this->bookingManager->createBooking($request);
         /** @var ?ConfigMerchant $configMerchant */
         $configMerchant = $this->manager
-                               ->getRepository(ConfigMerchant::class)
-                               ->findOneBy([]);
+            ->getRepository(ConfigMerchant::class)
+            ->findOneBy([]);
 
         if (is_null($configMerchant)) {
             throw new \LogicException('the configMerchant not found');
@@ -97,7 +104,7 @@ class BookingController extends AbstractController
 
         if (!$configMerchant->getMaintenance()) {
             $payment = $this->paypalManager
-                            ->findOnePaiement($this->session->get('pay'));
+                ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
             $this->bookingManager->save($booking);
@@ -111,15 +118,16 @@ class BookingController extends AbstractController
                 $user = $this->getUser();
                 $this->addFlash(
                     'success',
-                    sprintf('Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
+                    sprintf(
+                        'Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
                         $user->getEmail()
                     )
                 );
             }
 
             return $this->json([
-                        'msg' => 'Réservation ok',
-                        'error' => ''
+                'msg' => 'Réservation ok',
+                'error' => ''
             ]);
         }
         $msg = 'Un problème est survenu pendant la réservation, veuillez nous contacter ou réessayer plus tard.';
@@ -136,7 +144,7 @@ class BookingController extends AbstractController
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
-                       ->getAllMeetingPerRoom($request->query->get('d'));
+            ->getAllMeetingPerRoom($request->query->get('d'));
 
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $result['booking'],
@@ -154,12 +162,55 @@ class BookingController extends AbstractController
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {
-           return $this->redirectToRoute('new_reservation');
+            return $this->redirectToRoute('new_reservation');
         }
 
         $booking = $this->manager->getRepository(Booking::class)
-                    ->find($this->session->get('bookingId'));
+            ->find($this->session->get('bookingId'));
 
         return $this->render('reservation/resume.html.twig', compact('booking'));
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * @Route("/test", name="test")
+     */
+    public function testEmailCatch(): Response
+    {
+
+
+
+        $book1 = $this->getDoctrine()
+            ->getRepository(Booking::class)
+            ->find(2);
+
+
+        /** @var User $user */
+        $user = $book1->getUser();
+        $userMail = $user->getEmail();
+
+        $email = (new TemplatedEmail())
+            ->from('resa@resavo.fr')
+            ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
+            ->subject('Votre réservation')
+            ->htmlTemplate('reservation/_confirmation.html.twig')
+            ->context(['resa' => $book1]);
+        //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+
+
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
+        $this->mailer->send($email);
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
+
+        return $email;
+
+        return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 }

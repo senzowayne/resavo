@@ -36,7 +36,7 @@ class NotificationController extends AbstractController
             ->subject('Votre réservation')
             ->htmlTemplate('reservation/_confirmation.html.twig')
             ->context(['resa' => $booking]);
-            //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+        //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
 
 
         $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
