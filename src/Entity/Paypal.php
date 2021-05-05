@@ -133,7 +133,7 @@ class Paypal
         return $this;
     }
 
-    public function getPaymentDate()
+    public function getPaymentDate(): ?DateTime
     {
         return $this->payment_date;
     }
