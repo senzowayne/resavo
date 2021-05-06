@@ -192,7 +192,10 @@ class BookingController extends AbstractController
             ->find(2);
 
 
-        /** @var User $user */
+        /*
+         * 
+        
+        //** @var User $user /
         $user = $book1->getUser();
         $userMail = $user->getEmail();
 
@@ -211,6 +214,13 @@ class BookingController extends AbstractController
 
         return $email;
 
-        return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
+         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
+        */
+
+        //via un forward
+        return $this->forward(
+            'App\Controller\NotificationController::mailConfirmation',
+            [$book1]
+        );
     }
 }
