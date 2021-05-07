@@ -108,7 +108,7 @@ Vous pouvez enfin exécuter la commande suivante pour voir la liste des commande
 ```
 $ php bin/console
 ``` 
-Pour lancer le serveur de wamp, exécuter la commande suivante (pré-requis : Symfony CLI):
+Pour lancer un serveur php, exécuter la commande suivante (pré-requis : Symfony CLI):
 
 ```
 symfony server:start
