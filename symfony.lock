@@ -43,6 +43,9 @@
     "doctrine/dbal": {
         "version": "2.12.1"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -188,9 +191,6 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.7.1"
-    },
-    "pagerfanta/pagerfanta": {
-        "version": "v2.6.0"
     },
     "paypal/paypal-checkout-sdk": {
         "version": "1.0.1"
@@ -389,9 +389,6 @@
             "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
         }
     },
-    "symfony/http-client": {
-        "version": "v5.2.3"
-    },
     "symfony/http-client-contracts": {
         "version": "v2.3.1"
     },
@@ -424,21 +421,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/mercure": {
-        "version": "v0.4.1"
-    },
-    "symfony/mercure-bundle": {
-        "version": "0.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "0.2",
-            "ref": "a37d3438e4bd4f9f924c516996bc29e25f66b07e"
-        },
-        "files": [
-            "config/packages/mercure.yaml"
-        ]
     },
     "symfony/messenger": {
         "version": "4.3",
@@ -514,6 +496,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.22.0"
+    },
+    "symfony/polyfill-uuid": {
+        "version": "v1.22.1"
     },
     "symfony/process": {
         "version": "v5.2.3"
@@ -618,6 +603,9 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
+    },
+    "symfony/uid": {
+        "version": "v5.2.6"
     },
     "symfony/validator": {
         "version": "4.3",
