@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Booking;
 use App\Form\UserType;
+use App\Form\BookingType;
 use App\Manager\UserManager;
 use App\Manager\BookingManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,5 +71,19 @@ class UserController extends AbstractController
         $data = $this->bookingManager->getLatestBooking($user);
 
         return $this->render('user/historique.html.twig', compact('data'));
+    }
+
+    /**
+     * @Route("/edit/{booking}", name="edit", methods={"GET", "POST"})
+     * @return Response
+     */
+    public function edit(Booking $booking): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        // $data = $this->bookingManager->editBooking($user, $booking);
+        $form = $this->createForm(BookingType::class, $booking);
+
+        return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
     }
 }

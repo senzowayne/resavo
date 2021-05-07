@@ -24,10 +24,22 @@ class BookingType extends AbstractType
                 'choice_label' => 'name',
             ])
 
-           /* ->add('bookingDate', DateType::class, ['attr' => ['placeholder' => 'Cliquez ici pour selectionner une date'], 'widget' => 'single_text', 'html5' => false, 'format' => 'dd-MM-yyyy', 'data' => new \DateTime()])*/
+            ->add('booking_date', DateType::class, [
+                'attr' => ['placeholder' => 'Cliquez ici pour selectionner une date'],
+                'widget' => 'choice', 
+                'html5' => false, 
+                'format' => 'dd-MM-yyyy',
+                'data' => new \DateTime()])
 
-            ->add('notices', TextareaType::class, ['required' => false, 'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser']])
-            ;
+            ->add('notices', TextareaType::class, [
+                'required' => false, 
+                'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser']])
+            
+
+            ->add('meeting', EntityType::class, [
+                'class' => Meeting::class,
+                'choice_label' => 'label',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
