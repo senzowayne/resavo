@@ -77,7 +77,7 @@ class Booking
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
-    private ?DateTimeInterface $bookingDate;
+    private ?DateTime $bookingDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -171,12 +171,12 @@ class Booking
         return $this;
     }
 
-    public function getBookingDate(): ?DateTimeInterface
+    public function getBookingDate(): ?DateTime
     {
         return $this->bookingDate;
     }
 
-    public function setBookingDate(DateTimeInterface $bookingDate): self
+    public function setBookingDate(DateTime $bookingDate): self
     {
         $this->bookingDate = $bookingDate;
 
