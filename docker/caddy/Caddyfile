@@ -26,6 +26,7 @@ route {
         anonymous
         # Enable the subscription API (double-check that it's what you want)
         subscriptions
+        cors_origins *
         # Extra directives
         {$MERCURE_EXTRA_DIRECTIVES}
     }
