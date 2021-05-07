@@ -81,6 +81,80 @@ CLIENT_SECRET=
 
 Ces variables contiendront les identifiants de vos systèmes de paiement.
 
+### Installation sans docker
+
+Exécutez d'abord ces commandes : 
+
+```
+$ git clone git@github.com:USERNAME/resavo.git
+$ cd resavo/
+```
+
+Assurez vous d'avoir les bonnes versions de Composer (2.2) et de Php (8.0). Pour vérifier :
+
+```
+$ composer -v
+$ php -v
+```
+
+Il nous faut installer le projet avec composer. Vous pouvez exécuter cette commande afin de pouvoir exploiter le projet en ligne de commande :
+
+```
+$ composer install
+```
+
+Vous pouvez enfin exécuter la commande suivante pour voir la liste des commandes disponibles :
+
+```
+$ php bin/console
+``` 
+Pour lancer un serveur php, exécuter la commande suivante (pré-requis : Symfony CLI):
+
+```
+symfony server:start
+```
+Lancez enfin votre projet.
+
+Lien : http://127.0.0.1 ou http://localhost
+
+Pour mettre en place votre base de données, créez une fichier .env.local avec comme variable d'environnement : 
+
+```
+DATABASE_NAME=resavo
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=!ChangeMe!
+DATABASE_PASSWORD=!ChangeMe!
+
+DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DBNAME?serverVersion=8.0"
+```
+
+Une fois les variables initialisées, vous pouvez commencer à créer la base de données : 
+
+```
+$ php bin/console doctrine:database:create
+$ php bin/console doctrine:migration:migrate
+```
+
+Nous allons maintenant générer les fixtures :  
+
+```
+$ php bin/console doctrine:fixtures:load
+$ yes
+```
+
+Petit rappel, toutes ces tâches sont à effectuer sur le projet cloné de votre fork. 
+
+Nous allons maintenant intégrer le gestionnaire de paquet qui n'est pas intégré automatiquement avec composer.
+
+```
+$ npm install
+$ npm install yarn
+$ yarn install
+$ yarn encore dev
+```
+Et voilà ! Vous pouvez enfin lancer le projet et commencer à travailler sur les ISSUES ! 
+
 ### Paypal SANDBOX TEST
 
 Créez votre SANDBOX (celle-ci vous permettra d'effectuer des faux paiements et avoir le réel comportement de l'application) :
