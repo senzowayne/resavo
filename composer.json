@@ -49,6 +49,7 @@
         "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "phpstan/phpstan": "^0.12.50",
         "symfony/debug-pack": "*",
@@ -106,5 +107,6 @@
               "*": "dist"
           },
           "sort-packages": true
-    }
+    },
+    "description": "Système de réservation"
 }
