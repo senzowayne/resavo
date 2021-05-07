@@ -44,7 +44,7 @@
         },
         mounted() {
             // mercure hub
-            let hubUrl = this.hubLink ?? "http://localhost:3000/.well-known/mercure"
+            let hubUrl = this.hubLink ?? "https://localhost:8000/.well-known/mercure"
             const url = new URL(`${hubUrl}?topic=${document.location.origin}/api/bookings/{id}`);
             const eventSource = new EventSource(url);
             // The callback will be called every time an update is published
