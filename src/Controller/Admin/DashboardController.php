@@ -32,7 +32,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Réservation', 'fas fa-folder-open');
         yield MenuItem::linkToCrud('Nouvelle Réservation', 'fas fa-plus', Booking::class);
         yield MenuItem::linkToCrud('Réservation', 'fas fa-calendar-alt', Booking::class)->setDefaultSort(['bookingDate' => 'DESC']);
-        yield MenuItem::linktoRoute('Réservation du jour', 'fas fa-folder-open', 'resa_day')->setLinkTarget('_blank')->setLinkRel('resa-day');
 
         yield MenuItem::section('Autres', 'fas fa-folder-open');
         yield MenuItem::linkToCrud('Client', 'fas fa-user', User::class)->setDefaultSort(['name' => 'ASC']);
