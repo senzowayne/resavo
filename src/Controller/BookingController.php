@@ -20,10 +20,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
+use App\Controller\NotificationControllerTest;
+use App\Entity\Meeting;
+use App\Entity\Paypal;
+use App\Entity\Room;
 use App\Controller\NotificationController;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mime\Address;
-use Psr\Log\LoggerInterface;
+use App\Tests\Controller\NotificationControllerTest as ControllerNotificationControllerTest;
+use DateTime;
 
 /**
  * @Route("/reservation")
@@ -104,6 +107,12 @@ class BookingController extends AbstractController
 
         if (!$configMerchant->getMaintenance()) {
             $payment = $this->paypalManager
+
+
+
+
+
+
                 ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
@@ -181,46 +190,43 @@ class BookingController extends AbstractController
 
     /**
      * @Route("/test", name="test")
+     * 
      */
-    public function testEmailCatch(): Response
+    public function testEmailCatch(NotificationController $notification): Response
     {
 
 
 
-        $book1 = $this->getDoctrine()
-            ->getRepository(Booking::class)
-            ->find(2);
-
 
         /*
-         * 
-        
-        //** @var User $user /
-        $user = $book1->getUser();
-        $userMail = $user->getEmail();
+        $user = (new User())
+            ->setName('Resavo')
+            ->setFirstName('Jean')
+            ->setEmail('test@resavo.fr');
 
-        $email = (new TemplatedEmail())
-            ->from('resa@resavo.fr')
-            ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
-            ->subject('Votre réservation')
-            ->htmlTemplate('reservation/_confirmation.html.twig')
-            ->context(['resa' => $book1]);
-        //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+        $meeting = (new Meeting())->setLabel('14h 16h');
 
+        $room = (new Room())->setName('Salle Miami');
 
-        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
-        $this->mailer->send($email);
-        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
+        $payment = (new Paypal())->setUser($user);
+        $payment->setPaymentCurrency('Eur');
+        $payment->setPaymentAmount(125.00);
 
-        return $email;
+          $booking = (new Booking())
+            ->setUser($user)
+            ->setBookingDate(new DateTime('2020/01/10'))
+            ->setMeeting($meeting)
+            ->setRoom($room)
+            ->setNbPerson(3)
+            ->setName(null)
+            ->setPayment($payment);
+        $booking->setTotal(3 * 125.00);
 
-         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
         */
+        $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
 
-        //via un forward
-        return $this->forward(
-            'App\Controller\NotificationController::mailConfirmation',
-            [$book1]
-        );
+        $email = $notification->mailConfirmation($book);
+
+        return $this->redirectToRoute('new_reservation');
     }
 }
