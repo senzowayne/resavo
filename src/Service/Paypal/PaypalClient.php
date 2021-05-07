@@ -16,7 +16,7 @@ class PaypalClient
      * credentials context. This can be used invoke PayPal API's provided the
      * credentials have the access to do so.
      */
-    public static function client()
+    public static function client(): PayPalHttpClient
     {
         return new PayPalHttpClient(self::environment());
     }
@@ -28,8 +28,8 @@ class PaypalClient
      */
     public static function environment(): SandboxEnvironment
     {
-        $clientId = $_ENV["CLIENT_ID"] ?: "<<PAYPAL-CLIENT-ID>>";
-        $clientSecret = $_ENV["CLIENT_SECRET"] ?: "<<PAYPAL-CLIENT-SECRET>>";
+        $clientId = $_ENV["PAYPAL_CLIENT_ID"] ?: "<<PAYPAL-CLIENT-ID>>";
+        $clientSecret = $_ENV["PAYPAL_CLIENT_SECRET"] ?: "<<PAYPAL-CLIENT-SECRET>>";
         return new SandboxEnvironment($clientId, $clientSecret);
     }
 }
