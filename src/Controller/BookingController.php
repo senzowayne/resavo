@@ -195,34 +195,6 @@ class BookingController extends AbstractController
     public function testEmailCatch(NotificationController $notification): Response
     {
 
-
-
-
-        /*
-        $user = (new User())
-            ->setName('Resavo')
-            ->setFirstName('Jean')
-            ->setEmail('test@resavo.fr');
-
-        $meeting = (new Meeting())->setLabel('14h 16h');
-
-        $room = (new Room())->setName('Salle Miami');
-
-        $payment = (new Paypal())->setUser($user);
-        $payment->setPaymentCurrency('Eur');
-        $payment->setPaymentAmount(125.00);
-
-          $booking = (new Booking())
-            ->setUser($user)
-            ->setBookingDate(new DateTime('2020/01/10'))
-            ->setMeeting($meeting)
-            ->setRoom($room)
-            ->setNbPerson(3)
-            ->setName(null)
-            ->setPayment($payment);
-        $booking->setTotal(3 * 125.00);
-
-        */
         $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
 
         $email = $notification->mailConfirmation($book);
