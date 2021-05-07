@@ -14,18 +14,18 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *     itemOperations={"get"},
  *     mercure="true"
  * )
- * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
+ * <<ORM\Entity("App\Repository\MeetingRepository")>>
  * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
  */
 class Meeting
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      * @Groups({"meeting:read"})
      */
-    <<ORM\Column("integer")>>
+ 
     private ?int $id = null;
 
     public function __toString(): string
@@ -34,24 +34,24 @@ class Meeting
     }
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      * @Groups({"meeting:read"})
      */
-    <<ORM\Column("string", 255)>>
+    
     private ?string $label;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="meetings")
-     * @ORM\JoinColumn(nullable=false)
+     * <<ORM\ManyToOne("App\Entity\Room", "meetings")>>
+     * <<ORM\JoinColumn(false)>>
      * @Groups({"meeting:read"})
      */
    
     private ?Room $room;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" = 1})
+     * <<ORM\Column("boolean", options={"default" = 1})>>
      */
-    <<ORM\Column("boolean")>>
+   
     private ?bool $isActive;
 
     /**

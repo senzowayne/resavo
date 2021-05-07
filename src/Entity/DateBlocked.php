@@ -11,34 +11,34 @@ use Doctrine\ORM\Mapping as ORM;
  *     collectionOperations={"get"},
  *     itemOperations={}
  * )
- * @ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")
+ * <<ORM\Entity("App\Repository\DateBlockedRepository")>>
  */
 class DateBlocked
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      */
-    <<ORM\Column("integer")>>
+    
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      */
-    <<ORM\Column("string", 255)>>
+    
     private ?string $cause;
 
     /**
-     * @ORM\Column(type="date")
+     * <<ORM\Column("date")>>
      */
-    <<ORM\Column("date")>>
+    
     private ?DateTimeInterface $start;
 
     /**
-     * @ORM\Column(type="date")
+     * <<ORM\Column("date")>>
      */
-    <<ORM\Column("date")>>
+    
     private ?DateTimeInterface $end;
 
     public function getId(): ?int

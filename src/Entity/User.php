@@ -20,28 +20,28 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      */
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
     private ?string $name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
     private ?string $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255, unique = true)
+     * <<ORM\Column("string", 255, true)>>
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      * @Assert\NotBlank
      * @Assert\Email()
@@ -55,12 +55,12 @@ class User implements UserInterface
     public ?string $confirm_email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      */
     private ?string $avatar;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
@@ -72,28 +72,28 @@ class User implements UserInterface
     public ?string $confirm_hash;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
+     * <<ORM\OneToMany("App\Entity\Booking", "user")>>
      */
     private Collection $bookings;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
+     * <<ORM\OneToMany("App\Entity\Paypal", "user", cascade={"persist"})>>
      */
     private Collection $payments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
+     * <<ORM\ManyToMany("App\Entity\Role", "users")>>
      */
     private Collection $userRoles;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * <<ORM\Column("string", true)>>
      * @Groups({"resa:read"})
      */
     private ?string $number;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      */
     private ?string $googleId;
 

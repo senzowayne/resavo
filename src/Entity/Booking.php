@@ -32,88 +32,89 @@ use App\Controller\AvailableBookingController;
  *     itemOperations={"get"},
  *     mercure="true"
  * )
- * @ORM\HasLifecycleCallbacks()
+ * <<ORM\HasLifecycleCallbacks()>>
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
- * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
+ * <<ORM\Entity(repositoryClass="App\Repository\BookingRepository")>>
  * @ApiFilter(DateFilter::class, properties={"bookingDate"})
  * @ApiFilter(SearchFilter::class, properties={ "room": "exact"})
  */
 class Booking
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      */
-    <<ORM\Column("integer")>>
+    
     private ?int $id = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
-     * @ORM\JoinColumn(nullable=false)
+     * <<ORM\ManyToOne("App\Entity\User", "bookings")>>
+     * <<ORM\JoinColumn(false)>>
      */
     private ?UserInterface $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
-     * @ORM\JoinColumn(nullable=false)
+     * <<ORM\ManyToOne("App\Entity\Room", "bookings")>>
+     * <<ORM\JoinColumn(false)>>
      * @Groups({"resa:read","available:write"})
      */
     private ?Room $room;
 
     /**
-     * @ORM\Column(type="datetime")
+     * <<ORM\Column("datetime")>>
      */
+    
     private ?DateTimeInterface $createAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
-     * @ORM\JoinColumn(nullable=false)
+     * <<ORM\ManyToOne("App\Entity\Meeting")>>
+     * <<ORM\JoinColumn(false)>>
      * @Groups({"resa:read","available:write"})
      */
   
     private ?Meeting $meeting;
 
     /**
-     * @ORM\Column(type="date")
+     * <<ORM\Column("date")>>
      * @Groups({"resa:read","available:write"})
      */
-    <<ORM\Column("date")>>
+    
     private ?DateTimeInterface $bookingDate;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * <<ORM\Column("integer", true)>>
      * @Assert\NotBlank()
      */
-    <<ORM\Column("integer", true)>>
+    
     private ?int $nbPerson;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      * @Assert\NotBlank()
      */
-    <<ORM\Column("string", 255, true)>>
+    
     private ?string $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
+     * <<ORM\OneToOne("App\Entity\Paypal", "booking", cascade={"persist"})>>
+     * <<ORM\JoinColumn(true)>>
      */
     private ?Paypal $payment;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      * @Assert\Regex("/^\w+/")
      */
-    <<ORM\Column("string", 255, true)>>
+    
     private ?string $notices;
 
 
     /**
-     * @ORM\Column(type="string")
+     * <<ORM\Column("string")>>
      */
-    <<ORM\Column("string")>>
+
     private ?string $total;
 
 
@@ -157,7 +158,7 @@ class Booking
     }
 
     /**
-     * @ORM\PrePersist
+     * <<ORM\PrePersist>>
      */
     public function setCreateAt(): self
     {

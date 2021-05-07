@@ -15,60 +15,60 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Paypal
 {
     /**
-      * @ORM\Id()
-      * @ORM\GeneratedValue()
-      * @ORM\Column(type="integer")
+      * <<@ORM\Id()>>
+      * <<@ORM\GeneratedValue()>>
+      * <<ORM\Column("integer")>>
       */
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      */
     protected ?string $payment_id;
 
     /**
-     * @ORM\Column(type="text")
+     * <<ORM\Column("text")>>
      */
     protected ?string $payment_status;
 
     /**
-     * @ORM\Column(type="float")
+     * <<ORM\Column("float")>>
      */
     protected ?float $payment_amount;
 
     /**
-     * @ORM\Column(type="text")
+     * <<ORM\Column("text")>>
      */
     protected ?string $payment_currency;
 
     /**
-     * @ORM\Column(type="datetime")
+     * <<ORM\Column("datetime")>>
      */
     protected ?DateTime $payment_date;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column("text", true)>>
      */
     protected ?string $payer_email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments")
-     * @ORM\JoinColumn(nullable=false)
+     * <<ORM\ManyToOne("App\Entity\User", "payments")>>
+     * <<ORM\JoinColumn(false)>>
      */
     private ?UserInterface $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment")
+     * <<ORM\OneToOne("App\Entity\Booking", "payment")>>
      */
     private ?Booking $booking;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * <<ORM\Column("boolean", true)>>
      */
     private ?bool $capture;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * <<ORM\Column("string", 255, true)>>
      */
     private ?string $captureId;
 
@@ -139,7 +139,7 @@ class Paypal
     }
 
     /**
-     * @ORM\PrePersist
+     * <<ORM\PrePersist>>
      * @throws Exception
      */
     public function setPaymentDate(): self
