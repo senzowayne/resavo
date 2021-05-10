@@ -52,28 +52,6 @@
         },
         mounted() {
             this.getMeeting();
-            // mercure hub
-            let hubUrl = this.hubLink ?? "http://localhost:3000/.well-known/mercure"
-            const url = new URL(`${hubUrl}?topic=${document.location.origin}/api/meetings/{id}`);
-            const eventSource = new EventSource(url);
-            // The callback will be called every time an update is published
-            eventSource.onmessage = (e) => {
-                let data = JSON.parse(e.data)
-                const meetings = [...this.meetings]
-                meetings.forEach(function (m, index) {
-                    if (m[0].id === data.id) {
-                       meetings[index][0] = data
-                    }
-                })
-                this.refresh = false
-                this.meetings = meetings
-                this.refresh = true
-            }
-            window.addEventListener('beforeunload', function () {
-                if (eventSource !== null) {
-                    eventSource.close()
-                }
-            })
         },
         watch: {
             room: function () {
@@ -97,7 +75,7 @@
                 if (this.room !== null && this.date !== null) {
                     axios.get(`/api/meetings?room=${this.room}&date=${this.date}`)
                         .then(({data, headers}) => {
-                            this.hubLink = headers['link'].match(/<([^>]+)>;\s+rel="[^"]*mercure[^"]*"/)[1].replace('mercure/', 'localhost:3000/')
+                            //this.hubLink = headers['link'].match(/<([^>]+)>;\s+rel="[^"]*mercure[^"]*"/)[1].replace('mercure/', 'localhost:3000/')
                             this.meetings = data['hydra:member'];
                             if (this.meetings.length === 0) {
                                 this.$refs.reservation_room.options[val - 1].disabled = true
