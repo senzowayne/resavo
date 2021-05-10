@@ -8,9 +8,9 @@ use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="paiements")
- * @ORM\Entity(repositoryClass="App\Repository\PaypalRepository")
+ * <<ORM\HasLifecycleCallbacks()>>
+ * <<ORM\Table("paiements")>>
+ * <<ORM\Entity("App\Repository\PaypalRepository")>>
  */
 class Paypal
 {
