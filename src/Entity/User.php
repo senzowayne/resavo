@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * <<ORM\Entity("App\Repository\UserRepository")>>
  * @UniqueEntity(
  *     fields="email",
  *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
