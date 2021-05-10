@@ -10,13 +10,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * <<ORM\HasLifecycleCallbacks()>>
  * <<ORM\Table("paiements")>>
- * <<ORM\Entity("App\Repository\PaypalRepository")>>
+ * <<ORM\Entity("App\Repository\PaypalRepository")>>git
  */
 class Paypal
 {
     /**
-      * <<@ORM\Id()>>
-      * <<@ORM\GeneratedValue()>>
+      * <<ORM\Id()>>
+      * <<ORM\GeneratedValue()>>
       * <<ORM\Column("integer")>>
       */
     private ?int $id = null;
@@ -47,7 +47,7 @@ class Paypal
     protected ?DateTime $payment_date;
 
     /**
-     * @ORM\Column("text", true)>>
+     * <<ORM\Column("text", true)>>
      */
     protected ?string $payer_email;
 
