@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Form\BookingType;
 use App\Manager\UserManager;
 use App\Manager\BookingManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -75,14 +76,21 @@ class UserController extends AbstractController
 
     /**
      * @Route("/edit/{booking}", name="edit", methods={"GET", "POST"})
-     * @return Response
+     * 
      */
-    public function edit(Booking $booking): Response
+    public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request)
     {
-        /** @var User $user */
-        $user = $this->getUser();
+        
         // $data = $this->bookingManager->editBooking($user, $booking);
         $form = $this->createForm(BookingType::class, $booking);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $booking = $form->getData();
+            $entityManager->flush();
+            return $this->redirectToRoute('historique');
+        }
 
         return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
     }
