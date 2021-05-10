@@ -38,7 +38,7 @@ class BookingType extends AbstractType
                 'widget' => 'choice',
                 'html5' => false, 
                 'format' => 'dd-MM-yyyy',
-                'data' => new \DateTime()]);
+                'data' => $bookingDate]);
                     }
                 })
 
