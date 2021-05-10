@@ -76,12 +76,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/edit/{booking}", name="edit", methods={"GET", "POST"})
-     * 
      */
     public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request)
     {
-        
-        // $data = $this->bookingManager->editBooking($user, $booking);
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
 

@@ -30,7 +30,6 @@ class BookingType extends AbstractType
   
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
                 $form = $event->getForm();
-
                 $booking = $event->getData();
                 $bookingDate = $booking->getBookingDate();
                 if ($bookingDate != null)  {
@@ -40,14 +39,13 @@ class BookingType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'data' => $bookingDate]);
                     }
-                })
+            })
 
             ->add('notices', TextareaType::class, [
                 'required' => false, 
                 'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser']
             ])
             
-
             ->add('meeting', EntityType::class, [
                 'class' => Meeting::class,
                 'choice_label' => 'label',
