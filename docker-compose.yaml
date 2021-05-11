@@ -6,7 +6,7 @@ services:
       - database
     environment:
       MYSQL_ROOT_PASSWORD: root
-      PMA_HOST: db
+      PMA_HOST: database
     ports:
       - 8080:80
   database:
