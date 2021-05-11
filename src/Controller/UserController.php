@@ -75,16 +75,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{booking}", name="edit", methods={"GET", "POST"})
+     * @Route("/edit_booking/{booking}", name="edit_booking", methods={"GET", "POST"})
+     * @return Response
      */
-    public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request)
+    public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request) : Response
     {
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $booking = $form->getData();
             $entityManager->flush();
             return $this->redirectToRoute('historique');
         }

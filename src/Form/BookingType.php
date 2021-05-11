@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Booking;
 use App\Entity\Room;
 use App\Entity\Meeting;
+use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,6 +26,7 @@ class BookingType extends AbstractType
         $builder
             ->add('room', EntityType::class, [
                 'class' => Room::class,
+                'label' => 'Salle',
                 'choice_label' => 'name',
             ])
   
@@ -32,22 +34,26 @@ class BookingType extends AbstractType
                 $form = $event->getForm();
                 $booking = $event->getData();
                 $bookingDate = $booking->getBookingDate();
+                $today = new DateTime('now');
                 if ($bookingDate != null)  {
                     $form->add('booking_date', DateType::class, [
-                'widget' => 'choice',
-                'html5' => false, 
-                'format' => 'dd-MM-yyyy',
-                'data' => $bookingDate]);
+                'widget' => 'single_text',
+                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['min' => $today->format('Y-m-d')],
+                'label' => 'Date de la réservation'
+                ]);
                     }
             })
 
             ->add('notices', TextareaType::class, [
                 'required' => false, 
-                'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser']
+                'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser'],
+                'label' => 'Notes'
             ])
             
             ->add('meeting', EntityType::class, [
                 'class' => Meeting::class,
+                'label' => 'Créneau',
                 'choice_label' => 'label',
             ]);
     }

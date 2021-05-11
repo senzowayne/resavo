@@ -176,7 +176,7 @@ class Booking
         return $this->bookingDate;
     }
 
-    public function setBookingDate(DateTime $bookingDate): self
+    public function setBookingDate(DateTimeInterface $bookingDate): self
     {
         $this->bookingDate = $bookingDate;
 
