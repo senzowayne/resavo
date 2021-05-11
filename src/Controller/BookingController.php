@@ -20,14 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-use App\Controller\NotificationControllerTest;
-use App\Entity\Meeting;
-use App\Entity\Paypal;
-use App\Entity\Room;
-use App\Controller\NotificationController;
-use App\Tests\Controller\NotificationControllerTest as ControllerNotificationControllerTest;
-use DateTime;
-
 /**
  * @Route("/reservation")
  */
