@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     collectionOperations={"get"},
  *     itemOperations={}
  * )
- * <<ORM\Entity("App\Repository\DateBlockedRepository")>>
+ * <<ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")>>
  */
 class DateBlocked
 {

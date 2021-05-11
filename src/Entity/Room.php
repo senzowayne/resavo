@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  *     itemOperations={"get"}
  * )
- * <<ORM\Entity("App\Repository\RoomRepository")>>
+ * <<ORM\Entity(repositoryClass="App\Repository\RoomRepository")>>
  */
 class Room
 {
@@ -45,12 +45,12 @@ class Room
     private ?int $price;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Booking", "room")>>
+     * <<ORM\OneToMany(repositoryClass="App\Entity\Booking", "room")>>
      */
     private Collection $bookings;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Meeting", "room")>>
+     * <<ORM\OneToMany(repositoryClass="App\Entity\Meeting", "room")>>
      */
     private Collection $meetings;
 

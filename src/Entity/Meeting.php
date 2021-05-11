@@ -14,7 +14,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *     itemOperations={"get"},
  *     mercure="true"
  * )
- * <<ORM\Entity("App\Repository\MeetingRepository")>>
+ * <<ORM\Entity(repositoryClass="App\Repository\MeetingRepository")>>
  * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
  */
 class Meeting
@@ -41,7 +41,7 @@ class Meeting
     private ?string $label;
 
     /**
-     * <<ORM\ManyToOne("App\Entity\Room", "meetings")>>
+     * <<ORM\ManyToOne(repositoryClass="App\Entity\Room", "meetings")>>
      * <<ORM\JoinColumn(false)>>
      * @Groups({"meeting:read"})
      */

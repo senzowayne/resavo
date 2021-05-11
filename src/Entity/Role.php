@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * <<ORM\Entity(repositoryClass="App\Repository\RoleRepository")>>
  */
@@ -24,7 +25,7 @@ class Role
     private ?string $title;
 
     /**
-     * <<ORM\ManyToMany("App\Entity\User", "userRoles")>>
+     * <<ORM\ManyToMany(repositoryClass="App\Entity\User", "userRoles")>>
      */
     private Collection $users;
 

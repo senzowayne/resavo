@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * <<ORM\HasLifecycleCallbacks()>>
  * <<ORM\Table("paiements")>>
- * <<ORM\Entity("App\Repository\PaypalRepository")>>git
+ * <<ORM\Entity(repositoryClass="App\Repository\PaypalRepository")>>git
  */
 class Paypal
 {

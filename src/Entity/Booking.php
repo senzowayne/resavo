@@ -50,13 +50,13 @@ class Booking
     private ?int $id = null;
 
     /**
-     * <<ORM\ManyToOne("App\Entity\User", "bookings")>>
+     * <<ORM\ManyToOne(repositoryClass="App\Entity\User", "bookings")>>
      * <<ORM\JoinColumn(false)>>
      */
     private ?UserInterface $user;
 
     /**
-     * <<ORM\ManyToOne("App\Entity\Room", "bookings")>>
+     * <<ORM\ManyToOne(repositoryClass="App\Entity\Room", "bookings")>>
      * <<ORM\JoinColumn(false)>>
      * @Groups({"resa:read","available:write"})
      */
@@ -69,7 +69,7 @@ class Booking
     private ?DateTimeInterface $createAt;
 
     /**
-     * <<ORM\ManyToOne("App\Entity\Meeting")>>
+     * <<ORM\ManyToOne(repositoryClass="App\Entity\Meeting")>>
      * <<ORM\JoinColumn(false)>>
      * @Groups({"resa:read","available:write"})
      */
@@ -98,7 +98,7 @@ class Booking
     private ?string $name;
 
     /**
-     * <<ORM\OneToOne("App\Entity\Paypal", "booking", cascade={"persist"})>>
+     * <<ORM\OneToOne(repositoryClass="App\Entity\Paypal", "booking", cascade={"persist"})>>
      * <<ORM\JoinColumn(true)>>
      */
     private ?Paypal $payment;

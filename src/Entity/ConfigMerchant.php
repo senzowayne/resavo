@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * <<ORM\Entity("App\Repository\ConfigRepository")>>
+ * <<ORM\Entity(repositoryClass="App\Repository\ConfigRepository")>>
  * @ApiResource(attributes={"normalization_context"={"groups"={"config:read"}}},
  *     collectionOperations={"get"},
  *     itemOperations={"get"}
