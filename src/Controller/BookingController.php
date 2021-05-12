@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+// Exemple de syntaxe pour les routes #[Route("/api/posts/{id}", methods: ["GET", "HEAD"])]  #[Route("/reservation")]
 /**
  * @Route("/reservation")
  */
