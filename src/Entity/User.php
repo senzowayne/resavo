@@ -10,9 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
 /**
- * <<ORM\Entity(repositoryClass="App\Repository\UserRepository")>>
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
  *     fields="email",
  *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
@@ -21,28 +20,28 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     /**
-     * <<ORM\Id()>>
-     * <<ORM\GeneratedValue()>>
-     * <<ORM\Column("integer")>>
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
     private ?int $id = null;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
     private ?string $name;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
     private ?string $firstName;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, unique = true)
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      * @Assert\NotBlank
      * @Assert\Email()
@@ -56,12 +55,12 @@ class User implements UserInterface
     public ?string $confirm_email;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $avatar;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
@@ -73,28 +72,28 @@ class User implements UserInterface
     public ?string $confirm_hash;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Booking", "user")>>
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
     private Collection $bookings;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Paypal", "user", cascade={"persist"})>>
+     * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
     private Collection $payments;
 
     /**
-     * <<ORM\ManyToMany("App\Entity\Role", "users")>>
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
      */
     private Collection $userRoles;
 
     /**
-     * <<ORM\Column("string", true)>>
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
     private ?string $number;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $googleId;
 

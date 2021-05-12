@@ -8,67 +8,67 @@ use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * <<ORM\HasLifecycleCallbacks()>>
- * <<ORM\Table("paiements")>>
- * <<ORM\Entity(repositoryClass="App\Repository\PaypalRepository")>>git
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(name="paiements")
+ * @ORM\Entity(repositoryClass="App\Repository\PaypalRepository")
  */
 class Paypal
 {
     /**
-      * <<ORM\Id()>>
-      * <<ORM\GeneratedValue()>>
-      * <<ORM\Column("integer")>>
+      * @ORM\Id()
+      * @ORM\GeneratedValue()
+      * @ORM\Column(type="integer")
       */
     private ?int $id = null;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      */
     protected ?string $payment_id;
 
     /**
-     * <<ORM\Column("text")>>
+     * @ORM\Column(type="text")
      */
     protected ?string $payment_status;
 
     /**
-     * <<ORM\Column("float")>>
+     * @ORM\Column(type="float")
      */
     protected ?float $payment_amount;
 
     /**
-     * <<ORM\Column("text")>>
+     * @ORM\Column(type="text")
      */
     protected ?string $payment_currency;
 
     /**
-     * <<ORM\Column("datetime")>>
+     * @ORM\Column(type="datetime")
      */
     protected ?DateTime $payment_date;
 
     /**
-     * <<ORM\Column("text", true)>>
+     * @ORM\Column(type="text", nullable=true)
      */
     protected ?string $payer_email;
 
     /**
-     * <<ORM\ManyToOne("App\Entity\User", "payments")>>
-     * <<ORM\JoinColumn(false)>>
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments")
+     * @ORM\JoinColumn(nullable=false)
      */
     private ?UserInterface $user;
 
     /**
-     * <<ORM\OneToOne("App\Entity\Booking", "payment")>>
+     * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment")
      */
     private ?Booking $booking;
 
     /**
-     * <<ORM\Column("boolean", true)>>
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private ?bool $capture;
 
     /**
-     * <<ORM\Column("string", 255, true)>>
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $captureId;
 
@@ -139,7 +139,7 @@ class Paypal
     }
 
     /**
-     * <<ORM\PrePersist>>
+     * @ORM\PrePersist
      * @throws Exception
      */
     public function setPaymentDate(): self
