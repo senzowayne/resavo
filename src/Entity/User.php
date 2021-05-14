@@ -17,34 +17,31 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
  * )
  */
-
-// Exemple de syntaxe pour les ORM de données #[ORM\Column(name: 'email', type: 'VARCHAR', length: 255)]
-// Création d'attribut syntaxe #[Attribute(Attribute::TARGET_METHOD|Attribute::TARGET_CLASS)] mettre la méthode et la classe concernéé.
 class User implements UserInterface
 {
-    
-      #[ORM\Id()]
-      #[ORM\GeneratedValue()]
-      #[ORM\Column(type: 'integer')]
-     
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
-    
-      #[ORM\Column(type: 'string', length: 255)]
-      #[Assert\NotBlank]
-      #[Groups(["resa:read"])]
-     
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Groups({"resa:read"})
+     */
     private ?string $name;
 
     /**
-     * #[ORM\Column(type: "string", length: 255, nullable: true)]
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
     private ?string $firstName;
 
     /**
-     * #[ORM\Column(type: "string", length: 255, unique: true)]
+     * @ORM\Column(type="string", length=255, unique = true)
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      * @Assert\NotBlank
      * @Assert\Email()
@@ -58,12 +55,12 @@ class User implements UserInterface
     public ?string $confirm_email;
 
     /**
-     * #[ORM\Column(type: "string", length: 255, nullable: true)]
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $avatar;
 
     /**
-     * #[ORM\Column(type: "string", length: 255, nullable: true)]
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
@@ -75,28 +72,28 @@ class User implements UserInterface
     public ?string $confirm_hash;
 
     /**
-     * #[ORM\OneToMany(targetEntity: "App\Entity\Booking", mappedBy: "user")]
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
     private Collection $bookings;
 
     /**
-     * #[ORM\OneToMany(targetEntity: "App\Entity\Paypal", mappedBy: "user", cascade: {"persist"})]
+     * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
     private Collection $payments;
 
     /**
-     * #[ORM\ManyToMany(targetEntity: "App\Entity\Role", mappedBy: "users")]
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
      */
     private Collection $userRoles;
 
     /**
-     * [ORM\Column(type: "string", nullable: true)]
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
     private ?string $number;
 
     /**
-     * #[ORM\Column(type: "string", length: 255, nullable: true)]
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $googleId;
 
