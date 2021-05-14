@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Form\BookingType;
 use App\Manager\UserManager;
 use App\Manager\BookingManager;
+use App\Controller\CheckBookingController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,17 +79,24 @@ class UserController extends AbstractController
      * @Route("/edit_booking/{booking}", name="edit_booking", methods={"GET", "POST"})
      * @return Response
      */
-    public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request) : Response
+    public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request): Response
     {
-        $form = $this->createForm(BookingType::class, $booking);
-        $form->handleRequest($request);
+            $form = $this->createForm(BookingType::class, $booking);
+            $form->handleRequest($request);
+            $bookingDate = $booking->getBookingDate();
 
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $entityManager->flush();
-            return $this->redirectToRoute('historique');
-        }
-
+    if((new CheckBookingController)->verifyDate($bookingDate) == TRUE)
+    {
+            if($form->isSubmitted() && $form->isValid())
+            {   
+                $entityManager->flush();
+                return $this->redirectToRoute('historique');
+            }
+    }
+    else{
+        //bookingDate < today message erreur a faire
+        throw new \Exception('Mauvaise date');
+    }
         return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
     }
 }
