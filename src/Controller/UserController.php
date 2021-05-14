@@ -12,9 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * @Route("/user")
- */
+
+  #[Route("/user")]
+ 
 class UserController extends AbstractController
 {
     private UserManager $userManager;
@@ -25,9 +25,8 @@ class UserController extends AbstractController
         $this->userManager = $userManager;
         $this->bookingManager = $bookingManager;
     }
-
-    /**
-     * @Route("/new", name="user_new", methods={"GET","POST"})
+       #[Route("/new"/"user_new", methods: "GET", methods: "POST")]
+    /** 
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return Response
@@ -71,3 +70,27 @@ class UserController extends AbstractController
         return $this->render('user/historique.html.twig', compact('data'));
     }
 }
+
+
+/*
+Exemple de route pour la syntaxe
+#[Route('/api')]
+class HelloController
+{
+    #[Route('/hello/{name}')]
+    public function hello (string $name) {
+        return <<<HTML
+        Hello {$name}
+        <form method="post" action="/api/goodbye/{$name}">
+          <button>Envoyer</button>
+        </form>
+        HTML;
+    }
+    #[Route('/goodbye/{name}', method: 'post')]
+    public function goodbye (Response $response, string $name) {
+        $response->getBody()->write("Goodbye, $name");
+        return $response;
+    }
+}
+
+*/
