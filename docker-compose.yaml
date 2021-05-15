@@ -21,7 +21,6 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     ports:
       - 3306:3306
-
   composer:
     image: composer:latest
     command: install
@@ -32,3 +31,10 @@ services:
     volumes:
       - .:/app:cached
     working_dir: /app
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # interface port
