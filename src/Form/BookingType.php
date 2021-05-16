@@ -39,7 +39,6 @@ class BookingType extends AbstractType
                     $form->add('booking_date', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => ['class' => 'js-datepicker'],
-                'attr' => ['min' => $today->format('Y-m-d')],
                 'label' => 'Date de la réservation'
                 ]);
                     }

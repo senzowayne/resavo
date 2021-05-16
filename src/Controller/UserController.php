@@ -85,7 +85,7 @@ class UserController extends AbstractController
             $form->handleRequest($request);
             $bookingDate = $booking->getBookingDate();
 
-    if((new CheckBookingController)->verifyDate($bookingDate) == TRUE)
+    if(CheckBookingController::verifyDate($bookingDate) == TRUE)
     {
             if($form->isSubmitted() && $form->isValid())
             {   
@@ -94,8 +94,7 @@ class UserController extends AbstractController
             }
     }
     else{
-        //bookingDate < today message erreur a faire
-        throw new \Exception('Mauvaise date');
+        echo "<script> alert('Veuillez saisir une date supérieure à aujourd\'hui.') </script>";
     }
         return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
     }
