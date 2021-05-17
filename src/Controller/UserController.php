@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
+use Symfony\Loader\AnnotationClassLoader;
 
   #[Route("/user")]
  
@@ -25,7 +25,9 @@ class UserController extends AbstractController
         $this->userManager = $userManager;
         $this->bookingManager = $bookingManager;
     }
-       #[Route("/new"/"user_new", methods: "GET, POST")]
+       #[Route("/new", name: "user_new", methods: ["GET", "POST"])]
+
+       // url nom et méthode 
     /** 
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder

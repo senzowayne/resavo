@@ -15,14 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MeetingController extends AbstractController
 {
 
- //   #[Route("/reservation/verif/dispo", name: "dispo", methods: "GET")]
-    /**
-     * @Route("/reservation/verif/dispo", name="dispo", methods={"GET"})
-     * @param Request $request
-     * @param EntityManagerInterface $em
-     * @return JsonResponse
-     * @throws \Exception
-     */
+#[Route("/reservation/verif/dispo", name: "dispo", methods: ["GET"])]
     public function availabilityCheck(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $date = $request->query->get('date');
