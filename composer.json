@@ -13,6 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "easycorp/easyadmin-bundle": "^3.2",
+        "google/apiclient": "2.0",
         "knpuniversity/oauth2-client-bundle": "^2.5",
         "league/oauth2-google": "^3.0",
         "nelmio/cors-bundle": "^2.1",
