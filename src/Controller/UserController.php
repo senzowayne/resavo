@@ -25,7 +25,7 @@ class UserController extends AbstractController
         $this->userManager = $userManager;
         $this->bookingManager = $bookingManager;
     }
-       #[Route("/new"/"user_new", methods: "GET", methods: "POST")]
+       #[Route("/new"/"user_new", methods: "GET, POST")]
     /** 
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
@@ -56,9 +56,8 @@ class UserController extends AbstractController
 
         return $this->render('user/new.html.twig', ['form' => $form->createView()]);
     }
-
+        #[Route("/historique", name: "historique")]
     /**
-     * @Route("/historique", name="historique")
      * @return Response
      */
     public function history(): Response

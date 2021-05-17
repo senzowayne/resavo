@@ -26,6 +26,8 @@ class SecurityController extends AbstractController
         $this->userManager = $userManager;
     }
 
+
+   // #[Route("/login", name: "app_login")]
     /**
      * @Route("/login", name="app_login")
      * @param AuthenticationUtils $authenticationUtils
@@ -39,6 +41,7 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+   // #[Route("/deconnexion", name: "logout")]
     /**
      * @Route("/deconnexion", name="logout")
      */
@@ -46,6 +49,8 @@ class SecurityController extends AbstractController
     {
     }
 
+
+  //  #[Route("/user/update-password", name: "update_password")]
     /**
      * Permet de modifier le mot de passe
      * @Route("/user/update-password", name="update_password")
@@ -86,6 +91,8 @@ class SecurityController extends AbstractController
         return $this->render('user/update_password.html.twig', ['form' => $form->createView()]);
     }
 
+
+    // #[Route("/user/connect/", name: "connect_social")]
     /**
      * @Route("/user/connect/", name="connect_social")
      * @param ClientRegistry $clientRegistry
@@ -99,6 +106,8 @@ class SecurityController extends AbstractController
         return $client->redirect(['profile', 'email']);
     }
 
+
+   // #[Route("/user/connect/google/check", name: "connect_google_check")]
     /**
      * @Route("/user/connect/google/check", name="connect_google_check")
      */

@@ -20,9 +20,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 // Exemple de syntaxe pour les routes #[Route("/api/posts/{id}", methods: ["GET", "HEAD"])]  #[Route("/reservation")]
-/**
- * @Route("/reservation")
- */
+
+ #[Route("/reservation")]
+ 
 class BookingController extends AbstractController
 {
     private EntityManagerInterface $manager;
@@ -43,6 +43,8 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
+  //  #[Route("/reserve", name: "new_reservation",  methods: "POST, GET")]
+   // #[Route("/reserve/{salle}", name: "new_reservation_salle",  methods: "POST, GET")]
     /**
      * @Route("/reserve", name="new_reservation",  methods={"POST", "GET"})
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
@@ -55,6 +57,7 @@ class BookingController extends AbstractController
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
     }
 
+  //  #[Route("/before-reservation", name: "before_reservation")]
     /**
      * @Route("/before-reservation", name="before_reservation")
      */
@@ -63,6 +66,7 @@ class BookingController extends AbstractController
         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 
+   // #[Route("/paypal-transaction-complete", name: "pay", methods: "POST")]
     /**
      * Réponse de l'API PayPal & entré en bdd des informations d'autorisation du paiement
      * @Route("/paypal-transaction-complete", name="pay", methods={"POST"})
@@ -81,6 +85,7 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
+   // #[Route("/api-reserve", name: "reserve", methods: "POST")]
     /**
      * @Route("/api-reserve", name="reserve", methods={"POST"})
      */
@@ -128,7 +133,8 @@ class BookingController extends AbstractController
         return $this->json($msg);
     }
 
-
+    
+   // #[Route("/resa", name: "resa_day")]
     /**
      * @Route("/resa", name="resa_day")
      * @param Request $request
@@ -148,6 +154,8 @@ class BookingController extends AbstractController
         ]);
     }
 
+
+    // #[Route("/resume", name: "resume")]
     /**
      * @Route("/resume", name="resume")
      * @Security("is_granted('ROLE_USER')")

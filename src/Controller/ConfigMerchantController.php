@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ConfigMerchantController extends AbstractController
 {
+
+   // #[Route("/config", name: "config_merchant")]
     /**
      * @Route("/config", name="config_merchant")
      * @param Request $request
