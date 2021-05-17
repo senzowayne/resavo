@@ -40,12 +40,12 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-#[Route("/deconnexion", name: "logout")]
+    #[Route("/deconnexion", name: "logout")]
     public function logout(): void
     {
     }
 
-#[Route("/user/update-password", name: "update_password")]
+    #[Route("/user/update-password", name: "update_password")]
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $newPassword = new PasswordUpdate();
@@ -80,7 +80,7 @@ class SecurityController extends AbstractController
     }
 
 
-#[Route("/user/connect/", name: "connect_social")]
+    #[Route("/user/connect/", name: "connect_social")]
     public function connect(ClientRegistry $clientRegistry): RedirectResponse
     {
         /** @var GoogleClient $client */
@@ -90,7 +90,7 @@ class SecurityController extends AbstractController
     }
 
 
-#[Route("/user/connect/google/check", name: "connect_google_check")]
+    #[Route("/user/connect/google/check", name: "connect_google_check")]
     public function connectCheckAction(): RedirectResponse
     {
         return $this->redirectToRoute('your_homepage_route');

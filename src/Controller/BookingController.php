@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 // Exemple de syntaxe pour les routes #[Route("/api/posts/{id}", methods: ["GET", "HEAD"])]  #[Route("/reservation")]
 
- #[Route("/reservation")]
+#[Route("/reservation")]
  
 class BookingController extends AbstractController
 {
@@ -43,7 +43,7 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
-#[Route("/reserve", name: "new_reservation",  methods: ["POST", "GET"])]
+    #[Route("/reserve", name: "new_reservation",  methods: ["POST", "GET"])]
     public function index(): Response
     {
         $paypalClient = $this->paypalManager->generateSandboxLink();
@@ -51,13 +51,13 @@ class BookingController extends AbstractController
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
     }
 
-#[Route("/before-reservation", name: "before_reservation")]
+    #[Route("/before-reservation", name: "before_reservation")]
     public function reservationPage(): Response
     {
         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 
-#[Route("/paypal-transaction-complete", name: "pay", methods: ["POST"])]
+    #[Route("/paypal-transaction-complete", name: "pay", methods: ["POST"])]
     public function authorizePayment(Request $request): JsonResponse
     {
         $data = $this->paypalManager->requestAutorize($request);
@@ -70,7 +70,7 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-#[Route("/api-reserve", name: "reserve", methods: ["POST"])]
+    #[Route("/api-reserve", name: "reserve", methods: ["POST"])]
     public function reserve(Request $request, MessageBusInterface $bus): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
@@ -116,7 +116,7 @@ class BookingController extends AbstractController
     }
 
     
-#[Route("/resa", name: "resa_day")]
+    #[Route("/resa", name: "resa_day")]
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
@@ -132,7 +132,7 @@ class BookingController extends AbstractController
     }
 
 
-#[Route("/resume", name: "resume")]
+    #[Route("/resume", name: "resume")]
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {

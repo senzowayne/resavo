@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StaticController extends AbstractController
 {
     
-#[Route("/", name: "static")]
+    #[Route("/", name: "static")]
     public function index(): Response
     {
         return $this->render('static/index.html.twig', [

@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ConfigMerchantController extends AbstractController
 {
 
-#[Route("/config", name: "config_merchant")]
+    #[Route("/config", name: "config_merchant")]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
         $configMerchantRepo = $em->getRepository(ConfigMerchant::class);
