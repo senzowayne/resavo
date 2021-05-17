@@ -25,9 +25,9 @@ class MeetingCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $label = TextField::new('label');
-        $isActive = Field::new('isActive');
-        $room = AssociationField::new('room');
+        $label = TextField::new('label','Séance');
+        $isActive = Field::new('isActive', 'Actif / Inactif');
+        $room = AssociationField::new('room', 'Salle');
         $id = IntegerField::new('id', 'ID');
 
         if (Crud::PAGE_INDEX === $pageName) {

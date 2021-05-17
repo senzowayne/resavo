@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class BookingCrudController extends AbstractCrudController
@@ -33,18 +34,18 @@ class BookingCrudController extends AbstractCrudController
     {
         $panel1 = FormField::addPanel('Basic information');
         $name = TextField::new('name', 'ID');
-        $user = AssociationField::new('user');
+        $user = AssociationField::new('user', 'Client');
         $total = TextField::new('total');
-        $notices = TextField::new('notices');
+        $notices = TextareaField::new('notices', 'Remarques')->hideOnIndex();
         $panel2 = FormField::addPanel('Information réservation');
-        $bookingDate = DateField::new('bookingDate');
-        $room = AssociationField::new('room');
-        $meeting = AssociationField::new('meeting');
-        $nbPerson = IntegerField::new('nbPerson');
+        $bookingDate = DateField::new('bookingDate', 'Date');
+        $room = AssociationField::new('room', 'Salle');
+        $meeting = AssociationField::new('meeting', 'Séance');
+        $nbPerson = IntegerField::new('nbPerson', 'Nb Personnes');
         $id = IntegerField::new('id', 'ID');
-        $createAt = DateTimeField::new('createAt');
-        $payment = AssociationField::new('payment');
-        $userNumber = TelephoneField::new('user.number');
+        $createAt = DateTimeField::new('createAt', 'Crée le')->onlyOnDetail();
+        $payment = AssociationField::new('payment', 'Paiement');
+        $userNumber = TelephoneField::new('user.number', 'Téléphone');
 
         if (Crud::PAGE_INDEX === $pageName) {
             return [$name, $createAt, $bookingDate, $user, $room, $meeting, $nbPerson, $userNumber, $payment, $total, $notices];

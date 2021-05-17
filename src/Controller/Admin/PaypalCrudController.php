@@ -28,17 +28,17 @@ class PaypalCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $paymentId = TextField::new('payment_id');
-        $paymentStatus = TextareaField::new('payment_status');
-        $paymentAmount = NumberField::new('payment_amount');
-        $paymentCurrency = TextareaField::new('payment_currency');
-        $paymentDate = DateTimeField::new('payment_date');
-        $payerEmail = TextareaField::new('payer_email');
-        $capture = Field::new('capture');
-        $captureId = TextField::new('captureId');
-        $user = AssociationField::new('user');
-        $booking = AssociationField::new('booking');
-        $id = IntegerField::new('id', 'ID');
+        $paymentId = TextField::new('payment_id', 'ID');
+        $paymentStatus = TextareaField::new('payment_status','Statut');
+        $paymentAmount = NumberField::new('payment_amount', 'Prix');
+        $paymentCurrency = TextareaField::new('payment_currency', 'Devise');
+        $paymentDate = DateTimeField::new('payment_date', 'Crée le');
+        $payerEmail = TextareaField::new('payer_email', 'Email');
+        $capture = Field::new('capture', 'Encaissé');
+        $captureId = TextField::new('captureId', 'ID encaissement');
+        $user = AssociationField::new('user', 'Client');
+        $booking = AssociationField::new('booking', 'Reservation');
+        $id = IntegerField::new('id', 'ID')->hideOnIndex();
 
         if (Crud::PAGE_INDEX === $pageName) {
             return [$id, $paymentId, $paymentAmount, $paymentDate, $capture, $captureId, $user];

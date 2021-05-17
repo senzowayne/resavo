@@ -25,17 +25,17 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $name = TextField::new('name');
-        $firstName = TextField::new('firstName');
+        $name = TextField::new('name', 'Nom');
+        $firstName = TextField::new('firstName', 'Prénom');
         $email = TextField::new('email');
-        $number = TextField::new('number');
-        $hash = TextField::new('hash');
+        $number = TextField::new('number', 'Téléphone');
+        $hash = TextField::new('hash','Mot de passe');
         $id = IntegerField::new('id', 'ID');
         $avatar = TextField::new('avatar');
         $googleId = TextField::new('googleId');
-        $bookings = AssociationField::new('bookings');
-        $payments = AssociationField::new('payments');
-        $userRoles = AssociationField::new('userRoles');
+        $bookings = AssociationField::new('bookings', 'Réservations');
+        $payments = AssociationField::new('payments', 'Paiements');
+        $userRoles = AssociationField::new('userRoles', 'Roles');
 
         if (Crud::PAGE_INDEX === $pageName) {
             return [$name, $firstName, $email, $bookings, $number];
