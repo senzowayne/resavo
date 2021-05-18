@@ -64,11 +64,12 @@ class GoogleCalendarService
      */
     public function __construct($credentialsPath, $client_secretPath)
     {
-        $this->credentialsPath = $credentialsPath;
+        #$this->credentialsPath = $credentialsPath;
         $this->type = 'offline';
         $this->approvalPrompt = 'force';
         $this->scopes = implode(' ', [\Google_Service_Calendar::CALENDAR]);
         $this->clientSecretPath = $client_secretPath;
+        $this->redirectUri = "http://127.0.0.1:8000";
     }
 
     /**

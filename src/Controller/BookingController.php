@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\GoogleCalendarService;
-
+use DateTime;
 
 /**
  * @Route("/reservation")
@@ -53,7 +53,15 @@ class BookingController extends AbstractController
      */
     public function index(GoogleCalendarService $googleCalendarService): Response
     {
-        dd($googleCalendarService->getClient());
+        $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
+        $tomorrow  = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
+        $lastmonth = mktime(0, 0, 0, date("m") - 1, date("d"),   date("Y"));
+        $googleCalendarService->addEvent("booking", new DateTime(), new DateTime(), null, "test", "test", "Paris", null, true);
+
+        dd($googleCalendarService->listCalendars());
+        $calendar =  $googleCalendarService->getCalendarService()->calendarList;
+
+
 
         $paypalClient = $this->paypalManager->generateSandboxLink();
 
