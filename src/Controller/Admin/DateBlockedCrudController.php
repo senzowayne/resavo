@@ -24,9 +24,9 @@ class DateBlockedCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $cause = TextField::new('cause');
-        $start = DateField::new('start');
-        $end = DateField::new('end');
+        $cause = TextField::new('cause', 'Raison');
+        $start = DateField::new('start', 'Debut');
+        $end = DateField::new('end', 'Fin');
         $id = IntegerField::new('id', 'ID');
 
         if (Crud::PAGE_INDEX === $pageName) {
