@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
+
+
 /**
  * @ApiResource(
  *     collectionOperations={"get"},
@@ -13,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")
  */
+
+// #[ApiResource(routePrefix: '/DateBlocked')]
 class DateBlocked
 {
     /**

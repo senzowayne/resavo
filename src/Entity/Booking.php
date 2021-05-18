@@ -15,6 +15,23 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
 
+#[ApiResource(attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
+     collectionOperations: [
+         'get',
+         'available',
+             'denormalization_context'=>['groups'=>['available:write']],
+             'method' =>'post',
+             'path' =>'/booking/available',
+             'deserialize' => 'false',
+             'controller' => AvailableBookingController::class,
+             'status' => '200',
+            ],
+            itemOperations: [
+                'method' => 'get',
+                'mercure' => 'true',
+            ],
+)]
+
 /**
  * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
  *     collectionOperations={
