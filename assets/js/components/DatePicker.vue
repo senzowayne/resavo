@@ -14,7 +14,9 @@
                                    next-icon="mdi-skip-next"
                                    v-model="picker"
                                    :disabled="maintenance"
-                                   :allowed-dates="allowedDates">
+                                   :allowed-dates="allowedDates"
+                                   first-day-of-week="1"
+                    >
                     </v-date-picker>
             </v-app>
         </div> <!-- end col -->
