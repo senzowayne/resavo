@@ -18,7 +18,7 @@ Vous n'avez encore de reservation.
                            <span class="badge badge-dark">Terminé</span>
                     {% endif %}
                     {% if 'now' | date('Y-m-d')  <= resa.bookingDate | date_modify("-2 day") | date('Y-m-d') %}
-                    <a href="{{ path('edit_booking', {booking: resa.id}) }}"><span class="badge badge-primary">Éditer cette reservation</span></a>
+                    <a href="{{ path('user_edit_booking', {booking: resa.id}) }}"><span class="badge badge-primary">Éditer cette reservation</span></a>
                         {% endif %}
                 </div>
                 <div class="card-body">

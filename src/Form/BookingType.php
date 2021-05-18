@@ -30,19 +30,12 @@ class BookingType extends AbstractType
                 'choice_label' => 'name',
             ])
   
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
-                $form = $event->getForm();
-                $booking = $event->getData();
-                $bookingDate = $booking->getBookingDate();
-                $today = new DateTime('now');
-                if ($bookingDate != null)  {
-                    $form->add('booking_date', DateType::class, [
+            ->add('booking_date', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'js-datepicker'],
-                'label' => 'Date de la réservation'
-                ]);
-                    }
-            })
+                'attr' => ['min' => (new DateTime())->format('Y-m-d')],
+                'label' => 'Date de la réservation',
+                'data' => $options['booking_date']
+                ])
 
             ->add('notices', TextareaType::class, [
                 'required' => false, 
@@ -52,7 +45,7 @@ class BookingType extends AbstractType
             
             ->add('meeting', EntityType::class, [
                 'class' => Meeting::class,
-                'label' => 'Créneau',
+                'label' => 'Créneau nom de salle ',
                 'choice_label' => 'label',
             ]);
     }
@@ -61,6 +54,7 @@ class BookingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Booking::class,
+            'booking_date' => ''
         ]);
     }
 }

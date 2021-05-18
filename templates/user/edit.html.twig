@@ -26,13 +26,26 @@
         </div>
     </div>
 {% endblock %}
-{% block javascripts %}
+<!-- js pour resa dispo pas dispo -->
+{% block javascript %}
 <script>
-    $(document).ready(function() {
-        // you may need to change this code if you are not using Bootstrap Datepicker
-        $('.js-datepicker').datepicker({
-            format: 'yyyy-mm-dd'
-        });
-    });
+axios({
+    url: "/api/booking/available",
+    method: 'post',
+    data: {
+        room: this.room,
+        meeting: this.meeting,
+        bookingDate: this.date
+    }
+}).then(({data}) => {
+    if (data === false) {
+        this.isAvailable = false
+        this.message = " Cette séance n'est pas disponible."
+    } else {
+        this.isAvailable = true
+        this.message = " Cette séance est disponible."
+    }
+    this.display = true;
+}).catch((error) => console.log(error))
 </script>
 {% endblock %}

@@ -76,26 +76,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/edit_booking/{booking}", name="edit_booking", methods={"GET", "POST"})
+     * @Route("/user_edit_booking/{booking}", name="user_edit_booking", methods={"GET", "POST"})
      * @return Response
      */
     public function editForm(Booking $booking, EntityManagerInterface $entityManager, Request $request): Response
     {
-            $form = $this->createForm(BookingType::class, $booking);
-            $form->handleRequest($request);
+            $this->denyAccessUnlessGranted('booking_edit', $booking);
             $bookingDate = $booking->getBookingDate();
+            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate]);
+            $form->handleRequest($request);
 
-    if(CheckBookingController::verifyDate($bookingDate) == TRUE)
-    {
-            if($form->isSubmitted() && $form->isValid())
-            {   
-                $entityManager->flush();
-                return $this->redirectToRoute('historique');
-            }
-    }
-    else{
-        echo "<script> alert('Veuillez saisir une date supérieure à aujourd\'hui.') </script>";
-    }
-        return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
+        if(CheckBookingController::verifyDate($bookingDate)) {
+                if($form->isSubmitted() && $form->isValid()) {   
+                    $entityManager->flush();
+                    $this->addFlash('success', "Votre réservation a bien été modifié !");    
+                        return $this->redirectToRoute('historique');
+                }
+        } else {
+                $this->addFlash('danger', "Veuillez saisir une date supérieur à aujourd'hui");    
+        }
+            return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
     }
 }
