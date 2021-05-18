@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
 use App\Message\NotificationMessage;
+use App\Service\GoogleCalendar;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\GoogleCalendarService;
 
 
 /**
@@ -49,9 +51,12 @@ class BookingController extends AbstractController
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(): Response
+    public function index(GoogleCalendarService $googleCalendarService): Response
     {
+        dd($googleCalendarService->getClient());
+
         $paypalClient = $this->paypalManager->generateSandboxLink();
+
 
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
     }

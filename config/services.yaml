@@ -6,6 +6,8 @@
 parameters:
     locale: 'fr'
     CLIENT_ID: '%env(CLIENT_ID)%'
+    google_credentials_path: '%kernel.project_dir%/credentials.json'
+    google_client_secret_path: '%kernel.project_dir%/client_secret.json'
 
 services:
     # default configuration for services in *this* file
@@ -43,3 +45,10 @@ services:
     App\Events\ResolveBookingSubscriber:
         tags:
             - { name: 'doctrine.event_subscriber' }
+
+
+
+    App\Service\GoogleCalendarService:
+        arguments:
+            - "%google_credentials_path%"
+            - "%google_client_secret_path%"
