@@ -26,10 +26,10 @@
         </div>
     </div>
 {% endblock %}
-<!-- js pour resa dispo pas dispo -->
-{% block javascript %}
+{% block javascript {{parent()}} %}
 <script>
-axios({
+$(document).click(function(){
+$.ajax({
     url: "/api/booking/available",
     method: 'post',
     data: {
@@ -47,5 +47,6 @@ axios({
     }
     this.display = true;
 }).catch((error) => console.log(error))
+});
 </script>
 {% endblock %}

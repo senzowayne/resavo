@@ -47,4 +47,17 @@ class RoomRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAllMeetingsByRoom($room)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT r, m
+            FROM App\Entity\Room r
+            INNER JOIN r.meetings m
+            WHERE r.id = :id'
+        )->setParameter('id', $room);
+
+        return $query->getOneOrNullResult();
+    } 
 }

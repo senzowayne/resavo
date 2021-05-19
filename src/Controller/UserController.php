@@ -9,6 +9,10 @@ use App\Form\BookingType;
 use App\Manager\UserManager;
 use App\Manager\BookingManager;
 use App\Controller\CheckBookingController;
+use App\Entity\Meeting;
+use App\Entity\Room;
+use App\Repository\MeetingRepository;
+use App\Repository\RoomRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +87,24 @@ class UserController extends AbstractController
     {
             $this->denyAccessUnlessGranted('booking_edit', $booking);
             $bookingDate = $booking->getBookingDate();
-            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate]);
+            //meeting x room
+            // $room = $booking->getRoom();
+            $room = $this->getDoctrine()
+            ->getRepository(Room::class)->findAllMeetingsByRoom($meetings);
+            $meetings = $room->getMeetings();
+
+            // $em = $this->getDoctrine()
+            //    ->getManager();
+            // $room = $em->getRepository(Room::class)
+            //       ->find($booking->getId());
+            // $meetings = $em->getRepository(Meeting::class)
+            //                  ->findAll();
+            // foreach($meetings as $meeting)
+            // {
+            //     $room->addMeeting($meeting);
+            // }
+            
+            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate, 'room' => $room, 'meeting' => $meeting]);
             $form->handleRequest($request);
 
         if(CheckBookingController::verifyDate($bookingDate)) {
