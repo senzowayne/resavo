@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+//use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,41 +16,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
 
 // Préfixé tous les itinéraires de toutes les opérations#[ApiResource(routePrefix: '/Booking')] attributes: ['normalization_context'=>{'groups'=>{'resa:read'}}
-/*#[ApiResource(attributes: ["normalization_context"["groups"{"resa:read"}]],
-     collectionOperations: [
-         'get'=> [
-         'available',
-             'denormalization_context'=>['groups'{'available:write'}],
-             'method' =>'post',
-             'path' =>'/booking/available',
-             'deserialize' => 'false',
-             'controller' => AvailableBookingController::class,
-             'status' => '200',
-                 ],
-                ],
-            itemOperations: [
-                'method' => 'get',
-                'mercure' => 'true',
-            ],
-)] */
+
 
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
- *     collectionOperations={
- *         "get",
- *         "available"={
- *             "denormalization_context"={"groups"={"available:write"}},
- *             "method"="POST",
- *             "path"="/booking/available",
- *             "deserialize"=false,
- *             "validate"=false,
- *             "controller"=AvailableBookingController::class,
- *              "status"=200
- *          }
- *     },
- *     itemOperations={"get"},
- *     mercure="true"
- * )
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
@@ -58,6 +26,23 @@ use App\Controller\AvailableBookingController;
  * @ApiFilter(DateFilter::class, properties={"bookingDate"})
  * @ApiFilter(SearchFilter::class, properties={ "room": "exact"})
  */
+#[ApiResource(routePrefix: '/Booking')]
+#[ApiResource(attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
+    collectionOperations: [
+   'get' => ['method' => 'get'],
+   'available',
+   'denormalization_context'=>['groups'=>['available:write']],
+        'post' => ['method' => 'post'],
+        'path' =>'/reservation/reserve',
+        'deserialize' => 'false',
+        'controller' => AvailableBookingController::class,
+        'status' => '200',
+            ],
+    itemOperations: [
+        'get' => ['method' => 'get'],
+        'mercure' => 'true',
+],
+)]
 class Booking
 {
     /**
