@@ -89,22 +89,20 @@ class UserController extends AbstractController
             $bookingDate = $booking->getBookingDate();
             //meeting x room
             // $room = $booking->getRoom();
-            $room = $this->getDoctrine()
-            ->getRepository(Room::class)->findAllMeetingsByRoom($meetings);
-            $meetings = $room->getMeetings();
-
-            // $em = $this->getDoctrine()
-            //    ->getManager();
-            // $room = $em->getRepository(Room::class)
-            //       ->find($booking->getId());
-            // $meetings = $em->getRepository(Meeting::class)
-            //                  ->findAll();
-            // foreach($meetings as $meeting)
-            // {
-            //     $room->addMeeting($meeting);
-            // }
+            // $room = $this->getDoctrine()
+            // ->getRepository(Room::class)->findAllMeetingsByRoom($booking->getId());
+            // $meetings = $room->getMeetings();
+            $id = $booking->getId();
+            $em = $this->getDoctrine()
+               ->getManager();
+            $room = $em->getRepository(Room::class)
+                  ->findOneBy(array ('id' => $id));
+            $meetings = $em->getRepository(Meeting::class)
+                            ->findAll();
+            // $room->addMeeting($meetings);
             
-            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate, 'room' => $room, 'meeting' => $meeting]);
+            
+            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate]);
             $form->handleRequest($request);
 
         if(CheckBookingController::verifyDate($bookingDate)) {
