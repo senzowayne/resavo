@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Booking;
+use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
+
 class GoogleCalendarService
 {
     /**
@@ -759,5 +762,61 @@ class GoogleCalendarService
         curl_close($curl);
 
         return $contents;
+    }
+
+    public function ajouterEvenement(Booking $booking)
+    {
+        #$service = $this->getCalendarService();
+
+        $event = new \Google_Service_Calendar_Event(array(
+            'summary' => $booking->getName(),
+            'location' => $booking->getRoom()->__toString(),
+            'description' => $booking->__toString(),
+            'start' => array(
+                'dateTime' => '2015-05-28T09:00:00-07:00',
+                'timeZone' => 'America/Los_Angeles',
+            ),
+            'end' => array(
+                'dateTime' => '2015-05-28T17:00:00-07:00',
+                'timeZone' => 'America/Los_Angeles',
+            ),
+            'recurrence' => array(
+                'RRULE:FREQ=DAILY;COUNT=2'
+            ),
+            'attendees' => array(
+                array('email' => 'lpage@example.com'),
+                array('email' => 'sbrin@example.com'),
+            ),
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                ),
+            ),
+        ));
+
+
+        #$request = $this->ge('request_stack')->getMasterRequest();
+
+        $client2 = $this->getClient();
+
+
+        $client = new \Google_Client();
+        $client->setApplicationName('Google Calendar API');
+        $client->setScopes($this->scopes);
+        $client->setAuthConfig($this->clientSecretPath);
+        $client->setAccessType($this->type);
+        $client->setApprovalPrompt($this->approvalPrompt);
+        $client->setState($this->base64UrlEncode(json_encode($this->parameters)));
+
+
+        $service = new \Google_Service_Calendar($client);
+
+        $calendarId = 'primary';
+        # $event = $service->events->insert($calendarId, $event);
+        # printf('Event created: %s\n', $event->htmlLink);
+
+        return $service->events->insert($calendarId, $event);
     }
 }

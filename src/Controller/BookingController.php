@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\GoogleCalendarService;
 use DateTime;
+use Google_Client;
 
 /**
  * @Route("/reservation")
@@ -53,13 +54,30 @@ class BookingController extends AbstractController
      */
     public function index(GoogleCalendarService $googleCalendarService): Response
     {
+
+        $calendarId = 'primary';
+        $optParams = array(
+            'maxResults' => 10,
+            'orderBy' => 'startTime',
+            'singleEvents' => true,
+            'timeMin' => date('c'),
+        );
+
         $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
         $tomorrow  = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
         $lastmonth = mktime(0, 0, 0, date("m") - 1, date("d"),   date("Y"));
-        $googleCalendarService->addEvent("booking", new DateTime(), new DateTime(), null, "test", "test", "Paris", null, true);
+        $googleCalendarService->addEvent($calendarId, new DateTime(), new DateTime(), null, "test", "test", "Paris", $optParams, true);
 
-        dd($googleCalendarService->listCalendars());
-        $calendar =  $googleCalendarService->getCalendarService()->calendarList;
+
+
+
+        $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
+
+        #GoogleClient $client = $googleCalendarService->getClient();
+        $client = $googleCalendarService;
+        #$googleCalendarService->ajouterEvenement($book);
+        dd($googleCalendarService->getClient());
+        #$calendar =  $googleCalendarService->getCalendarService()->calendarList;
 
 
 
