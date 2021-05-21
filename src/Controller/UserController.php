@@ -87,22 +87,10 @@ class UserController extends AbstractController
     {
             $this->denyAccessUnlessGranted('booking_edit', $booking);
             $bookingDate = $booking->getBookingDate();
-            //meeting x room
-            // $room = $booking->getRoom();
-            // $room = $this->getDoctrine()
-            // ->getRepository(Room::class)->findAllMeetingsByRoom($booking->getId());
-            // $meetings = $room->getMeetings();
-            $id = $booking->getId();
-            $em = $this->getDoctrine()
-               ->getManager();
-            $room = $em->getRepository(Room::class)
-                  ->findOneBy(array ('id' => $id));
-            $meetings = $em->getRepository(Meeting::class)
-                            ->findAll();
-            // $room->addMeeting($meetings);
+
+            $roomId = $booking->getRoom()->getId();
             
-            
-            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate]);
+            $form = $this->createForm(BookingType::class, $booking, ['booking_date' => $bookingDate, 'room_id' => $roomId]);
             $form->handleRequest($request);
 
         if(CheckBookingController::verifyDate($bookingDate)) {

@@ -31,6 +31,7 @@ class BookingType extends AbstractType
                 'class' => Room::class,
                 'label' => 'Salle',
                 'choice_label' => 'name',
+                'disabled' => true
             ])
   
             ->add('booking_date', DateType::class, [
@@ -45,23 +46,14 @@ class BookingType extends AbstractType
                 'attr' => ['placeholder' => 'Laissez vide si vous n\'avez rien de special à preciser'],
                 'label' => 'Notes'
             ])
-
-            ->add('meetings', CollectionType::class, array(
-                'entry_type' => RoomType::class,
-                'attr' => ['class' => Room::class,
-                            'choice_label' => 'label',
-                            'label' => 'Créneau par salle'],
-                'by_reference' => true
-            ));
-                // ->add('meeting', EntityType::class, [
-                //     'class' => Meeting::class,
-                //     'choice_label' => 'label',
-                //     // 'query_builder' => function (MeetingRepository $mr) use ($booking) {
-                //     //                    return $mr->findAllMeetingsByRoom($booking->getRoom());},
-                //     'label' => 'Créneau par salle',
-                //     'data' => $options['meeting']
-                // ]);
-            // });
+            
+                ->add('meeting', EntityType::class, [
+                    'class' => Meeting::class,
+                    'choice_label' => 'label',
+                    'query_builder' => function (MeetingRepository $mr) use ($options) {
+                                       return $mr->findAllMeetingsByRoom($options['room_id']);},
+                    'label' => 'Créneau par salle',
+                ]);
             }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -69,6 +61,7 @@ class BookingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Booking::class,
             'booking_date' => '',
+            'room_id' => ''
         ]);
     }
 }

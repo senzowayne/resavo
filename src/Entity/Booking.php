@@ -59,7 +59,7 @@ class Booking
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
-    private ?Room $room;
+    private Room $room;
 
     /**
      * @ORM\Column(type="datetime")
@@ -127,12 +127,12 @@ class Booking
         return $this;
     }
 
-    public function getRoom(): ?Room
+    public function getRoom(): Room
     {
         return $this->room;
     }
 
-    public function setRoom(?Room $room): self
+    public function setRoom(Room $room): self
     {
         $this->room = $room;
 
