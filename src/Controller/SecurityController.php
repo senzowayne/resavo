@@ -81,7 +81,6 @@ class SecurityController extends AbstractController
                 $this->addFlash('success', 'Votre mot de passe a bien été modifier !');
                 return $this->redirectToRoute('new_reservation');
             }
-
         }
         return $this->render('user/update_password.html.twig', ['form' => $form->createView()]);
     }
@@ -105,5 +104,15 @@ class SecurityController extends AbstractController
     public function connectCheckAction(): RedirectResponse
     {
         return $this->redirectToRoute('your_homepage_route');
+    }
+
+
+    /**
+     * Permet de modifier le mot de passe
+     * @Route("/forgot-password", name="forgot_password")
+     */
+    public function forgotPassword(Request $request, UserPasswordEncoderInterface $encoder): Response
+    {
+        return $this->render('user/forgot_password.html.twig');
     }
 }
