@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+
 use App\Repository\BookingRepository;
 use App\Repository\MeetingRepository;
 use App\Repository\RoomRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
+//#[Route("/booking/available")]
 class AvailableBookingController
 {
     private BookingRepository $bookingRepository;

@@ -6,6 +6,7 @@ namespace App\Entity;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -15,8 +16,29 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
 
+
 // Préfixé tous les itinéraires de toutes les opérations#[ApiResource(routePrefix: '/Booking')] attributes: ['normalization_context'=>{'groups'=>{'resa:read'}}
 
+//#[Route("/booking")]
+#[ApiResource(collectionOperations: [
+'get' => [
+'available' => [
+'denormalization_context'=>['groups'=>['available:write']],
+   'path' =>'/booking/available',
+   'post' => ['method' => 'post'],
+    'deserialize' => 'false',
+    'validate'=> 'false',
+    'controller' => AvailableBookingController::class,
+    'status' => '200',
+        ],
+   ],
+],
+    itemOperations: [
+        'get' => ['method' => 'get'],
+        'mercure' => 'true',
+],
+    attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
+)]
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -26,23 +48,7 @@ use App\Controller\AvailableBookingController;
  * @ApiFilter(DateFilter::class, properties={"bookingDate"})
  * @ApiFilter(SearchFilter::class, properties={ "room": "exact"})
  */
-#[ApiResource(routePrefix: '/Booking')]
-#[ApiResource(attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
-    collectionOperations: [
-   'get' => ['method' => 'get'],
-   'available',
-   'denormalization_context'=>['groups'=>['available:write']],
-        'post' => ['method' => 'post'],
-        'path' =>'/reservation/reserve',
-        'deserialize' => 'false',
-        'controller' => AvailableBookingController::class,
-        'status' => '200',
-            ],
-    itemOperations: [
-        'get' => ['method' => 'get'],
-        'mercure' => 'true',
-],
-)]
+
 class Booking
 {
     /**
