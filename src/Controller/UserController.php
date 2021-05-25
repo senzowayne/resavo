@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -103,5 +104,54 @@ class UserController extends AbstractController
                 $this->addFlash('danger', "Veuillez saisir une date supérieur à aujourd'hui");    
         }
             return $this->render('user/edit.html.twig', ['booking' => $booking, 'form' => $form->createView()]);
+    }
+
+    public function existsAction(Request $request): JsonResponse
+	{
+        // This is optional.
+        // Only include it if the function is reserved for ajax calls only.
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(array(
+                'status' => 'Error',
+                'message' => 'Error'),
+            400);
+        }
+
+    	if(isset($request->request))
+    	{
+            // Get data from ajax
+            $data = $request->request->get('data');
+
+            // Check if a Folder with the given name already exists
+			$booking = $this
+			    ->getDoctrine()
+			    ->getManager()
+			    ->getRepository('Meeting')
+	
+		    ->findOneBy($data);
+			    
+            if ($booking === null)
+            {
+            	// Folder does not exist
+            	return new JsonResponse(array(
+            		'status' => 'OK',
+            		'message' => 0),
+            	200);
+            }
+            else
+            {
+            	// Folder exists
+            	return new JsonResponse(array(
+            		'status' => 'OK',
+            		'message' => 1),
+            	200);
+            }
+        }
+
+        // If we reach this point, it means that something went wrong
+        return new JsonResponse(array(
+            'status' => 'Error',
+            'message' => 'Error'), 400);
+
     }
 }

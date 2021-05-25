@@ -64,4 +64,8 @@ class BookingType extends AbstractType
             'room_id' => ''
         ]);
     }
+    public function getBlockPrefix()
+    {
+        return 'test_available_booking';
+    }
 }

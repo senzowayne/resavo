@@ -17,7 +17,21 @@
                 {{ form_row(form.booking_date) }}
                 {{ form_row(form.meeting) }}
                 {{ form_row(form.notices) }}
+                <div class="form_errors col-md-12">
+	                {{ form_errors(form) }}
+                </div>
             </div>
+                    <div class="row" id="folder_exists_error" style="display: none;">
+                    <div class="col col-xs-12">
+	                <div class="form_errors col-lg-12">
+		            <span class="help-block">
+			            <ul class="list-unstyled">
+				            <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ 'folder_exists' | trans }}</li>
+			            </ul>
+		            </span>
+	                </div>
+                    </div>
+                    </div>
         </div>
             <div class="col-1">
                 <input class="btn btn-primary" type="submit" value="valider">
@@ -26,27 +40,62 @@
         </div>
     </div>
 {% endblock %}
-{% block javascript {{parent()}} %}
-<script>
-$(document).click(function(){
-$.ajax({
-    url: "/api/booking/available",
-    method: 'post',
-    data: {
-        room: this.room,
+
+{% block javascripts %}
+<script src='{{parent()}}'>
+
+var inUse = false;
+function checkExists()
+{
+    // Get the input value
+    var data = $("#test_available_booking_name").val();
+
+    // Send an ajax request with the user input data
+    $.ajax({
+    	type: "POST",
+    	url: "{{ path('api_bookings_available_collection') }}",
+    	data: {room: this.room,
         meeting: this.meeting,
-        bookingDate: this.date
-    }
-}).then(({data}) => {
-    if (data === false) {
-        this.isAvailable = false
-        this.message = " Cette séance n'est pas disponible."
-    } else {
-        this.isAvailable = true
-        this.message = " Cette séance est disponible."
-    }
-    this.display = true;
-}).catch((error) => console.log(error))
+        bookingDate: this.date }
+    })
+    .done(function(data){
+        if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK")
+        {
+        	if (typeof data.message != "undefined" && data.message != "undefined")
+        	{
+        		if (parseInt(data.message) == 1)
+        		{
+                    // Folder name already exists
+                    // => raise flag
+                    inUse = true;
+                    // => display error message
+                    $("#folder_exists_error").show();
+                    return;
+        		}
+        	}
+        }
+	});
+    // We suppose all went well.
+    // If not, the Ajax call will update the flag and display the error message
+    inUse = false;
+    $("#folder_exists_error").hide();
+}
+$(document).ready(function(){
+    // Each time we modify the folder name, do an ajax check
+    $("#test_available_booking_name").bind("input change keyup", checkExists);
+    
+    // On form submission, check data
+    $("form[name=test_available_booking]").on('submit', function(e){
+    
+        // Hide errors
+        $("#folder_exists_error").hide();
+        
+        if (inUse === true)
+        {
+            $("#folder_exists_error").show();
+            return false;
+        }
+    });
 });
 </script>
 {% endblock %}
