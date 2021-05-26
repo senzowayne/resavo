@@ -114,5 +114,24 @@ class SecurityController extends AbstractController
     public function forgotPassword(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         return $this->render('user/forgot_password.html.twig');
+        /*
+        $user = $booking->getUser();
+        $userMail = $user->getEmail();
+
+        $email = (new TemplatedEmail())
+            ->from('resa@resavo.fr')
+            ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
+            ->subject('Votre réservation')
+            ->htmlTemplate('reservation/_confirmation.html.twig')
+            ->context(['resa' => $booking]);
+            //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+
+
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
+        $this->mailer->send($email);
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
+
+        return $email;
+        */
     }
 }

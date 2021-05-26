@@ -97,6 +97,8 @@ class User implements UserInterface
      */
     private ?string $googleId;
 
+    
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
