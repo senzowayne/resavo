@@ -108,15 +108,6 @@ class UserController extends AbstractController
 
     public function existsAction(Request $request): JsonResponse
 	{
-        // This is optional.
-        // Only include it if the function is reserved for ajax calls only.
-        if (!$request->isXmlHttpRequest()) {
-            return new JsonResponse(array(
-                'status' => 'Error',
-                'message' => 'Error'),
-            400);
-        }
-
     	if(isset($request->request))
     	{
             // Get data from ajax
@@ -132,7 +123,7 @@ class UserController extends AbstractController
 			    
             if ($booking === null)
             {
-            	// Folder does not exist
+            	// Booking does not exist
             	return new JsonResponse(array(
             		'status' => 'OK',
             		'message' => 0),
@@ -140,7 +131,7 @@ class UserController extends AbstractController
             }
             else
             {
-            	// Folder exists
+            	// Booking exists
             	return new JsonResponse(array(
             		'status' => 'OK',
             		'message' => 1),
