@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+//#[Route("/api/rooms/")]
+#[Route("/api/meetings" )]
 class MeetingController extends AbstractController
 {
 

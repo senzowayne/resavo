@@ -19,7 +19,7 @@ use App\Controller\AvailableBookingController;
 
 // Préfixé tous les itinéraires de toutes les opérations#[ApiResource(routePrefix: '/Booking')] attributes: ['normalization_context'=>{'groups'=>{'resa:read'}}
 
-//#[Route("/booking")]
+
 #[ApiResource(collectionOperations: [
 'get' => [
 'available' => [

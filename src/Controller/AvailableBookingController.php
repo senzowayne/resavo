@@ -6,10 +6,11 @@ namespace App\Controller;
 use App\Repository\BookingRepository;
 use App\Repository\MeetingRepository;
 use App\Repository\RoomRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-//#[Route("/booking/available")]
+#[Route("/api/booking/available")]
 class AvailableBookingController
 {
     private BookingRepository $bookingRepository;
@@ -27,7 +28,7 @@ class AvailableBookingController
         $this->meetingRepository = $meetingRepository;
     }
 
-    public function __invoke(Request $request): bool
+    public function __invoke(Request $request): JsonResponse
     {
         $posts = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -40,7 +41,7 @@ class AvailableBookingController
         $data = $this->bookingRepository
                      ->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
 
-        return $data === null;
+        return new JsonResponse($data === null);
     }
 
 }

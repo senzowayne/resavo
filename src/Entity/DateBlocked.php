@@ -19,9 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
     collectionOperations: [
         'get' => ['method' => 'get'],
     ],
-    itemOperations: [
-
-    ],
+    itemOperations: [],
 )]
 class DateBlocked
 {

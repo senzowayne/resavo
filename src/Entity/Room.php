@@ -2,20 +2,37 @@
 
 namespace App\Entity;
 
+// // j'ai également mis la route dans le CheckbookingController.
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\AvailableBookingController;
+use App\Controller\MeetingController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
+#[ApiResource(collectionOperations: [
+    'get' => [
+        'room' => [
+            'denormalization_context'=>['groups'=>['room:read']],
+            'path' =>'/room/read',
+            'get' => ['method' => 'get'],
+            'deserialize' => 'false',
+            'validate'=> 'false',
+            'controller' => CheckBookingController::class,
+            'status' => '200',
+        ],
+    ],
+],
+    itemOperations: [
+    'get' => ['method' => 'get'],
+    ],
+    attributes: ["normalization_context"=>["groups"=>["room:read"]]],
+)]
+
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"room:read"}}},
- *     collectionOperations={
- *         "get",
- *     },
- *     itemOperations={"get"}
- * )
  * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
  */
 class Room

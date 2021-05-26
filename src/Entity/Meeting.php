@@ -2,18 +2,37 @@
 
 namespace App\Entity;
 
+// quand je laisse ApiPlatform\Core\Annotation\ApiResource utilisé j'ai un message d'erreur " Cannot access offset of type string on string"
+// j'ai également mis la route dans le MeetingController.
+//use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\MeetingController;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
+
+#[ApiResource(collectionOperations: [
+    'get' => [
+        'meeting' => [
+            'denormalization_context'=>['groups'=>['meeting:read']],
+            'path' =>'/meeting/read',
+            'get' => ['method' => 'get'],
+            'deserialize' => 'false',
+            'validate'=> 'false',
+            'controller' => MeetingController::class,
+            'status' => '200',
+        ],
+    ],
+],
+    itemOperations: [
+    'get' => ['method' => 'get'],
+    'mercure' => 'true',
+    ],
+    attributes: ["normalization_context"=>["groups"=>["meeting:read"]]],
+)]
+
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"meeting:read"}}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"},
- *     mercure="true"
- * )
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
  * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
  */
