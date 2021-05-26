@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use App\Repository\UserRepository;
+use phpDocumentor\Reflection\Type;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+//#[ORM\Entity(repositoryClass: UserRepository::class)]
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
@@ -24,13 +28,17 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+   // #[ORM\Id, ORM\GeneratedValue]
+   // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
+
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
+    //#[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $name;
 
     /**
@@ -38,6 +46,7 @@ class User implements UserInterface
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
+   // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $firstName;
 
     /**
@@ -47,6 +56,7 @@ class User implements UserInterface
      * @Assert\Email()
      * @Groups({"resa:read"})
      */
+    //#[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private ?string $email;
 
     /**
@@ -57,6 +67,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    //#[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $avatar;
 
     /**
@@ -64,6 +75,7 @@ class User implements UserInterface
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
+   // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $hash = null;
 
     /**
@@ -74,27 +86,32 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
      */
+   // #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: "user")]
     private Collection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
      */
+   // #[ORM\OneToMany(targetEntity: Paypal::class, mappedBy: "user", cascade: ["persist"])]
     private Collection $payments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
      */
+    //#[ORM\ManyToMany(targetEntity: Role::class, mappedBy: "users")]
     private Collection $userRoles;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
+   // #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $number;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+   // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $googleId;
 
     public function __construct()
