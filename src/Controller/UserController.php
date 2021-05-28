@@ -111,13 +111,13 @@ class UserController extends AbstractController
     	if(isset($request->request))
     	{
             // Get data from ajax
-            $data = $request->request->get('data');
+            $data = $request->request->get('booking');
 
             // Check if a Folder with the given name already exists
 			$booking = $this
 			    ->getDoctrine()
 			    ->getManager()
-			    ->getRepository('Meeting')
+			    ->getRepository('Booking')
 	
 		    ->findOneBy($data);
 			    

@@ -51,17 +51,18 @@ function checkExists()
 {
     // Get the input value
     var data = $("#test_available_booking").val();
-
+    
     // Send an ajax request with the user input data
-    $.ajax({
+    {# $.ajax({
     	type: "POST",
-    	url: "{{ path('api_bookings_available_collection') }}",
-    	data: {room: '#test_available_booking_room',
-        meeting: '#test_available_booking_meeting',
-        bookingDate: '#test_available_booking_booking_date' }
-    })
+    	url: "/api/booking/available",
+    	data: {room: $("#test_available_booking_room").val(),
+                meeting: $("#test_available_booking_meeting").val(),
+                bookingDate: $("#test_available_booking_booking_date").val()},
+        
+    }) #}
     .done(function(data){
-        if (typeof data.status != "undefined" && data.status != 'undefined' && data.status == "OK")
+        if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK")
         {
         	if (typeof data.message != "undefined" && data.message != "undefined")
         	{
