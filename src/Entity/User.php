@@ -184,6 +184,19 @@ class User implements UserInterface
         return $this->bookings;
     }
 
+
+    public function getResetToken()
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(string $resetToken)
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
     public function addBooking(Booking $booking): self
     {
         if (!$this->bookings->contains($booking)) {

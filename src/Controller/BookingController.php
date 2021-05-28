@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Manager\BookingManager;
 use App\Manager\PaypalManager;
 use App\Message\NotificationMessage;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 
 /**
  * @Route("/reservation")
@@ -34,8 +36,8 @@ class BookingController extends AbstractController
         BookingManager $bookingManager,
         PaypalManager $paypalManager,
         SessionInterface $session
-    )
-    {
+
+    ) {
         $this->manager = $manager;
         $this->bookingManager = $bookingManager;
         $this->paypalManager = $paypalManager;
@@ -47,8 +49,13 @@ class BookingController extends AbstractController
      * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(): Response
+    public function index(UserRepository $repUser): Response
     {
+
+
+
+        $user  = $repUser->findOneByEmail('seybasacko1@gmail.com');
+        dd($user);
         $paypalClient = $this->paypalManager->generateSandboxLink();
 
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
@@ -88,8 +95,8 @@ class BookingController extends AbstractController
         $booking = $this->bookingManager->createBooking($request);
         /** @var ?ConfigMerchant $configMerchant */
         $configMerchant = $this->manager
-                               ->getRepository(ConfigMerchant::class)
-                               ->findOneBy([]);
+            ->getRepository(ConfigMerchant::class)
+            ->findOneBy([]);
 
         if (is_null($configMerchant)) {
             throw new \LogicException('the configMerchant not found');
@@ -97,7 +104,7 @@ class BookingController extends AbstractController
 
         if (!$configMerchant->getMaintenance()) {
             $payment = $this->paypalManager
-                            ->findOnePaiement($this->session->get('pay'));
+                ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
             $this->bookingManager->save($booking);
@@ -111,15 +118,16 @@ class BookingController extends AbstractController
                 $user = $this->getUser();
                 $this->addFlash(
                     'success',
-                    sprintf('Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
+                    sprintf(
+                        'Félicitations votre réservation à bien été enregistrée, un e-mail de confirmation vous a été envoyer sur %s',
                         $user->getEmail()
                     )
                 );
             }
 
             return $this->json([
-                        'msg' => 'Réservation ok',
-                        'error' => ''
+                'msg' => 'Réservation ok',
+                'error' => ''
             ]);
         }
         $msg = 'Un problème est survenu pendant la réservation, veuillez nous contacter ou réessayer plus tard.';
@@ -136,7 +144,7 @@ class BookingController extends AbstractController
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
-                       ->getAllMeetingPerRoom($request->query->get('d'));
+            ->getAllMeetingPerRoom($request->query->get('d'));
 
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $result['booking'],
@@ -154,11 +162,11 @@ class BookingController extends AbstractController
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {
-           return $this->redirectToRoute('new_reservation');
+            return $this->redirectToRoute('new_reservation');
         }
 
         $booking = $this->manager->getRepository(Booking::class)
-                    ->find($this->session->get('bookingId'));
+            ->find($this->session->get('bookingId'));
 
         return $this->render('reservation/resume.html.twig', compact('booking'));
     }

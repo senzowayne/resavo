@@ -16,6 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Repository\UserRepository;
+use App\Controller\TokenGeneratorInterface;
+use App\Form\ResetPassType;
+use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 
 class SecurityController extends AbstractController
 {
@@ -109,15 +113,78 @@ class SecurityController extends AbstractController
 
     /**
      * Permet de modifier le mot de passe
-     * @Route("/forgot-password", name="forgot_password")
+     * @Route("/forgotten-password", name="forgotten_password")
      */
-    public function forgotPassword(Request $request, UserPasswordEncoderInterface $encoder): Response
+    public function forgotPassword(Request $request, UserRepository $users, UserPasswordEncoderInterface $encoder, NotificationController $notification): Response
     {
-        return $this->render('user/forgot_password.html.twig');
+
+        $form = $this->createForm(ResetPassType::class);
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            dd($data);
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('user/forgotten_password.html.twig', ['emailForm' => $form->createView()]);
+
+        #return $this->redirectToRoute('app_login');
+
+
         /*
+
+ // On récupère les données
+            $data = $form->getData();
+
+            dd($data);
+
+            // On cherche un utilisateur ayant cet e-mail
+            $user = $users->findOneByEmail($data['email']);
+
+            dd($user);
+            if ($user === null) {
+                $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
+
+                return $this->redirectToRoute('app_login');
+            }
+
+
+            $token = 'iibbbbbiiibibibi';
+
+            dd($user->getFirstName);
+            try {
+                $user->setResetToken($token);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+                return $this->redirectToRoute('app_login');
+            }
+
+
+            // On génère l'URL de réinitialisation de mot de passe
+            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+
+            $subject = 'Réinitialisation mot de Passe';
+            # $body = "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée pour le site Nouvelle-Techno.fr. Veuillez cliquer sur le lien suivant : " . $url,
+            'text/html';
+
+            $email = $notification->sendEmail($user, $subject, 'Test');
+            $this->addFlash('message', 'E-mail de réinitialisation du mot de passe envoyé !');
+
+
+
+
+
         $user = $booking->getUser();
         $userMail = $user->getEmail();
-
         $email = (new TemplatedEmail())
             ->from('resa@resavo.fr')
             ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
