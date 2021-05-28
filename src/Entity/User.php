@@ -97,7 +97,12 @@ class User implements UserInterface
      */
     private ?string $googleId;
 
-    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private  $resetToken;
+
+
 
     public function __construct()
     {
