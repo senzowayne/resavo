@@ -10,6 +10,7 @@
             <hr>
             <p class="lead">Modification</p>
         </div>
+            <span id="available" class="glyphicon glyphicon-exclamation-sign"></span>
                 <div class="form_errors col-md-12">
 	                {{ form_errors(form) }}
                 </div>
@@ -36,7 +37,7 @@
                     
         </div>
             <div class="col-1">
-                <input class="btn btn-primary" type="submit" value="valider">
+                <input id="btn_validate" class="btn btn-primary" type="submit" value="valider">
             {{ form_end(form) }}
             </div>
         </div>
@@ -46,42 +47,34 @@
 {% block javascripts %}
 {{parent()}}
 <script>
-var inUse = false;
-function checkExists()
-{
-    // Get the input value
-    var data = $("#test_available_booking").val();
-    
-    // Send an ajax request with the user input data
-    {# $.ajax({
-    	type: "POST",
-    	url: "/api/booking/available",
-    	data: {room: $("#test_available_booking_room").val(),
-                meeting: $("#test_available_booking_meeting").val(),
-                bookingDate: $("#test_available_booking_booking_date").val()},
-        
-    }) #}
-    .done(function(data){
-        if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK")
-        {
-        	if (typeof data.message != "undefined" && data.message != "undefined")
-        	{
-        		if (parseInt(data.message) == 1)
-        		{
-                    // Booking already exists
-                    // => raise flag
-                    inUse = true;
-                    // => display error message
-                    $("#booking_exists_error").show();
-                    return;
-        		}
-        	}
-        }
-	})
-    // We suppose all went well.
-    // If not, the Ajax call will update the flag and display the error message
-    inUse = false;
-    $("#booking_exists_error").hide();
+function checkExists() {
+            // Get the input value
+            var data = $("#test_available_booking").val();
+
+            // Send an ajax request with the user input data
+            $.ajax({
+                url: "/api/booking/available",
+                method: "post",
+                dataType : "json",
+                data: {
+                    bookingDate: $('#test_available_booking_booking_date').val(),
+                    meeting: $('#test_available_booking_meeting').val(),
+                    room: $('#test_available_booking_room').val()
+                },
+                success: function (data) {
+                    $('#available').empty(data)
+
+                    let result = ''
+                    if (data) {
+                        result = ""
+                        $('#btn_validate').prop('disabled', false)
+                    } else {
+                        $('#btn_validate').prop('disabled', true)
+                        result = alert('Cette séance ou date est indisponible, veuillez resssayer.')
+                    }
+                    $('#available').append(result)
+                }
+            })
 }
 
 $(document).ready(function(){
