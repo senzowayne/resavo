@@ -190,7 +190,7 @@ class User implements UserInterface
         return $this->resetToken;
     }
 
-    public function setResetToken(string $resetToken)
+    public function setResetToken($resetToken)
     {
         $this->resetToken = $resetToken;
 

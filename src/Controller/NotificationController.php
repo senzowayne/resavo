@@ -46,22 +46,25 @@ class NotificationController extends AbstractController
         return $email;
     }
 
-    final public function sendEmail(User $user, $subject, $body): TemplatedEmail
+    final public function resetPassEmail(User $user,  $url): TemplatedEmail
     {
+
+        /** @var User $user */
 
         $userMail = $user->getEmail();
 
         $email = (new TemplatedEmail())
             ->from('resa@resavo.fr')
             ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
-            ->subject($subject)
-            ->setBody($body)
-            ->context(['resa' => 'context']);
-        //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+            ->subject('Réinitialisation mot de passe')
+            ->htmlTemplate('security/_reset_email.html.twig')
+            ->context(['resetUrl' => $url]);
 
-
-
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
         $this->mailer->send($email);
+        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
+
+        return $email;
 
         return $email;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\User;
 use App\Manager\UserManager;
 use App\Entity\PasswordUpdate;
@@ -20,6 +21,9 @@ use App\Repository\UserRepository;
 use App\Controller\TokenGeneratorInterface;
 use App\Form\ResetPassType;
 use Symfony\Component\Mailer\Messenger\SendEmailMessage;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface as GeneratorUrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface as TokenGeneratorTokenGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -115,48 +119,27 @@ class SecurityController extends AbstractController
      * Permet de modifier le mot de passe
      * @Route("/forgotten-password", name="forgotten_password")
      */
-    public function forgotPassword(Request $request, UserRepository $users, UserPasswordEncoderInterface $encoder, NotificationController $notification): Response
+    public function forgottenPassword(Request $request, UserRepository $users, UserPasswordEncoderInterface $encoder, NotificationController $notification, TokenGeneratorTokenGeneratorInterface $tokenGenerator): Response
     {
 
         $form = $this->createForm(ResetPassType::class);
-
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            dd($data);
-
-            return $this->redirectToRoute('app_login');
-        }
-
-        return $this->render('user/forgotten_password.html.twig', ['emailForm' => $form->createView()]);
-
-        #return $this->redirectToRoute('app_login');
-
-
-        /*
-
- // On récupère les données
+            // On récupère les données
             $data = $form->getData();
-
-            dd($data);
 
             // On cherche un utilisateur ayant cet e-mail
             $user = $users->findOneByEmail($data['email']);
 
-            dd($user);
             if ($user === null) {
                 $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
 
                 return $this->redirectToRoute('app_login');
             }
-
-
-            $token = 'iibbbbbiiibibibi';
-
-            dd($user->getFirstName);
+            $token = $tokenGenerator->generateToken();
             try {
                 $user->setResetToken($token);
                 $entityManager = $this->getDoctrine()->getManager();
@@ -167,38 +150,55 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_login');
             }
 
-
             // On génère l'URL de réinitialisation de mot de passe
-            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->generateUrl('reset_password', array('token' => $token), GeneratorUrlGeneratorInterface::ABSOLUTE_URL);
 
-
-            $subject = 'Réinitialisation mot de Passe';
-            # $body = "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée pour le site Nouvelle-Techno.fr. Veuillez cliquer sur le lien suivant : " . $url,
-            'text/html';
-
-            $email = $notification->sendEmail($user, $subject, 'Test');
+            $email = $notification->resetPassEmail($user, $url);
             $this->addFlash('message', 'E-mail de réinitialisation du mot de passe envoyé !');
+            return $this->redirectToRoute('app_login');
+        }
 
+        return $this->render('security/forgotten_password.html.twig', ['emailForm' => $form->createView()]);
+    }
 
+    /**
+     * Modifier le mot de passe
+     * @Route("/reset_password/{token}", name="reset_password")
+     */
+    public function resetPassword(Request $request, string $token, UserRepository $users, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        // On cherche un utilisateur avec le token donné
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['resetToken' => $token]);
 
+        // Si l'utilisateur n'existe pas
+        if ($user === null) {
+            // On affiche une erreur
+            $this->addFlash('danger', 'Token Inconnu');
+            return $this->redirectToRoute('app_login');
+        }
 
+        // Si le formulaire est envoyé en méthode post
+        if ($request->isMethod('POST')) {
+            // On supprime le token
+            $user->setResetToken(null);
 
-        $user = $booking->getUser();
-        $userMail = $user->getEmail();
-        $email = (new TemplatedEmail())
-            ->from('resa@resavo.fr')
-            ->to(new Address($userMail, $user->getName() . ' ' . $user->getFirstName()))
-            ->subject('Votre réservation')
-            ->htmlTemplate('reservation/_confirmation.html.twig')
-            ->context(['resa' => $booking]);
-            //->html($this->render('reservation/_confirmation.html.twig', ['resa' => $booking])); @TODO : à tester
+            // On chiffre le mot de passe
+            $hash = $passwordEncoder->encodePassword($user, $request->request->get('password'));
+            $user->setHash($hash);
 
+            // On stocke
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-        $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
-        $this->mailer->send($email);
-        $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
+            // On crée le message flash
+            $this->addFlash('message', 'Mot de passe mis à jour');
 
-        return $email;
-        */
+            // On redirige vers la page de connexion
+            return $this->redirectToRoute('app_login');
+        } else {
+            // Si on n'a pas reçu les données, on affiche le formulaire
+            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+        }
     }
 }

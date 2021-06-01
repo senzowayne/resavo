@@ -31,12 +31,13 @@ class BookingController extends AbstractController
     private PaypalManager $paypalManager;
     private SessionInterface $session;
 
+    private const SVC_NAME = '[NOTIFICATION_CONTROLLER] :: ';
+
     public function __construct(
         EntityManagerInterface $manager,
         BookingManager $bookingManager,
         PaypalManager $paypalManager,
         SessionInterface $session
-
     ) {
         $this->manager = $manager;
         $this->bookingManager = $bookingManager;
@@ -52,10 +53,6 @@ class BookingController extends AbstractController
     public function index(UserRepository $repUser): Response
     {
 
-
-
-        $user  = $repUser->findOneByEmail('seybasacko1@gmail.com');
-        dd($user);
         $paypalClient = $this->paypalManager->generateSandboxLink();
 
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient]);
@@ -169,5 +166,27 @@ class BookingController extends AbstractController
             ->find($this->session->get('bookingId'));
 
         return $this->render('reservation/resume.html.twig', compact('booking'));
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * @Route("/test", name="test")
+     * 
+     */
+    public function testEmailCatch(NotificationController $notification): Response
+    {
+
+        $book = $this->getDoctrine()->getManager()->getRepository(Booking::class)->find(2);
+
+        $email = $notification->mailConfirmation($book);
+
+        return $this->redirectToRoute('new_reservation');
     }
 }

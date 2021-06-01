@@ -5,3 +5,4 @@ RUN docker-php-ext-install pdo_mysql
 COPY xdebug.ini /usr/local/etc/php/conf.d/
 
 WORKDIR /var/www/symfony
+

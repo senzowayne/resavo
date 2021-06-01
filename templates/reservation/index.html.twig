@@ -1,18 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Résavo{% endblock %}
+{% block title %}Résavo
+{% endblock %}
 {% block css %}
-    {{ parent() }}
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+	{{ parent() }}
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 {% endblock %}
 {% block body %}
-    <div class="container">
-        <div id="app"></div>
-    </div>
+	<div class="container">
+		<div id="app"></div>
+	</div>
+	<a class="nav-link" href="{{ path('test') }}">Test</a>
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('resavo') }}
+	{{ parent() }}
+	{{ encore_entry_script_tags('resavo') }}
+
 {% endblock %}

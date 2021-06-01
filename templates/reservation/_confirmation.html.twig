@@ -1,24 +1,44 @@
+<div class="container p-4 mt-2">
 
-    <div class="container p-4 mt-2">
+	<h1>Bonjour
+		{{ resa.user.name }}
+		{{ resa.user.firstName }}</h1>
+	<small>Voici les details de votre réservation :</small>
+	<hr>
 
-        <h1>Bonjour {{ resa.user.name }} {{ resa.user.firstName }}</h1>
-        <small>Voici les details de votre réservation :</small>
-        <hr>
-
-        <strong>Nom:</strong> {{ resa.user.name }} <br>
-        <strong>Prénom:</strong> {{ resa.user.firstName }} <br>
-        <strong>ID reservation:</strong> {{ resa.name }} <br>
-        <strong>Date:</strong> {{ resa.bookingDate | date('d-m-Y') }}<br>
-        <strong>Séance: {{ resa.meeting.label }}<br></strong>
-        <strong>Salle: {{ resa.room.name }}<br></strong>
-        <strong>Nombre de personnes:</strong> {{ resa.nbPerson }}<br>
-        <strong>{% if resa.notices %}
-                Votre remarque: {{ resa.notices }}<br>
-            {% else %}
-                Aucune remarque n'a été mentionnée.<br>
-            {% endif %}</strong>
-        <strong>Acompte: </strong>{{ resa.payment.paymentAmount }}{{ resa.payment.paymentCurrency }}<br>
-        <strong>total de la commande :</strong> {{ resa.total }}{{ resa.payment.paymentCurrency }} <br>
-        <hr>
-        <strong style="font-size: 30px">Reste à payer (sur place): <span style="color: red;">{{ resa.total - resa.payment.paymentAmount }}{{ resa.payment.paymentCurrency }}</span></strong>
-    </div>
+	<strong>Nom:</strong>
+	{{ resa.user.name }}
+	<br>
+	<strong>Prénom:</strong>
+	{{ resa.user.firstName }}
+	<br>
+	<strong>ID reservation:</strong>
+	{{ resa.name }}
+	<br>
+	<strong>Date:</strong>
+	{{ resa.bookingDate | date('d-m-Y') }}<br>
+	<strong>Séance:
+		{{ resa.meeting.label }}<br></strong>
+	<strong>Salle:
+		{{ resa.room.name }}<br></strong>
+	<strong>Nombre de personnes:</strong>
+	{{ resa.nbPerson }}<br>
+	<strong>
+		{% if resa.notices %}
+			Votre remarque:
+			{{ resa.notices }}<br>
+		{% else %}
+			Aucune remarque n'a été mentionnée.<br>
+		{% endif %}
+	</strong>
+	<strong>Acompte:
+	</strong>
+	{{ resa.payment.paymentAmount }}{{ resa.payment.paymentCurrency }}<br>
+	<strong>total de la commande :</strong>
+	{{ resa.total }}{{ resa.payment.paymentCurrency }}
+	<br>
+	<hr>
+	<strong style="font-size: 30px">Reste à payer (sur place):
+		<span style="color: red;">{{ resa.total - resa.payment.paymentAmount }}{{ resa.payment.paymentCurrency }}</span>
+	</strong>
+</div>
