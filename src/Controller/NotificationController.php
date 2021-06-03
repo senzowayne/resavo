@@ -50,7 +50,6 @@ class NotificationController extends AbstractController
     {
 
         /** @var User $user */
-
         $userMail = $user->getEmail();
 
         $email = (new TemplatedEmail())
@@ -63,8 +62,6 @@ class NotificationController extends AbstractController
         $this->logger->info(self::SVC_NAME . ' SEND MAIL ' . $userMail);
         $this->mailer->send($email);
         $this->logger->info(self::SVC_NAME . ' SEND MAIL OK' . $userMail);
-
-        return $email;
 
         return $email;
     }
