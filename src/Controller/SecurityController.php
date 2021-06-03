@@ -118,8 +118,13 @@ class SecurityController extends AbstractController
      * Permet de modifier le mot de passe
      * @Route("/forgotten-password", name="forgotten_password")
      */
-    public function forgottenPassword(Request $request, UserRepository $users, UserPasswordEncoderInterface $encoder, NotificationController $notification, TokenGeneratorTokenGeneratorInterface $tokenGenerator): Response
-    {
+    public function forgottenPassword(
+        Request $request,
+        UserRepository $users,
+        UserPasswordEncoderInterface $encoder,
+        NotificationController $notification,
+        TokenGeneratorTokenGeneratorInterface $tokenGenerator
+    ): Response {
 
         $form = $this->createForm(ResetPassType::class);
         $form->handleRequest($request);
