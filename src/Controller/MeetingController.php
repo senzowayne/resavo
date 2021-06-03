@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 //#[Route("/api/rooms/")]
-#[Route("/api/meetings" )]
+#[Route("/api/meetings/" )]
 class MeetingController extends AbstractController
 {
 
