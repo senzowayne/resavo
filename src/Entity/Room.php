@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-// // j'ai également mis la route dans le CheckbookingController.
+//use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\AvailableBookingController;
 use App\Controller\MeetingController;
@@ -32,6 +32,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     attributes: ["normalization_context"=>["groups"=>["room:read"]]],
 )]
 
+//#[ORM\Entity(repositoryClass: RoomRepository::class)]
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
  */
@@ -43,29 +44,31 @@ class Room
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read", "room:read"})
      */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
-
+//#[ORM\Column(type: Types::STRING, length: 255)]
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"room:read"})
      */
     private ?string $name;
-
+//#[ORM\Column(type: Types::TEXT)]
     /**
      * @ORM\Column(type="text")
      */
     private ?string $description;
-
+//#[ORM\Column(type: Types::INTEGER)]
     /**
      * @ORM\Column(type="integer")
      */
     private ?int $price;
-
+    // #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: "room")]
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
     private Collection $bookings;
-
+// #[ORM\OneToMany(targetEntity: Meeting::class, mappedBy: "room")]
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */

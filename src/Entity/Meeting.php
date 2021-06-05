@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+//use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MeetingController;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,6 +23,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     attributes: ["normalization_context"=>["groups"=>["meeting:read"]]],
 )]
 
+//#[ORM\Entity(repositoryClass: MeetingRepository::class)]
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
  * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
@@ -34,26 +36,29 @@ class Meeting
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read"})
      */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     public function __toString(): string
     {
         return $this->label;
     }
-
+//#[ORM\Column(type: Types::STRING, length: 255)]
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"meeting:read"})
      */
     private ?string $label;
-
+    //#[ORM\ManyToOne]
+    //#[ORM\JoinColumn(nullable: false)]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"meeting:read"})
      */
     private ?Room $room;
-
+//#[ORM\Column(type: Types::BOOLEAN, options:["default: 1"])]
     /**
      * @ORM\Column(type="boolean", options={"default" = 1})
      */

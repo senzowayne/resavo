@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 //use ApiPlatform\Core\Annotation\ApiResource;
+//use Doctrine\DBAL\Types\Types;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,10 +16,6 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
-
-
-// Préfixé tous les itinéraires de toutes les opérations#[ApiResource(routePrefix: '/Booking')] attributes: ['normalization_context'=>{'groups'=>{'resa:read'}}
-
 
 #[ApiResource(collectionOperations: [
 'get' => [
@@ -39,7 +36,8 @@ use App\Controller\AvailableBookingController;
 ],
     attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
 )]
-
+//#[ORM\HasLifecycleCallbacks()]
+//#[ORM\Entity(repositoryClass: BookingRepository::class)]
 /**
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
@@ -56,64 +54,67 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
-
+    // #[ORM\ManyToOne]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?UserInterface $user;
-
+// #[ORM\ManyToOne]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
     private ?Room $room;
-
+    // #[ORM\Column(type: Types::DATETIME)]
     /**
      * @ORM\Column(type="datetime")
      */
     private ?DateTimeInterface $createAt;
-
+    // #[ORM\ManyToOne]
+    // #[ORM\JoinColumn(nullable: false)]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
     private ?Meeting $meeting;
-
+    // #[ORM\Column(type: Types::DATE)]
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
     private ?DateTimeInterface $bookingDate;
-
+    // #[ORM\Column(type: Types::INTEGER, nullable: true)]
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      */
     private ?int $nbPerson;
-
+    // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
     private ?string $name;
-
+    // #[ORM\OneToOne]
+    // #[ORM\JoinColumn(nullable: true)]
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private ?Paypal $payment;
-
+    // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      */
     private ?string $notices;
-
-
+    // #[ORM\Column(type: Types::STRING)]
     /**
      * @ORM\Column(type="string")
      */
@@ -158,7 +159,7 @@ class Booking
     {
         return $this->name ?? '';
     }
-
+    // #[ORM\PrePersist]
     /**
      * @ORM\PrePersist
      */

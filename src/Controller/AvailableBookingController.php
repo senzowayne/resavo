@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Repository\BookingRepository;
 use App\Repository\MeetingRepository;
 use App\Repository\RoomRepository;

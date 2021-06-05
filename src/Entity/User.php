@@ -32,7 +32,6 @@ class User implements UserInterface
    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
