@@ -20,9 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/reservation")
- */
+#[Route("/reservation")]
 class BookingController extends AbstractController
 {
     private EntityManagerInterface $manager;
@@ -43,12 +41,8 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
-    /**
-     * @Route("/reserve", name="new_reservation",  methods={"POST", "GET"})
-     * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function index(NewsRepository $newsRepository): Response
+    #[Route("/reserve", name: "new_reservation",  methods: ["POST", "GET"])]
+    public function index(): Response
     {
         $paypalClient = $this->paypalManager->generateSandboxLink();
         $news = $newsRepository->findAll();
@@ -56,20 +50,13 @@ class BookingController extends AbstractController
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient, 'news' => $news]);
     }
 
-    /**
-     * @Route("/before-reservation", name="before_reservation")
-     */
+    #[Route("/before-reservation", name: "before_reservation")]
     public function reservationPage(): Response
     {
         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 
-    /**
-     * Réponse de l'API PayPal & entré en bdd des informations d'autorisation du paiement
-     * @Route("/paypal-transaction-complete", name="pay", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     */
+    #[Route("/paypal-transaction-complete", name: "pay", methods: ["POST"])]
     public function authorizePayment(Request $request): JsonResponse
     {
         $data = $this->paypalManager->requestAutorize($request);
@@ -82,9 +69,7 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-    /**
-     * @Route("/api-reserve", name="reserve", methods={"POST"})
-     */
+    #[Route("/api-reserve", name: "reserve", methods: ["POST"])]
     public function reserve(Request $request, MessageBusInterface $bus): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
@@ -129,12 +114,8 @@ class BookingController extends AbstractController
         return $this->json($msg);
     }
 
-
-    /**
-     * @Route("/resa", name="resa_day")
-     * @param Request $request
-     * @return Response
-     */
+    
+    #[Route("/resa", name: "resa_day")]
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
@@ -149,10 +130,8 @@ class BookingController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/resume", name="resume")
-     * @Security("is_granted('ROLE_USER')")
-     */
+
+    #[Route("/resume", name: "resume")]
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {
