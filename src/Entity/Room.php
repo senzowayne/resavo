@@ -3,12 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\AvailableBookingController;
-use App\Controller\MeetingController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(collectionOperations: [
@@ -30,7 +27,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
  */
-//#[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room
 {
     /**
@@ -39,38 +35,32 @@ class Room
      * @ORM\Column(type="integer")
      * @Groups({"meeting:read", "room:read"})
      */
-    // #[ORM\Id, ORM\GeneratedValue]
-    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"room:read"})
      */
-    //#[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $name;
 
     /**
      * @ORM\Column(type="text")
      */
-    //#[ORM\Column(type: Types::TEXT)]
     private ?string $description;
+
     /**
      * @ORM\Column(type="integer")
      */
-    //#[ORM\Column(type: Types::INTEGER)]
     private ?int $price;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
-    // #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: "room")]
     private Collection $bookings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */
-    // #[ORM\OneToMany(targetEntity: Meeting::class, mappedBy: "room")]
     private Collection $meetings;
 
     public function __construct()

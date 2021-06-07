@@ -24,8 +24,6 @@ class PasswordUpdate
      */
     private ?string $confirmPassword;
 
-
-
     public function getOldPassword(): ?string
     {
         return $this->oldPassword;
