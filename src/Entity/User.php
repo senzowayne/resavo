@@ -97,6 +97,11 @@ class User implements UserInterface
      */
     private ?string $googleId;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private  $resetToken;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -177,6 +182,18 @@ class User implements UserInterface
         return $this->bookings;
     }
 
+    public function getResetToken()
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
     public function addBooking(Booking $booking): self
     {
         if (!$this->bookings->contains($booking)) {
@@ -242,7 +259,6 @@ class User implements UserInterface
     {
         return null;
     }
-
 
     public function __toString()
     {
