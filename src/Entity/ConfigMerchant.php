@@ -2,17 +2,23 @@
 
 namespace App\Entity;
 
+//use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+//#[ORM\Entity(repositoryClass: ConfigRepository::class)]
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ConfigRepository")
- * @ApiResource(attributes={"normalization_context"={"groups"={"config:read"}}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- *     )
  */
+#[ApiResource(
+    collectionOperations: ['get'],
+
+    itemOperations: ['get'],
+
+    attributes: ["normalization_context"=>["groups"=>["config:read"]]],
+)]
+
 class ConfigMerchant
 {
     /**
@@ -20,35 +26,38 @@ class ConfigMerchant
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     /**
      * @Groups("config:read")
      * @ORM\Column(type="string", length=255)
      */
+    // #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $nameMerchant;
-
+    // #[ORM\Column(type: Types::STRING, length: 255)]
     /**
      * @ORM\Column(type="string", length=255)
      */
     private ?string $paymentService;
-
+    // #[ORM\Column(type: Types::STRING, length: 255)]
     /**
      * @ORM\Column(type="string", length=255)
      */
     private ?string $patternColor;
-
+//#[ORM\Column(type: Types::BOOLEAN, options: ["default: 0"])]
     /**
      * @Groups("config:read")
      * @ORM\Column(type="boolean", options={"default"="0"})
      */
     private bool $maintenance = false;
-
+    // #[ORM\Column(type: Types::DATETIME)]
     /**
      * @ORM\Column(type="datetime")
      */
     private \DateTimeInterface $createdAt;
-
+    // #[ORM\Column(type: Types::TEXT, length: 755, nullable: true)]
     /**
      * @Groups("config:read")
      * @ORM\Column(type="text", length=755, nullable=true)
