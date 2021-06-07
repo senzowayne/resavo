@@ -16,8 +16,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route("/reservation")]
@@ -42,7 +40,7 @@ class BookingController extends AbstractController
     }
 
     #[Route("/reserve", name: "new_reservation",  methods: ["POST", "GET"])]
-    public function index(): Response
+    public function index(NewsRepository $newsRepository): Response
     {
         $paypalClient = $this->paypalManager->generateSandboxLink();
         $news = $newsRepository->findAll();

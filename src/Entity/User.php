@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use App\Repository\UserRepository;
-use phpDocumentor\Reflection\Type;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
- #[ORM\Entity(repositoryClass: UserRepository::class)]
 /**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
  *     fields="email",
  *     message="Cette adresse e-mail existe déjà, essayer de vous connecter via la page identifier"
@@ -22,48 +19,51 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
-    #[ORM\Column(type: Types::STRING, length: 255)]
+
     /**
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
-
     private ?string $name;
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Groups({"resa:read"})
      */
-
     private ?string $firstName;
-     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
+
     /**
+     * @ORM\Column(type="string", length=255, unique = true)
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      * @Assert\NotBlank
      * @Assert\Email()
      * @Groups({"resa:read"})
      */
-
     private ?string $email;
 
     /**
      * @Assert\EqualTo(propertyPath="email", message="Vous n'avez pas tapé le meme e-mail")
      */
     public ?string $confirm_email;
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
 
-    private ?string $avatar;
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $avatar;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min="4", minMessage="Votre mot de passe doit faire au minimum 4 caractères")
      * @Assert\EqualTo(propertyPath="confirm_hash", message="Vous n'avez pas tapé le meme mot de passe")
      */
-
     private ?string $hash = null;
 
     /**
@@ -71,22 +71,30 @@ class User implements UserInterface
      */
     public ?string $confirm_hash;
 
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: "user")]
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="user")
+     */
     private Collection $bookings;
 
-    #[ORM\OneToMany(targetEntity: Paypal::class, mappedBy: "user", cascade: ["persist"])]
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Paypal", mappedBy="user", cascade={"persist"})
+     */
     private Collection $payments;
 
-    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: "users")]
-
-    private Collection $userRoles;
-    #[ORM\Column(type: Types::STRING, nullable: true)]
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
+     */
+    private Collection $userRoles;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"resa:read"})
      */
     private ?string $number;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     private ?string $googleId;
 
     /**

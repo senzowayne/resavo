@@ -2,12 +2,9 @@
 
 namespace App\Entity;
 
-//use ApiPlatform\Core\Annotation\ApiResource;
-//use Doctrine\DBAL\Types\Types;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -18,35 +15,32 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
 
 #[ApiResource(collectionOperations: [
-'get' => [
-'available' => [
-'denormalization_context'=>['groups'=>['available:write']],
-   'path' =>'/booking/available',
-   'post' => ['method' => 'post'],
-    'deserialize' => 'false',
-    'validate'=> 'false',
-    'controller' => AvailableBookingController::class,
-    'status' => '200',
+    'get' => [
+        'available' => [
+            'denormalization_context' => ['groups' => ['available:write']],
+            'path' => '/booking/available',
+            'post' => ['method' => 'post'],
+            'deserialize' => 'false',
+            'validate' => 'false',
+            'controller' => AvailableBookingController::class,
+            'status' => '200',
         ],
-   ],
+    ],
 ],
     itemOperations: [
-        'get' => ['method' => 'get'],
+        'get',
         'mercure' => 'true',
-],
-    attributes: ["normalization_context"=>["groups"=>["resa:read"]]],
+    ],
+    attributes: ["normalization_context" => ["groups" => ["resa:read"]]],
 )]
-//#[ORM\HasLifecycleCallbacks()]
-//#[ORM\Entity(repositoryClass: BookingRepository::class)]
+#[ApiFilter(DateFilter::class, properties: ["bookingDate"])]
+#[ApiFilter(SearchFilter::class, properties: ["room" => "exact"])]
 /**
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
  * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
- * @ApiFilter(DateFilter::class, properties={"bookingDate"})
- * @ApiFilter(SearchFilter::class, properties={ "room": "exact"})
  */
-
 class Booking
 {
     /**
@@ -160,12 +154,13 @@ class Booking
         return $this->name ?? '';
     }
     // #[ORM\PrePersist]
+
     /**
      * @ORM\PrePersist
      */
     public function setCreateAt(): self
     {
-        $this->createAt =  new DateTime();
+        $this->createAt = new DateTime();
 
         return $this;
     }
