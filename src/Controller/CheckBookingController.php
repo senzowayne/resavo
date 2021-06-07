@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Paypal;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route("/api/rooms/")]
 class CheckBookingController
 {
     /**

@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
+//use Doctrine\DBAL\Types\Types;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+//#[ORM\HasLifecycleCallbacks()]
+//#[ORM\Entity(repositoryClass: PaypalRepository::class)]
+//#[ORM\Table(name: "paiements")]
 /**
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="paiements")
@@ -19,54 +23,57 @@ class Paypal
       * @ORM\GeneratedValue()
       * @ORM\Column(type="integer")
       */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
-
+//#[ORM\Column(type: Types::STRING, length: 255)]
     /**
      * @ORM\Column(type="string", length=255)
      */
     protected ?string $payment_id;
-
+//#[ORM\Column(type: Types::TEXT)]
     /**
      * @ORM\Column(type="text")
      */
     protected ?string $payment_status;
-
+//#[ORM\Column(type: Types::FLOAT)]
     /**
      * @ORM\Column(type="float")
      */
     protected ?float $payment_amount;
-
+//#[ORM\Column(type: Types::TEXT)]
     /**
      * @ORM\Column(type="text")
      */
     protected ?string $payment_currency;
-
+//#[ORM\Column(type: Types::DATETIME)]
     /**
      * @ORM\Column(type="datetime")
      */
     protected ?DateTime $payment_date;
-
+//#[ORM\Column(type: Types::TEXT, nullable: true)]
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected ?string $payer_email;
-
+    //#[ORM\ManyToOne]
+    //#[ORM\JoinColumn(nullable: false)]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?UserInterface $user;
-
+    //#[ORM\OneToOne]
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Booking", mappedBy="payment")
      */
     private ?Booking $booking;
-
+//#[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private ?bool $capture;
-
+//#[ORM\Column(type: Types::string, length: 255, nullable: true)]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -137,7 +144,7 @@ class Paypal
     {
         return $this->payment_date;
     }
-
+    //#[ORM\PrePersist]
     /**
      * @ORM\PrePersist
      * @throws Exception
