@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route("/api/meetings/" )]
+#[Route("/api/meetings/")]
 class MeetingController extends AbstractController
 {
 
@@ -24,23 +24,23 @@ class MeetingController extends AbstractController
         $room = $request->query->get('room');
 
         $verifyDate = $em->getRepository(DateBlocked::class)
-                              ->findOneBy(['blockedDate' => new \DateTime($date)]);
+            ->findOneBy(['blockedDate' => new \DateTime($date)]);
 
         if ($verifyDate) {
             return $this->json(['message' => 'Cette date n\'est pas disponible']);
         }
 
-            $roomValue = $em->getRepository(Room::class)
-                                 ->find($room);
+        $roomValue = $em->getRepository(Room::class)
+            ->find($room);
 
-            $meetingValue = $em->getRepository(Meeting::class)
-                                    ->find($meeting);
+        $meetingValue = $em->getRepository(Meeting::class)
+            ->find($meeting);
 
-            $booking = $em->getRepository(Booking::class)->findOneBy([
-                  'bookingDate' => new \DateTime($date),
-                  'meeting' => $meetingValue,
-                  'room' => $roomValue
-            ]);
+        $booking = $em->getRepository(Booking::class)->findOneBy([
+            'bookingDate' => new \DateTime($date),
+            'meeting' => $meetingValue,
+            'room' => $roomValue
+        ]);
 
         $data = ($booking) ? ['available' => false] : ['available' => true];
 

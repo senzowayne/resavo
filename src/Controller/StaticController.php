@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StaticController extends AbstractController
 {
-    
+
     #[Route("/", name: "static")]
     public function index(): Response
     {

@@ -35,10 +35,10 @@ class AvailableBookingController
         $room = $this->roomRepository->find($posts['room']);
 
         $meeting = $this->meetingRepository
-                        ->findOneBy(['room' => $room, 'id' => $posts['meeting']]);
+            ->findOneBy(['room' => $room, 'id' => $posts['meeting']]);
 
         $data = $this->bookingRepository
-                     ->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
+            ->findOneBy(['room' => $room, 'meeting' => $meeting, 'bookingDate' => $date]);
 
         return new JsonResponse($data === null);
     }

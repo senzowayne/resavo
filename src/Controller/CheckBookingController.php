@@ -31,7 +31,7 @@ class CheckBookingController
         }
 
         $indexDay = date('w', $timestamp);
-        return ($indexDay == 0 || $indexDay == 6);
+        return ($indexDay === 0 || $indexDay === 6);
     }
 
     /**

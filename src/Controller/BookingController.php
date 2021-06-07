@@ -39,7 +39,7 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
-    #[Route("/reserve", name: "new_reservation",  methods: ["POST", "GET"])]
+    #[Route("/reserve", name: "new_reservation", methods: ["POST", "GET"])]
     public function index(NewsRepository $newsRepository): Response
     {
         $paypalClient = $this->paypalManager->generateSandboxLink();
@@ -73,8 +73,8 @@ class BookingController extends AbstractController
         $booking = $this->bookingManager->createBooking($request);
         /** @var ?ConfigMerchant $configMerchant */
         $configMerchant = $this->manager
-                               ->getRepository(ConfigMerchant::class)
-                               ->findOneBy([]);
+            ->getRepository(ConfigMerchant::class)
+            ->findOneBy([]);
 
         if (is_null($configMerchant)) {
             throw new \LogicException('the configMerchant not found');
@@ -82,7 +82,7 @@ class BookingController extends AbstractController
 
         if (!$configMerchant->getMaintenance()) {
             $payment = $this->paypalManager
-                            ->findOnePaiement($this->session->get('pay'));
+                ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
             $this->bookingManager->save($booking);
@@ -103,8 +103,8 @@ class BookingController extends AbstractController
             }
 
             return $this->json([
-                        'msg' => 'Réservation ok',
-                        'error' => ''
+                'msg' => 'Réservation ok',
+                'error' => ''
             ]);
         }
         $msg = 'Un problème est survenu pendant la réservation, veuillez nous contacter ou réessayer plus tard.';
@@ -112,12 +112,12 @@ class BookingController extends AbstractController
         return $this->json($msg);
     }
 
-    
+
     #[Route("/resa", name: "resa_day")]
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
-                       ->getAllMeetingPerRoom($request->query->get('d'));
+            ->getAllMeetingPerRoom($request->query->get('d'));
 
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $result['booking'],
@@ -128,16 +128,15 @@ class BookingController extends AbstractController
         ]);
     }
 
-
     #[Route("/resume", name: "resume")]
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {
-           return $this->redirectToRoute('new_reservation');
+            return $this->redirectToRoute('new_reservation');
         }
 
         $booking = $this->manager->getRepository(Booking::class)
-                    ->find($this->session->get('bookingId'));
+            ->find($this->session->get('bookingId'));
 
         return $this->render('reservation/resume.html.twig', compact('booking'));
     }
