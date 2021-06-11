@@ -7,59 +7,55 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * <<ORM\Entity("App\Repository\ConfigRepository")>>
- * @ApiResource(attributes={"normalization_context"={"groups"={"config:read"}}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- *     )
+ * @ORM\Entity(repositoryClass="App\Repository\ConfigRepository")
  */
+#[ApiResource(
+    collectionOperations: ['get'],
+
+    itemOperations: ['get'],
+
+    attributes: ["normalization_context" => ["groups" => ["config:read"]]],
+)]
 class ConfigMerchant
 {
     /**
-     * <<ORM\Id()>>
-     * <<ORM\GeneratedValue()>>
-     * <<ORM\Column("integer")>>
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-
     private ?int $id = null;
 
     /**
      * @Groups("config:read")
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      */
-    
     private ?string $nameMerchant;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      */
-    
     private ?string $paymentService;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      */
-    
     private ?string $patternColor;
 
     /**
      * @Groups("config:read")
-     * <<ORM\Column("boolean", options={"default"="0"})>>
+     * @ORM\Column(type="boolean", options={"default"="0"})
      */
-   
     private bool $maintenance = false;
 
     /**
-     * <<ORM\Column("datetime")>>
+     * @ORM\Column(type="datetime")
      */
-    
     private \DateTimeInterface $createdAt;
 
     /**
      * @Groups("config:read")
-     * <<ORM\Column("text", 755, true)>>
+     * @ORM\Column(type="text", length=755, nullable=true)
      */
-    
     private ?string $description;
 
     public function __construct()

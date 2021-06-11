@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\User;
 use App\Manager\UserManager;
 use App\Entity\PasswordUpdate;
@@ -18,9 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Repository\UserRepository;
-use App\Controller\TokenGeneratorInterface;
 use App\Form\ResetPassType;
-use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface as GeneratorUrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface as TokenGeneratorTokenGeneratorInterface;
 
@@ -33,11 +30,7 @@ class SecurityController extends AbstractController
         $this->userManager = $userManager;
     }
 
-    /**
-     * @Route("/login", name="app_login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
-     */
+    #[Route("/login", name: "app_login")]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -46,20 +39,12 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    /**
-     * @Route("/deconnexion", name="logout")
-     */
+    #[Route("/deconnexion", name: "logout")]
     public function logout(): void
     {
     }
 
-    /**
-     * Permet de modifier le mot de passe
-     * @Route("/user/update-password", name="update_password")
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return Response
-     */
+    #[Route("/user/update-password", name: "update_password")]
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $newPassword = new PasswordUpdate();
@@ -92,11 +77,8 @@ class SecurityController extends AbstractController
         return $this->render('user/update_password.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/user/connect/", name="connect_social")
-     * @param ClientRegistry $clientRegistry
-     * @return RedirectResponse
-     */
+
+    #[Route("/user/connect/", name: "connect_social")]
     public function connect(ClientRegistry $clientRegistry): RedirectResponse
     {
         /** @var GoogleClient $client */
@@ -105,26 +87,22 @@ class SecurityController extends AbstractController
         return $client->redirect(['profile', 'email']);
     }
 
-    /**
-     * @Route("/user/connect/google/check", name="connect_google_check")
-     */
+
+    #[Route("/user/connect/google/check", name: "connect_google_check")]
     public function connectCheckAction(): RedirectResponse
     {
         return $this->redirectToRoute('your_homepage_route');
     }
 
-
-    /**
-     * Permet de modifier le mot de passe
-     * @Route("/forgotten-password", name="forgotten_password")
-     */
+    #[Route("/forgotten-password", name: "forgotten_password")]
     public function forgottenPassword(
         Request $request,
         UserRepository $users,
         UserPasswordEncoderInterface $encoder,
         NotificationController $notification,
         TokenGeneratorTokenGeneratorInterface $tokenGenerator
-    ): Response {
+    ): Response
+    {
 
         $form = $this->createForm(ResetPassType::class);
         $form->handleRequest($request);
@@ -161,10 +139,7 @@ class SecurityController extends AbstractController
         return $this->render('security/forgotten_password.html.twig', ['emailForm' => $form->createView()]);
     }
 
-    /**
-     * Modifier le mot de passe
-     * @Route("/reset_password/{token}", name="reset_password")
-     */
+    #[Route("/reset_password/{token}", name: "reset_password")]
     public function resetPassword(Request $request, string $token, UserRepository $users, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['resetToken' => $token]);
@@ -188,8 +163,8 @@ class SecurityController extends AbstractController
             $this->addFlash('success', 'Mot de passe mis à jour');
 
             return $this->redirectToRoute('app_login');
-        } else {
-            return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
+
+        return $this->render('security/reset_password.html.twig', ['token' => $token]);
     }
 }

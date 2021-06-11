@@ -2,55 +2,64 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(collectionOperations: [
+    'get' => [
+        'room' => [
+            'denormalization_context' => ['groups' => ['room:read']],
+            'path' => '/room/read',
+            'get' => ['method' => 'get'],
+            'deserialize' => 'false',
+            'validate' => 'false',
+            'controller' => CheckBookingController::class,
+            'status' => '200',
+        ],
+    ],
+],
+    itemOperations: ['get'],
+    attributes: ["normalization_context" => ["groups" => ["room:read"]]],
+)]
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"room:read"}}},
- *     collectionOperations={
- *         "get",
- *     },
- *     itemOperations={"get"}
- * )
- * <<ORM\Entity("App\Repository\RoomRepository")>>
+ * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
  */
 class Room
 {
     /**
-     * <<ORM\Id()>>
-     * <<ORM\GeneratedValue()>>
-     * <<ORM\Column("integer")>>
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      * @Groups({"meeting:read", "room:read"})
      */
     private ?int $id = null;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      * @Groups({"room:read"})
      */
     private ?string $name;
 
     /**
-     * <<ORM\Column("text")>>
+     * @ORM\Column(type="text")
      */
     private ?string $description;
 
     /**
-     * <<ORM\Column("integer")>>
+     * @ORM\Column(type="integer")
      */
     private ?int $price;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Booking", "room")>>
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
      */
     private Collection $bookings;
 
     /**
-     * <<ORM\OneToMany("App\Entity\Meeting", "room")>>
+     * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
      */
     private Collection $meetings;
 

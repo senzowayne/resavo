@@ -7,38 +7,37 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={}
- * )
- * <<ORM\Entity("App\Repository\DateBlockedRepository")>>
+ *
+ * @ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")
  */
+#[ApiResource(
+    collectionOperations: [
+    'get' => ['method' => 'get'],
+],
+    itemOperations: [],
+)]
 class DateBlocked
 {
     /**
-     * <<ORM\Id()>>
-     * <<ORM\GeneratedValue()>>
-     * <<ORM\Column("integer")>>
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    
     private ?int $id = null;
 
     /**
-     * <<ORM\Column("string", 255)>>
+     * @ORM\Column(type="string", length=255)
      */
-    
     private ?string $cause;
 
     /**
-     * <<ORM\Column("date")>>
+     * @ORM\Column(type="date")
      */
-    
     private ?DateTimeInterface $start;
 
     /**
-     * <<ORM\Column("date")>>
+     * @ORM\Column(type="date")
      */
-    
     private ?DateTimeInterface $end;
 
     public function getId(): ?int
