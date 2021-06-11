@@ -7,24 +7,24 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
+ * <<ORM\Entity(repositoryClass="App\Repository\RoleRepository")>>
  */
 class Role
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      */
     private ?int $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      */
     private ?string $title;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="userRoles")
+     * <<ORM\ManyToMany("App\Entity\User", "userRoles")>>
      */
     private Collection $users;
 

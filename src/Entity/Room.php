@@ -16,41 +16,41 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  *     itemOperations={"get"}
  * )
- * @ORM\Entity(repositoryClass="App\Repository\RoomRepository")
+ * <<ORM\Entity("App\Repository\RoomRepository")>>
  */
 class Room
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * <<ORM\Id()>>
+     * <<ORM\GeneratedValue()>>
+     * <<ORM\Column("integer")>>
      * @Groups({"meeting:read", "room:read"})
      */
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * <<ORM\Column("string", 255)>>
      * @Groups({"room:read"})
      */
     private ?string $name;
 
     /**
-     * @ORM\Column(type="text")
+     * <<ORM\Column("text")>>
      */
     private ?string $description;
 
     /**
-     * @ORM\Column(type="integer")
+     * <<ORM\Column("integer")>>
      */
     private ?int $price;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="room")
+     * <<ORM\OneToMany("App\Entity\Booking", "room")>>
      */
     private Collection $bookings;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Meeting", mappedBy="room")
+     * <<ORM\OneToMany("App\Entity\Meeting", "room")>>
      */
     private Collection $meetings;
 
