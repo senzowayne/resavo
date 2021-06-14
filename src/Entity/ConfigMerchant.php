@@ -8,11 +8,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ConfigRepository")
- * @ApiResource(attributes={"normalization_context"={"groups"={"config:read"}}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- *     )
  */
+#[ApiResource(
+    collectionOperations: ['get'],
+
+    itemOperations: ['get'],
+
+    attributes: ["normalization_context" => ["groups" => ["config:read"]]],
+)]
 class ConfigMerchant
 {
     /**

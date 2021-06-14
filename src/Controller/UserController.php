@@ -12,9 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * @Route("/user")
- */
+#[Route("/user")]
 class UserController extends AbstractController
 {
     private UserManager $userManager;
@@ -26,12 +24,7 @@ class UserController extends AbstractController
         $this->bookingManager = $bookingManager;
     }
 
-    /**
-     * @Route("/new", name="user_new", methods={"GET","POST"})
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return Response
-     */
+    #[Route("/new", name: "user_new", methods: ["GET", "POST"])]
     public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $user = new User();
@@ -58,10 +51,7 @@ class UserController extends AbstractController
         return $this->render('user/new.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/historique", name="historique")
-     * @return Response
-     */
+    #[Route("/historique", name: "historique")]
     public function history(): Response
     {
         /** @var User $user */
