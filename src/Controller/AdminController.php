@@ -25,7 +25,7 @@ class AdminController extends EasyAdminController
 
     private function encodePassword(User $user, string $hash): string
     {
-        /** @var EncoderFactoryInterface $passwordEncoderFactory **/
+        /** @var EncoderFactoryInterface $passwordEncoderFactory * */
         $passwordEncoderFactory = $this->get('security.encoder_factory');
 
         $encoder = $passwordEncoderFactory->getEncoder($user);

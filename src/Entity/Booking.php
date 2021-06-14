@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,29 +14,32 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Controller\AvailableBookingController;
 
+#[ApiResource(collectionOperations: [
+    'get' => [
+        'available' => [
+            'denormalization_context' => ['groups' => ['available:write']],
+            'path' => '/booking/available',
+            'post' => ['method' => 'post'],
+            'deserialize' => 'false',
+            'validate' => 'false',
+            'controller' => AvailableBookingController::class,
+            'status' => '200',
+        ],
+    ],
+],
+    itemOperations: [
+        'get',
+        'mercure' => 'true',
+    ],
+    attributes: ["normalization_context" => ["groups" => ["resa:read"]]],
+)]
+#[ApiFilter(DateFilter::class, properties: ["bookingDate"])]
+#[ApiFilter(SearchFilter::class, properties: ["room" => "exact"])]
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"resa:read"}}},
- *     collectionOperations={
- *         "get",
- *         "available"={
- *             "denormalization_context"={"groups"={"available:write"}},
- *             "method"="POST",
- *             "path"="/booking/available",
- *             "deserialize"=false,
- *             "validate"=false,
- *             "controller"=AvailableBookingController::class,
- *              "status"=200
- *          }
- *     },
- *     itemOperations={"get"},
- *     mercure="true"
- * )
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"bookingDate", "meeting", "room"},
  * message= "Cette réservation est pas disponible choisissez une autre séance ou autre date")
  * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
- * @ApiFilter(DateFilter::class, properties={"bookingDate"})
- * @ApiFilter(SearchFilter::class, properties={ "room": "exact"})
  */
 class Booking
 {
@@ -46,64 +48,67 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    // #[ORM\Id, ORM\GeneratedValue]
+    // #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
-
+    // #[ORM\ManyToOne]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?UserInterface $user;
-
+// #[ORM\ManyToOne]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Room", inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
     private ?Room $room;
-
+    // #[ORM\Column(type: Types::DATETIME)]
     /**
      * @ORM\Column(type="datetime")
      */
     private ?DateTimeInterface $createAt;
-
+    // #[ORM\ManyToOne]
+    // #[ORM\JoinColumn(nullable: false)]
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Meeting")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"resa:read","available:write"})
      */
     private ?Meeting $meeting;
-
+    // #[ORM\Column(type: Types::DATE)]
     /**
      * @ORM\Column(type="date")
      * @Groups({"resa:read","available:write"})
      */
     private ?DateTimeInterface $bookingDate;
-
+    // #[ORM\Column(type: Types::INTEGER, nullable: true)]
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
      */
     private ?int $nbPerson;
-
+    // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
     private ?string $name;
-
+    // #[ORM\OneToOne]
+    // #[ORM\JoinColumn(nullable: true)]
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Paypal", inversedBy="booking", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private ?Paypal $payment;
-
+    // #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Regex("/^\w+/")
      */
     private ?string $notices;
-
-
+    // #[ORM\Column(type: Types::STRING)]
     /**
      * @ORM\Column(type="string")
      */
@@ -148,13 +153,14 @@ class Booking
     {
         return $this->name ?? '';
     }
+    // #[ORM\PrePersist]
 
     /**
      * @ORM\PrePersist
      */
     public function setCreateAt(): self
     {
-        $this->createAt =  new DateTime();
+        $this->createAt = new DateTime();
 
         return $this;
     }

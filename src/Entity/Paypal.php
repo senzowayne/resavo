@@ -15,10 +15,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Paypal
 {
     /**
-      * @ORM\Id()
-      * @ORM\GeneratedValue()
-      * @ORM\Column(type="integer")
-      */
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
     /**
@@ -74,7 +74,7 @@ class Paypal
 
     public function __toString()
     {
-        return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/;
+        return $this->payment_amount . $this->payment_currency /*. ' mail: ' . $this->payer_email*/ ;
     }
 
     public function getId(): ?int
@@ -137,6 +137,7 @@ class Paypal
     {
         return $this->payment_date;
     }
+    //#[ORM\PrePersist]
 
     /**
      * @ORM\PrePersist
