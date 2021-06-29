@@ -28,8 +28,8 @@ class PaypalClient
      */
     public static function environment(): SandboxEnvironment
     {
-        $clientId = $_ENV["PAYPAL_CLIENT_ID_"] ?: "<<PAYPAL-CLIENT-ID>>";
-        $clientSecret = $_ENV["PAYPAL_CLIENT_SECRET_"] ?: "<<PAYPAL-CLIENT-SECRET>>";
+        $clientId = $_ENV["PAYPAL_CLIENT_ID"] ?: "<<PAYPAL-CLIENT-ID>>";
+        $clientSecret = $_ENV["PAYPAL_CLIENT_SECRET"] ?: "<<PAYPAL-CLIENT-SECRET>>";
         return new SandboxEnvironment($clientId, $clientSecret);
     }
 }
