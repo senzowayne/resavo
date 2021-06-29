@@ -15,21 +15,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	mkdir -p var/cache var/log
 
-	# The first time volumes are mounted, the project needs to be recreated
-	if [ ! -f composer.json ]; then
-		CREATION=1
-		composer create-project "$SKELETON $SYMFONY_VERSION" tmp --stability="$STABILITY" --prefer-dist --no-progress --no-interaction --no-install
-
-		cd tmp
-		composer config --json extra.symfony.docker 'true'
-		cp -Rp . ..
-		cd -
-
-		rm -Rf tmp/
-	elif [ "$APP_ENV" != 'prod' ]; then
-		rm -f .env.local.php
-	fi
-
 	composer install --prefer-dist --no-progress --no-interaction
 
 	if grep -q ^DATABASE_URL= .env; then
