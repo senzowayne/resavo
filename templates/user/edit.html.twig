@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Hello ReservationController!{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 p-4">
+        <div class="jumbotron">
+            <h1 class="display-4">Réservation : #{{ booking.name }}</h1>
+            <hr>
+            <p class="lead">Modification</p>
+        </div>
+            <span id="available" class="glyphicon glyphicon-exclamation-sign"></span>
+                <div class="form_errors col-md-12">
+	                {{ form_errors(form) }}
+                </div>
+                    <div class="row" id="booking_exists_error" style="display: none;">
+                    <div class="col col-xs-12">
+	                <div class="form_errors col-lg-12">
+		            <span class="help-block">
+			            <ul class="list-unstyled">
+				            <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ 'booking_exists' | trans }}</li>
+			            </ul>
+		            </span>
+	                </div>
+                    </div>
+                    </div>
+        <div class="row mt-5">
+            <div class="col pl-4">
+            {{ form_start(form) }}
+                {{ form_row(form.room) }}
+                {{ form_row(form.booking_date) }}
+                {{ form_row(form.meeting) }}
+                {{ form_row(form.notices) }}
+                
+            </div>
+                    
+        </div>
+            <div class="col-1">
+                <input id="btn_validate" class="btn btn-primary" type="submit" value="valider">
+            {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+<script>
+function checkExists() {
+            // Get the input value
+            var data = $("#test_available_booking").val();
+
+            // Send an ajax request with the user input data
+            $.ajax({
+                url: "/api/booking/available",
+                method: "post",
+                dataType : "json",
+                data: {
+                    bookingDate: $('#test_available_booking_booking_date').val(),
+                    meeting: $('#test_available_booking_meeting').val(),
+                    room: $('#test_available_booking_room').val()
+                },
+                success: function (data) {
+                    $('#available').empty(data)
+
+                    let result = ''
+                    if (data) {
+                        result = ""
+                        $('#btn_validate').prop('disabled', false)
+                    } else {
+                        $('#btn_validate').prop('disabled', true)
+                        result = alert('Cette séance ou date est indisponible, veuillez resssayer.')
+                    }
+                    $('#available').append(result)
+                }
+            })
+}
+
+$(document).ready(function(){
+    console.log('ça marche');
+    // Each time we modify the booking, do an ajax check
+        document.getElementById('test_available_booking_meeting').addEventListener("change", checkExists);
+    
+});
+
+
+</script>
+{% endblock %}
