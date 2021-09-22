@@ -48,15 +48,18 @@
         "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "phpstan/phpstan": "^0.12.50",
-        "symfony/debug-pack": "*",
+        "phpunit/phpunit": "^9.5",
+        "roave/security-advisories": "dev-latest",
+        "symfony/browser-kit": "^5.2",
+        "symfony/css-selector": "^5.2",
+        "symfony/debug-bundle": "^5.2",
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^5.2",
-        "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*",
-        "symfony/var-dumper": "5.2.*"
+        "symfony/stopwatch": "^5.2",
+        "symfony/var-dumper": "5.2.*",
+        "symfony/web-profiler-bundle": "^5.2"
     },
     "autoload": {
         "psr-4": {
