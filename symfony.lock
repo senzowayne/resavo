@@ -225,9 +225,6 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
-    "roave/security-advisories": {
-        "version": "9999999-dev"
-    },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
         "recipe": {
@@ -380,9 +377,6 @@
             "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
         }
     },
-    "symfony/http-client-contracts": {
-        "version": "v2.4.0"
-    },
     "symfony/http-foundation": {
         "version": "v5.2.8"
     },
@@ -448,6 +442,9 @@
     },
     "symfony/options-resolver": {
         "version": "v5.2.4"
+    },
+    "symfony/password-hasher": {
+        "version": "v5.4.2"
     },
     "symfony/phpunit-bridge": {
         "version": "5.1",
