@@ -25,7 +25,7 @@ help:  ## Outputs this help screen
 
 ## ------- Project ----------------------------------------
 reboot: stop up ## Reboot development environment
-start: install yarn encore up dmm dfl ## Initialize the project
+start: up yarn encore dmm dfl ## Initialize the project
 
 ## ------- Docker -----------------------------------------
 up: ## Start the docker hub
@@ -49,7 +49,7 @@ purge: ## Purge cache and logs
 
 ## ------- Composer --------------------------------------
 install: ## Install vendors according to the current composer.lock file
-	$(COMPOSER) install --no-progress --no-suggest --prefer-dist
+	$(COMPOSER) install --no-progress --prefer-dist
 
 update: composer.json ## Update vendors according to the composer.json file
 	$(COMPOSER) update $(COMMAND_ARGS)
