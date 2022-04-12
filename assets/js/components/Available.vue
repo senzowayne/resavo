@@ -78,15 +78,16 @@
         },
         methods: {
             getAvailable() {
+                let params = new URLSearchParams();
+                params.append('bookingDate', this.date );
+                params.append('room', this.room );
+                params.append('meeting', this.meeting );
+
                 if (this.meeting !== null && this.room !== null && this.date !== null) {
                     axios({
                         url: "/api/booking/available",
                         method: 'post',
-                        data: {
-                            room: this.room,
-                            meeting: this.meeting,
-                            bookingDate: this.date
-                        }
+                        data: params
                     }).then(({data}) => {
 
                         if (data === false) {

@@ -56,4 +56,13 @@ class MeetingRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
+    public function findAllMeetingsByRoom(int $roomId)
+    {
+        $query = $this->createQueryBuilder('m')
+            ->where('m.room = :id')
+            ->setParameter('id', $roomId);
+
+            return $query;
+    }
 }

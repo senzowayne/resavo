@@ -130,19 +130,6 @@ class Room
         return $this;
     }
 
-    public function removeReservation(Booking $reservation): self
-    {
-        if ($this->bookings->contains($reservation)) {
-            $this->bookings->removeElement($reservation);
-            // set the owning side to null (unless already changed)
-            if ($reservation->getRoom() === $this) {
-                $reservation->setRoom(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Meeting[]
      */

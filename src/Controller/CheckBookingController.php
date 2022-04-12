@@ -12,7 +12,7 @@ class CheckBookingController
      * @param \DateTime $date
      * @return bool
      */
-    public function verifyDate(\DateTime $date): bool
+    public static function verifyDate(\DateTime $date): bool
     {
 
         $date = $date->format('Y-m-d');
