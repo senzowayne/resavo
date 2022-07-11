@@ -16,13 +16,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/reservation")
- */
+#[Route("/reservation")]
 class BookingController extends AbstractController
 {
     private EntityManagerInterface $manager;
@@ -43,11 +39,7 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
-    /**
-     * @Route("/reserve", name="new_reservation",  methods={"POST", "GET"})
-     * @Route("/reserve/{salle}", name="new_reservation_salle",  methods={"POST", "GET"})
-     * @IsGranted("ROLE_USER")
-     */
+    #[Route("/reserve", name: "new_reservation", methods: ["POST", "GET"])]
     public function index(NewsRepository $newsRepository): Response
     {
         $paypalClient = $this->paypalManager->generateSandboxLink();
@@ -56,20 +48,13 @@ class BookingController extends AbstractController
         return $this->render('reservation/index.html.twig', ['client' => $paypalClient, 'news' => $news]);
     }
 
-    /**
-     * @Route("/before-reservation", name="before_reservation")
-     */
+    #[Route("/before-reservation", name: "before_reservation")]
     public function reservationPage(): Response
     {
         return $this->render('reservation/booking.html.twig', ['reservation' => 'reservation']);
     }
 
-    /**
-     * Réponse de l'API PayPal & entré en bdd des informations d'autorisation du paiement
-     * @Route("/paypal-transaction-complete", name="pay", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     */
+    #[Route("/paypal-transaction-complete", name: "pay", methods: ["POST"])]
     public function authorizePayment(Request $request): JsonResponse
     {
         $data = $this->paypalManager->requestAutorize($request);
@@ -82,16 +67,14 @@ class BookingController extends AbstractController
         return $this->json(['error' => 'problème de paiement', 'booking' => false,]);
     }
 
-    /**
-     * @Route("/api-reserve", name="reserve", methods={"POST"})
-     */
+    #[Route("/api-reserve", name: "reserve", methods: ["POST"])]
     public function reserve(Request $request, MessageBusInterface $bus): JsonResponse
     {
         $booking = $this->bookingManager->createBooking($request);
         /** @var ?ConfigMerchant $configMerchant */
         $configMerchant = $this->manager
-                               ->getRepository(ConfigMerchant::class)
-                               ->findOneBy([]);
+            ->getRepository(ConfigMerchant::class)
+            ->findOneBy([]);
 
         if (is_null($configMerchant)) {
             throw new \LogicException('the configMerchant not found');
@@ -99,7 +82,7 @@ class BookingController extends AbstractController
 
         if (!$configMerchant->getMaintenance()) {
             $payment = $this->paypalManager
-                            ->findOnePaiement($this->session->get('pay'));
+                ->findOnePaiement($this->session->get('pay'));
 
             $booking->setPayment($payment);
             $this->bookingManager->save($booking);
@@ -120,8 +103,8 @@ class BookingController extends AbstractController
             }
 
             return $this->json([
-                        'msg' => 'Réservation ok',
-                        'error' => ''
+                'msg' => 'Réservation ok',
+                'error' => ''
             ]);
         }
         $msg = 'Un problème est survenu pendant la réservation, veuillez nous contacter ou réessayer plus tard.';
@@ -130,15 +113,11 @@ class BookingController extends AbstractController
     }
 
 
-    /**
-     * @Route("/resa", name="resa_day")
-     * @param Request $request
-     * @return Response
-     */
+    #[Route("/resa", name: "resa_day")]
     public function bookingDay(Request $request): Response
     {
         $result = $this->bookingManager
-                       ->getAllMeetingPerRoom($request->query->get('d'));
+            ->getAllMeetingPerRoom($request->query->get('d'));
 
         return $this->render('reservation/booking-day.html.twig', [
             'booking' => $result['booking'],
@@ -149,18 +128,15 @@ class BookingController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/resume", name="resume")
-     * @Security("is_granted('ROLE_USER')")
-     */
+    #[Route("/resume", name: "resume")]
     public function resume(): Response
     {
         if (is_null($this->session->get('bookingId'))) {
-           return $this->redirectToRoute('new_reservation');
+            return $this->redirectToRoute('new_reservation');
         }
 
         $booking = $this->manager->getRepository(Booking::class)
-                    ->find($this->session->get('bookingId'));
+            ->find($this->session->get('bookingId'));
 
         return $this->render('reservation/resume.html.twig', compact('booking'));
     }

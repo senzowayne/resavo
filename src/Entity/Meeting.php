@@ -2,20 +2,20 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
+#[ApiResource(
+    attributes: ["normalization_context" => ["groups" => ["meeting:read"]]],
+    collectionOperations: ['get'],
+    itemOperations: ['get'],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['room' => 'exact'])]
 /**
- * @ApiResource(attributes={"normalization_context"={"groups"={"meeting:read"}}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"},
- *     mercure="true"
- * )
  * @ORM\Entity(repositoryClass="App\Repository\MeetingRepository")
- * @ApiFilter(SearchFilter::class, properties={"room": "exact"})
  */
 class Meeting
 {
@@ -50,14 +50,10 @@ class Meeting
      */
     private ?bool $isActive;
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
-
 
     public function getLabel(): ?string
     {

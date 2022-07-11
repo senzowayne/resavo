@@ -7,12 +7,15 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={}
- * )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\DateBlockedRepository")
  */
+#[ApiResource(
+    collectionOperations: [
+    'get' => ['method' => 'get'],
+],
+    itemOperations: [],
+)]
 class DateBlocked
 {
     /**

@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Paypal;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route("/api/rooms/")]
 class CheckBookingController
 {
     /**
@@ -29,7 +31,7 @@ class CheckBookingController
         }
 
         $indexDay = date('w', $timestamp);
-        return ($indexDay == 0 || $indexDay == 6);
+        return ($indexDay === 0 || $indexDay === 6);
     }
 
     /**
